@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <ProjectGuid>{0AEFC158-B109-47BA-93BC-31EFCDF9705A}</ProjectGuid>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Pulse.Api.Mgmt.Contract\Pulse.Api.Mgmt.Contract.csproj" />
+      <ProjectReference Include="..\Pulse.Api.Shared\Pulse.Api.Shared.csproj" />
+    </ItemGroup>
+
+</Project>

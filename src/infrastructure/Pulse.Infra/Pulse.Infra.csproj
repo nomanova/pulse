@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <ProjectGuid>{C36F536C-A184-43A5-999B-DC46E5688AD5}</ProjectGuid>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\application\Pulse.Application\Pulse.Application.csproj" />
+      <ProjectReference Include="..\..\domain\Pulse.Domain\Pulse.Domain.csproj" />
+      <ProjectReference Include="..\Pulse.Infra.Database\Pulse.Infra.Database.csproj" />
+    </ItemGroup>
+
+</Project>

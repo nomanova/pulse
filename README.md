@@ -78,6 +78,6 @@ The project is at an early stage, and the roadmap is being shaped right now. If 
 
 **→ Open a Github issue or discussion to share your use case or thoughts**
 
-**→ Or email directly: hello \_at\_ nomanova \_dot\_ com**
+**→ Or email directly: info \_at\_ nomanova \_dot\_ com**
 
 No sales process. No pitch deck. Just an honest conversation about whether this solves a real problem for you.

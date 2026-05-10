@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <ProjectGuid>{06114962-D453-49F7-BD81-523006332E2F}</ProjectGuid>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <NoWarn>1591</NoWarn>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.7" />
+        <PackageReference Include="Scalar.AspNetCore" Version="2.14.11" />
+        <PackageReference Include="Serilog.AspNetCore" Version="10.0.0" />
+        <PackageReference Include="Serilog.Settings.Configuration" Version="10.0.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.1.1" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <None Include="appsettings.json" CopyToOutputDirectory="Always" />
+    </ItemGroup>
+
+    <ItemGroup Condition="Exists('appsettings.Local.json')">
+        <None Include="appsettings.Local.json" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\infrastructure\Pulse.Infra\Pulse.Infra.csproj" />
+      <ProjectReference Include="..\Pulse.Api.Mgmt\Pulse.Api.Mgmt.csproj" />
+    </ItemGroup>
+    
+</Project>
