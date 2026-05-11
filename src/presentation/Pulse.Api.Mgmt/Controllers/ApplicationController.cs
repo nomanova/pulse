@@ -1,16 +1,32 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pulse.Api.Mgmt.Controllers.Base;
+using Pulse.Application.Common.Dispatcher;
+using Pulse.Application.Handlers.Applications.Commands;
 
 namespace Pulse.Api.Mgmt.Controllers;
 
 [Route("mgmt/v1/applications")]
 public class ApplicationController : MgmtApiController
 {
-    [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> Get(CancellationToken cancellationToken = default)
+    private readonly ISender _sender;
+    
+    public ApplicationController(ISender sender)
     {
-        return Ok();
+        _sender = sender;
+    }
+
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> Create(CancellationToken cancellationToken = default)
+    {
+        var command = new CreateApplicationCommand
+        {
+            Name = "Test"
+        };
+        
+        var result = await _sender.Send(command, cancellationToken);
+        
+        return Ok(result);
     }
 }

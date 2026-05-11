@@ -6,5 +6,5 @@ internal static class Constants
     public const int ExitError = 1;
 
     public const string LogTemplate =
-        "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {Properties:j}{NewLine}{Exception}";
+        "[{Timestamp:HH:mm:ss} {Level:u3}] {Message:lj} {NewLine}{Exception}";
 }

@@ -5,6 +5,8 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\..\application\Pulse.Application.Dto\Pulse.Application.Dto.csproj" />
+      <ProjectReference Include="..\..\application\Pulse.Application\Pulse.Application.csproj" />
       <ProjectReference Include="..\Pulse.Api.Mgmt.Contract\Pulse.Api.Mgmt.Contract.csproj" />
       <ProjectReference Include="..\Pulse.Api.Shared\Pulse.Api.Shared.csproj" />
     </ItemGroup>

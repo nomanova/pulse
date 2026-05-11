@@ -1,4 +1,6 @@
 using System.Reflection;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Mvc;
 using Throw;
 
@@ -11,7 +13,8 @@ internal static class Endpoints
         services.ThrowIfNull();
 
         var mvcBuilder = services.AddControllers()
-            .ConfigureApiBehaviorOptions(Set);
+            .ConfigureApiBehaviorOptions(Set)
+            .AddJsonOptions(Set);
 
         foreach (var applicationPart in applicationParts)
         {
@@ -23,5 +26,15 @@ internal static class Endpoints
     {
         options.SuppressModelStateInvalidFilter = true;
         options.SuppressMapClientErrors = true;
+    }
+    
+    private static void Set(JsonOptions options)
+    {
+        options.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+        options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+        options.JsonSerializerOptions.WriteIndented = true;
+        
+        options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
     }
 }

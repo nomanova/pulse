@@ -38,6 +38,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Infra", "src\infrastr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Infra.Database", "src\infrastructure\Pulse.Infra.Database\Pulse.Infra.Database.csproj", "{8FF5AF09-C353-41A5-A035-95F09587D97E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Application.Dto", "src\application\Pulse.Application.Dto\Pulse.Application.Dto.csproj", "{06A6C98C-3C79-42B7-A1FA-1DFA9C341839}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -55,6 +57,7 @@ Global
 		{20D39AD3-6413-4E46-A6B2-D48A343853EA} = {FB4FE66A-E49C-4A1A-AC40-6F6172A7AD1F}
 		{2158DB3C-6694-4569-B3ED-7676400515AD} = {89A8C8E4-02E1-45AE-8B43-28E62013EADE}
 		{8FF5AF09-C353-41A5-A035-95F09587D97E} = {89A8C8E4-02E1-45AE-8B43-28E62013EADE}
+		{06A6C98C-3C79-42B7-A1FA-1DFA9C341839} = {FB4FE66A-E49C-4A1A-AC40-6F6172A7AD1F}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{25CDAA92-F4FE-41AA-ABFF-20167D395406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -101,5 +104,9 @@ Global
 		{8FF5AF09-C353-41A5-A035-95F09587D97E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FF5AF09-C353-41A5-A035-95F09587D97E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FF5AF09-C353-41A5-A035-95F09587D97E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{06A6C98C-3C79-42B7-A1FA-1DFA9C341839}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{06A6C98C-3C79-42B7-A1FA-1DFA9C341839}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{06A6C98C-3C79-42B7-A1FA-1DFA9C341839}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{06A6C98C-3C79-42B7-A1FA-1DFA9C341839}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

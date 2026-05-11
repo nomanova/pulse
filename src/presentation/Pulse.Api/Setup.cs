@@ -52,6 +52,8 @@ internal static class Setup
                 options.HideDeveloperTools();
                 options.DisableTelemetry();
             });
+            
+            endpoints.MapControllers();
         });
     }
 }
