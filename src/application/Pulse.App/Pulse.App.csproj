@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <ProjectGuid>{522FB87A-3F07-464A-A8C9-6446069B2B24}</ProjectGuid>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\domain\Pulse.Domain\Pulse.Domain.csproj" />
+      <ProjectReference Include="..\Pulse.App.Dto\Pulse.App.Dto.csproj" />
+    </ItemGroup>
+    
+</Project>

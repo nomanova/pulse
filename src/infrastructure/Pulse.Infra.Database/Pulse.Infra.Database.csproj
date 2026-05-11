@@ -16,5 +16,10 @@
             <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
         </PackageReference>
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\application\Pulse.App\Pulse.App.csproj" />
+      <ProjectReference Include="..\..\domain\Pulse.Domain\Pulse.Domain.csproj" />
+    </ItemGroup>
     
 </Project>

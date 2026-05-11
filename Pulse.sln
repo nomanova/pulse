@@ -30,7 +30,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Domain", "src\domain\
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{FB4FE66A-E49C-4A1A-AC40-6F6172A7AD1F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Application", "src\application\Pulse.Application\Pulse.Application.csproj", "{20D39AD3-6413-4E46-A6B2-D48A343853EA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.App", "src\application\Pulse.App\Pulse.App.csproj", "{20D39AD3-6413-4E46-A6B2-D48A343853EA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{89A8C8E4-02E1-45AE-8B43-28E62013EADE}"
 EndProject
@@ -38,7 +38,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Infra", "src\infrastr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Infra.Database", "src\infrastructure\Pulse.Infra.Database\Pulse.Infra.Database.csproj", "{8FF5AF09-C353-41A5-A035-95F09587D97E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Application.Dto", "src\application\Pulse.Application.Dto\Pulse.Application.Dto.csproj", "{06A6C98C-3C79-42B7-A1FA-1DFA9C341839}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.App.Dto", "src\application\Pulse.App.Dto\Pulse.App.Dto.csproj", "{06A6C98C-3C79-42B7-A1FA-1DFA9C341839}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

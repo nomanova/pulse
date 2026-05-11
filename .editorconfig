@@ -1,0 +1,5 @@
+root = true
+
+# Entity base class is intentionally unsealed (DDD pattern); equality symmetry is preserved by the GetType() check in Equals.
+[**/Common/Models/Entities/Entity.cs]
+dotnet_diagnostic.S4035.severity = none

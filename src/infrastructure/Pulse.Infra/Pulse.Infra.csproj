@@ -5,7 +5,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\application\Pulse.Application\Pulse.Application.csproj" />
+      <ProjectReference Include="..\..\application\Pulse.App\Pulse.App.csproj" />
       <ProjectReference Include="..\..\domain\Pulse.Domain\Pulse.Domain.csproj" />
       <ProjectReference Include="..\Pulse.Infra.Database\Pulse.Infra.Database.csproj" />
     </ItemGroup>

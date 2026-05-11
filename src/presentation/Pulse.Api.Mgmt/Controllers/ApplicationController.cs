@@ -1,8 +1,10 @@
+using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pulse.Api.Mgmt.Controllers.Base;
-using Pulse.Application.Common.Dispatcher;
-using Pulse.Application.Handlers.Applications.Commands;
+using Pulse.App.Common.Dispatcher;
+using Pulse.App.Handlers.Applications.Commands;
 
 namespace Pulse.Api.Mgmt.Controllers;
 

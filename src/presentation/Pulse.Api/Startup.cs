@@ -1,4 +1,8 @@
-using Pulse.Application;
+using System;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Pulse.App;
 using Pulse.Infra;
 
 namespace Pulse.Api;
