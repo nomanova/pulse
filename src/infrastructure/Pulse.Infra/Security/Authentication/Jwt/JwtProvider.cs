@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -8,6 +7,7 @@ using Microsoft.IdentityModel.Tokens;
 using Pulse.App.Common.Security.Interfaces;
 using Pulse.App.Common.Services.Interfaces;
 using Pulse.Domain.Aggregates.Users;
+using Pulse.Domain.Common.Services;
 using Throw;
 using JwtRegisteredClaimNames = Microsoft.IdentityModel.JsonWebTokens.JwtRegisteredClaimNames;
 
@@ -42,12 +42,9 @@ public class JwtProvider : IJwtProvider
         var claims = new List<Claim>
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.Value),
-            new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-            new(type: UserClaims.UserId, value: user.Id.Value),
-            new(type: UserClaims.UserSecurityStamp, value: userSecurityStamp)
+            new(JwtRegisteredClaimNames.Jti, IdentityProvider.New()),
+            new(type: UserClaims.SecurityStamp, value: userSecurityStamp)
         };
-        
-        // TODO - add optional organization level claims
         
         var securityToken = new JwtSecurityToken(
             issuer: _options.Issuer,

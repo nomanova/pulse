@@ -7,7 +7,7 @@ namespace Pulse.App.Common.Dispatcher;
 /// Delegate that represents the next step in a pipeline. Calling it invokes the next
 /// behavior or, at the end of the chain, the handler itself.
 /// </summary>
-public delegate ValueTask<TResponse> RequestHandlerDelegate<TResponse>();
+public delegate Task<TResponse> RequestHandlerDelegate<TResponse>();
 
 /// <summary>
 /// A cross-cutting behavior that wraps the handler. Behaviors are composed in
@@ -16,7 +16,7 @@ public delegate ValueTask<TResponse> RequestHandlerDelegate<TResponse>();
 public interface IPipelineBehavior<in TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    ValueTask<TResponse> Handle(
+    Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken);

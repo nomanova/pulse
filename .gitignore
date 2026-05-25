@@ -5,6 +5,7 @@
 *.dtmp
 
 .idea/
+.junie/
 .vs/
 *.DotSettings.user
 *.csproj.user

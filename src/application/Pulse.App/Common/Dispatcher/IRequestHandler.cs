@@ -4,13 +4,12 @@ using System.Threading.Tasks;
 namespace Pulse.App.Common.Dispatcher;
 
 /// <summary>
-/// Handles a request and returns a response. ValueTask is used over Task to avoid
-/// allocations when the handler completes synchronously.
+/// Handles a request and returns a response.
 /// </summary>
 public interface IRequestHandler<in TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
-    ValueTask<TResponse> Handle(TRequest request, CancellationToken cancellationToken);
+    Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken);
 }
 
 /// <summary>

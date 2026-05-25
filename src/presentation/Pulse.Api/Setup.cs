@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi;
 using Pulse.Api.Common;
+using Pulse.Infra.Database.Contexts;
 using Scalar.AspNetCore;
 
 namespace Pulse.Api;
@@ -14,7 +15,7 @@ internal static class Setup
     {
         var mgmtAssembly = typeof(Mgmt.AssemblyReference).Assembly;
         services.AddEndpoints(mgmtAssembly);
-        
+
         services.AddOpenApi(options =>
         {
             options.AddDocumentTransformer((document, _, _) =>
@@ -40,10 +41,18 @@ internal static class Setup
         return services;
     }
 
-    public static void UsePresentation(this IApplicationBuilder app)
+    public static void UsePresentation(this IApplicationBuilder app,
+        IServiceProvider serviceProvider, DatabaseContext databaseContext)
     {
+        databaseContext.EnsureMigrated();
+        databaseContext.EnsureSeeded(serviceProvider);
+
+        app.UseExceptionMiddleware();
         app.UseFileServer();
         app.UseRouting();
+
+        app.UseAuthentication();
+        app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
         {
@@ -56,8 +65,8 @@ internal static class Setup
                 options.HideDeveloperTools();
                 options.DisableTelemetry();
             });
-            
-            endpoints.MapControllers();
+
+            endpoints.MapControllers().RequireAuthorization();
         });
     }
 }

@@ -16,7 +16,7 @@ internal abstract class RequestHandlerBase;
 /// </summary>
 internal abstract class RequestHandlerBase<TResponse> : RequestHandlerBase
 {
-    public abstract ValueTask<TResponse> Handle(
+    public abstract Task<TResponse> Handle(
         IRequest<TResponse> request,
         IServiceProvider provider,
         CancellationToken cancellationToken);
@@ -30,7 +30,7 @@ internal abstract class RequestHandlerBase<TResponse> : RequestHandlerBase
 internal sealed class RequestHandlerWrapper<TRequest, TResponse> : RequestHandlerBase<TResponse>
     where TRequest : IRequest<TResponse>
 {
-    public override ValueTask<TResponse> Handle(
+    public override Task<TResponse> Handle(
         IRequest<TResponse> request,
         IServiceProvider provider,
         CancellationToken cancellationToken)

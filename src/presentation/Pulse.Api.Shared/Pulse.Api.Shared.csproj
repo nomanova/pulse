@@ -8,4 +8,8 @@
         <FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Pulse.Api.Shared.Contract\Pulse.Api.Shared.Contract.csproj" />
+    </ItemGroup>
+
 </Project>

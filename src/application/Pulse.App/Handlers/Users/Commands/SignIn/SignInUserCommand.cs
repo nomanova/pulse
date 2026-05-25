@@ -4,9 +4,9 @@ using Pulse.App.Dto.Users;
 
 namespace Pulse.App.Handlers.Users.Commands.SignIn;
 
-public sealed record SignInUserCommand : ICommand<ErrorOr<ProfileDto>>
+public sealed record SignInUserCommand : ICommand<ErrorOr<AuthDto>>
 {
-    public string? EmailAddress { get; init; }
+    public string? Username { get; init; }
 
     public string? Password { get; init; }
 }

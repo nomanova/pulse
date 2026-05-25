@@ -22,7 +22,7 @@ public static partial class StringExtensions
         var value = string.IsNullOrWhiteSpace(input) ? string.Empty : input;
         var folded = value.FoldToAscii();
         var alphaNum = AlphaNumRegex().Replace(folded, string.Empty);
-        return alphaNum.ToLowerInvariant();
+        return alphaNum.Normalize().ToLowerInvariant();
     }
 
     /// Taken from: https://gist.github.com/andyraddatz/e6a396fb91856174d4e3f1bf2e10951c

@@ -1,59 +1,88 @@
-using ErrorOr;
+using Pulse.Domain.Aggregates.Users.Services;
 using Pulse.Domain.Aggregates.Users.ValueObjects;
 using Pulse.Domain.Common.Errors;
-using Pulse.Domain.Common.Extensions;
 using Pulse.Domain.Common.Models.Entities;
-using Pulse.Domain.Common.Models.Text;
 using Pulse.Domain.Common.Services;
 
 namespace Pulse.Domain.Aggregates.Users;
 
-public class User : DomainEntity<UserId>, INamed
+public class User : DomainEntity<UserId>
 {
-    public string FirstName { get; private set; } = null!;
+    public Username Username { get; private set; } = null!;
 
-    public string LastName { get; private set; } = null!;
+    public Name? Name { get; private set; }
+    
+    public EmailAddress? EmailAddress { get; private set; }
 
-    public string Name { get; private set; } = null!;
-
-    public string NormalizedName { get; private set; } = null!;
+    public Password? Password { get; private set; }
 
     public SecurityStamp SecurityStamp { get; private set; } = null!;
-    
+
     private User()
     {
     }
 
     private User(
         UserId id,
-        string firstName,
-        string lastName,
-        string name,
-        string normalizedName) : base(id)
+        Username username) : base(id)
     {
-        FirstName = firstName;
-        LastName = lastName;
-        Name = name;
-        NormalizedName = normalizedName;
+        Username = username;
+        SecurityStamp = SecurityStamp.Create();
     }
 
-    public static ErrorOr<User> Create(string? firstName, string? lastName)
+    public static User Create(string? username)
     {
-        var firstNameValue = firstName.AsName(nameof(FirstName)).Assert();
-        var lastNameValue = lastName.AsName(nameof(LastName)).Assert();
-
-        var name = $"{firstNameValue} {lastNameValue}";
-        var normalizedName = name.AsNormalizedQueryable();
-
+        var usernameValue = Username.Create(username).Assert();
         var id = IdentityProvider.New<UserId>();
 
-        var user = new User(id, firstNameValue, lastNameValue, name, normalizedName);
+        var user = new User(id, usernameValue);
 
         user.SetCreated();
 
         return user;
     }
-    
+
+    public void SetName(string? firstName, string? lastName)
+    {
+        Name = Name.Create(firstName, lastName).Assert();
+        
+        SetModified();
+    }
+
+    public void SetPassword(string? password, IUserPasswordHasher passwordHasher)
+    {
+        Password = Password.Create(password, passwordHasher).Assert();
+        SecurityStamp.Reset();
+
+        SetModified();
+    }
+
+    public void SetEmail(string? emailAddress)
+    {
+        EmailAddress = EmailAddress.Create(emailAddress).Assert();
+
+        SetModified();
+    }
+
+    public void SetEmailConfirmed()
+    {
+        BusinessErrors.User.EmailAddressRequired.Assert(() => EmailAddress != null);
+
+        EmailAddress!.SetConfirmed();
+        SetModified();
+    }
+
+    public bool IsMatchingPassword(string? password, IUserPasswordHasher passwordHasher)
+    {
+        if (Password == null || string.IsNullOrEmpty(password))
+        {
+            return false;
+        }
+
+        var hash = Password.HashedValue;
+        return hash != null && passwordHasher.Verify(password, hash);
+    }
+
     public override string ToString()
     {
         return $"[{Id.Value}] {Name}";

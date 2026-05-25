@@ -14,7 +14,7 @@ internal sealed class Dispatcher(
     IServiceProvider provider,
     DispatcherRegistry registry) : ISender, IPublisher
 {
-    public ValueTask<TResponse> Send<TResponse>(
+    public Task<TResponse> Send<TResponse>(
         IRequest<TResponse> request,
         CancellationToken cancellationToken = default)
     {

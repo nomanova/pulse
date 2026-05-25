@@ -9,7 +9,7 @@ public sealed class SqliteDatabaseContextFactory : IDesignTimeDbContextFactory<S
 {
     /**
      * Add migration
-     * dotnet ef migrations add Init --context SqliteDatabaseContext --output-dir Migrations/Sqlite -- "Data Source=/Users/dries/Development/nomanova/pulse/data/pulse.db;"
+     * dotnet ef migrations add User --context SqliteDatabaseContext --output-dir Migrations/Sqlite -- "Data Source=/Users/dries/Development/nomanova/projects/data/pulse.db;"
      *
      * Update database
      * dotnet ef database update --context SqliteDatabaseContext -- "Data Source=/Users/dries/Development/nomanova/pulse/data/pulse.db;"

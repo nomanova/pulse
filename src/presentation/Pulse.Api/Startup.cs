@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pulse.App;
 using Pulse.Infra;
+using Pulse.Infra.Database.Contexts;
 
 namespace Pulse.Api;
 
@@ -27,8 +28,9 @@ internal class Startup
     public static void Configure(
         IApplicationBuilder app,
         IServiceProvider serviceProvider,
-        IConfiguration configuration)
+        IConfiguration configuration,
+        DatabaseContext databaseContext)
     {
-        app.UsePresentation();
+        app.UsePresentation(serviceProvider, databaseContext);
     }
 }

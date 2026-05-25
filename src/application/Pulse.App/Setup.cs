@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Pulse.App.Common.Behaviors;
 using Pulse.App.Common.Dispatcher;
+using Pulse.App.Handlers.Users.Common;
 
 namespace Pulse.App;
 
@@ -15,6 +16,15 @@ public static class Setup
         
         services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         
+        services.AddRepositories();
+        
         return services;
     }
+
+    private static void AddRepositories(this IServiceCollection services)
+    {
+        // (Write) repositories (aggregate roots)
+        services.AddScoped<IUserRepository, UserRepository>();
+    }
+
 }

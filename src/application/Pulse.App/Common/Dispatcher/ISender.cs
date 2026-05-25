@@ -8,7 +8,7 @@ namespace Pulse.App.Common.Dispatcher;
 /// </summary>
 public interface ISender
 {
-    ValueTask<TResponse> Send<TResponse>(
+    Task<TResponse> Send<TResponse>(
         IRequest<TResponse> request,
         CancellationToken cancellationToken = default);
 }

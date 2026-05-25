@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Aspire.Hosting;
+using Aspire.Hosting.ApplicationModel;
 
 namespace Pulse.AppHost;
 
@@ -16,7 +17,7 @@ public static class AppHost
     {
         return MainAsync(args).GetAwaiter().GetResult();
     }
-    
+
     private static async Task<int> MainAsync(string[] args, CancellationToken cancellationToken = default)
     {
         var builder = DistributedApplication.CreateBuilder(args);
@@ -24,16 +25,26 @@ public static class AppHost
         var dbProviderParameter = builder.AddParameter("DatabaseProvider");
         var dbProvider = await dbProviderParameter.Resource.GetValueAsync(cancellationToken);
 
-        switch (dbProvider)
+        var dbOnlyParameter = builder.AddParameter("DatabaseOnly");
+        var dbOnly =
+            bool.TryParse(await dbOnlyParameter.Resource.GetValueAsync(cancellationToken), out var parsedDbOnly) &&
+            parsedDbOnly;
+
+        var dbResource = dbProvider switch
         {
-            case DbProviderSqlite:
-                await builder.WithSqlite(cancellationToken);
-                break;
-            case DbProviderPostgres:
-                builder.WithPostgres();
-                break;
-            default:
-                throw new NotImplementedException(dbProvider);
+            DbProviderSqlite => await builder.WithSqlite(cancellationToken),
+            DbProviderPostgres => await builder.WithPostgres(cancellationToken),
+            _ => throw new NotImplementedException(dbProvider)
+        };
+
+        if (!dbOnly)
+        {
+            builder
+                .AddProject<Projects.Pulse_Api>("api")
+                .WithReference(dbResource)
+                .WaitFor(dbResource)
+                .WithEnvironment("Database__Provider", dbProvider)
+                .WithEnvironment("Database__ConnectionString", dbResource.Resource.ConnectionStringExpression);
         }
 
         await builder.Build().RunAsync(cancellationToken);
@@ -45,26 +56,25 @@ public static class BuilderExtensions
 {
     extension(IDistributedApplicationBuilder builder)
     {
-        public async Task WithSqlite(CancellationToken cancellationToken = default)
+        public async Task<IResourceBuilder<IResourceWithConnectionString>> WithSqlite(
+            CancellationToken cancellationToken = default)
         {
             var dbPathParameter = builder.AddParameter("DatabasePath");
             var dbPath = await dbPathParameter.Resource.GetValueAsync(cancellationToken);
-            
-            var sqlite = builder.AddSqlite("sqlite", dbPath, "pulse.db");
 
-            builder
-                .AddProject<Projects.Pulse_Api>("api")
-                .WithReference(sqlite)
-                .WithEnvironment("Database__Provider", "Sqlite")
-                .WithEnvironment("Database__ConnectionString", sqlite.Resource.ConnectionStringExpression);
+            return builder.AddSqlite("sqlite", dbPath, "pulse.db");
         }
 
-        public void WithPostgres()
+        public async Task<IResourceBuilder<IResourceWithConnectionString>> WithPostgres(
+            CancellationToken cancellationToken = default)
         {
             var dbUsernameParameter = builder.AddParameter("DatabaseUsername");
             var dbPasswordParameter = builder.AddParameter("DatabasePassword");
 
-            var postgres = builder.AddPostgres("postgres", dbUsernameParameter, dbPasswordParameter, 5432);
+            var postgres = builder
+                .AddPostgres("postgres", dbUsernameParameter, dbPasswordParameter, 5432)
+                .WithDataVolume()
+                .WithLifetime(ContainerLifetime.Persistent);
 
             const string databaseName = "pulse";
 
@@ -77,12 +87,7 @@ public static class BuilderExtensions
             var postgresDatabase = postgres.AddDatabase(databaseName)
                 .WithCreationScript(creationScript);
 
-            builder
-                .AddProject<Projects.Pulse_Api>("api")
-                .WithReference(postgresDatabase)
-                .WaitFor(postgresDatabase)
-                .WithEnvironment("Database__Provider", "Postgres")
-                .WithEnvironment("Database__ConnectionString", postgresDatabase.Resource.ConnectionStringExpression);
+            return await Task.FromResult(postgresDatabase);
         }
     }
 }
