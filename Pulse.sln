@@ -40,6 +40,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Infra.Database", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.App.Dto", "src\application\Pulse.App.Dto\Pulse.App.Dto.csproj", "{06A6C98C-3C79-42B7-A1FA-1DFA9C341839}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.AppHost", "Pulse.AppHost\Pulse.AppHost.csproj", "{64BF1AE7-FD69-4800-99E9-2A2C8E3FBF51}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -108,5 +110,9 @@ Global
 		{06A6C98C-3C79-42B7-A1FA-1DFA9C341839}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06A6C98C-3C79-42B7-A1FA-1DFA9C341839}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06A6C98C-3C79-42B7-A1FA-1DFA9C341839}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64BF1AE7-FD69-4800-99E9-2A2C8E3FBF51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64BF1AE7-FD69-4800-99E9-2A2C8E3FBF51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64BF1AE7-FD69-4800-99E9-2A2C8E3FBF51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64BF1AE7-FD69-4800-99E9-2A2C8E3FBF51}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

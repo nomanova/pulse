@@ -10,10 +10,12 @@ public sealed record EmailAddress
 
     public static string Normalized(string input)
     {
-        return input.Trim().ToLowerInvariant();
+        return input.Trim().Normalize().ToUpperInvariant();
     }
 
     public string Value { get; private set; } = null!;
+
+    public string NormalizedValue { get; private set; } = null!;
 
     public bool IsValidated { get; private set; }
 
@@ -21,9 +23,10 @@ public sealed record EmailAddress
     {
     }
 
-    private EmailAddress(string value)
+    private EmailAddress(string value, string normalizedValue)
     {
         Value = value;
+        NormalizedValue = normalizedValue;
     }
 
     public static ErrorOr<EmailAddress> Create(string? value)
@@ -34,7 +37,7 @@ public sealed record EmailAddress
         }
 
         var normalizedValue = Normalized(value);
-        var emailAddress = new EmailAddress(normalizedValue);
+        var emailAddress = new EmailAddress(value, normalizedValue);
 
         var validator = new EmailAddressValidator();
         var result = validator.Validate(emailAddress);
@@ -56,9 +59,10 @@ public sealed record EmailAddress
     {
         public EmailAddressValidator()
         {
-            RuleFor(model => model.Value).NotEmpty().WithError(BusinessErrors.User.EmailAddressRequired);
-            RuleFor(model => model.Value).EmailAddress().WithError(BusinessErrors.User.EmailAddressInvalid);
-            RuleFor(model => model.Value).MaximumLength(MaxLength).WithError(BusinessErrors.User.EmailAddressTooLong);
+            RuleFor(model => model.NormalizedValue).NotEmpty().WithError(BusinessErrors.User.EmailAddressRequired);
+            RuleFor(model => model.NormalizedValue).EmailAddress().WithError(BusinessErrors.User.EmailAddressInvalid);
+            RuleFor(model => model.NormalizedValue).MaximumLength(MaxLength)
+                .WithError(BusinessErrors.User.EmailAddressTooLong);
         }
     }
 }
