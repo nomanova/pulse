@@ -1,3 +1,4 @@
+using Pulse.Domain.Aggregates.Applications;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Common.Errors;
 using Pulse.Domain.Common.Extensions;
@@ -5,51 +6,51 @@ using Pulse.Domain.Common.Models.Entities;
 using Pulse.Domain.Common.Models.Text;
 using Pulse.Domain.Common.Services;
 
-namespace Pulse.Domain.Aggregates.Applications;
+namespace Pulse.Domain.Aggregates.Environments;
 
-public sealed record ApplicationId : EntityId<ApplicationId, Application>;
+public sealed record EnvironmentId : EntityId<EnvironmentId, Environment>;
 
-public sealed class Application : DomainEntity<ApplicationId>, IOrganizationScoped, INamed
+public class Environment : DomainEntity<EnvironmentId>, IOrganizationScoped, IApplicationScoped, INamed
 {
     public OrganizationId OrganizationId { get; } = null!;
+
+    public ApplicationId ApplicationId { get; } = null!;
 
     public string Name { get; private set; } = null!;
 
     public string NormalizedName { get; private set; } = null!;
 
-    private Application()
+    private Environment()
     {
     }
 
-    private Application(
-        ApplicationId id,
+    private Environment(
+        EnvironmentId id,
         OrganizationId organizationId,
+        ApplicationId applicationId,
         string name,
         string normalizedName) : base(id)
     {
         OrganizationId = organizationId;
+        ApplicationId = applicationId;
         Name = name;
         NormalizedName = normalizedName;
     }
 
-    public static Application Create(string? name, Organization organization)
+    public static Environment Create(string? name, Application application)
     {
         var nameValue = name.AsName().Assert();
-        var id = IdentityProvider.New<ApplicationId>();
+        var id = IdentityProvider.New<EnvironmentId>();
 
-        var application = new Application(
+        var environment = new Environment(
             id,
-            organization.Id,
+            application.OrganizationId,
+            application.Id,
             nameValue,
             nameValue.AsNormalizedQueryable());
 
-        application.SetCreated();
+        environment.SetCreated();
 
-        return application;
-    }
-
-    public override string ToString()
-    {
-        return $"[{Id.Value}] {Name}";
+        return environment;
     }
 }

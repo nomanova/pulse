@@ -13,5 +13,9 @@
       <ProjectReference Include="..\..\domain\Pulse.Domain\Pulse.Domain.csproj" />
       <ProjectReference Include="..\Pulse.App.Dto\Pulse.App.Dto.csproj" />
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Handlers\Organizations\" />
+    </ItemGroup>
     
 </Project>

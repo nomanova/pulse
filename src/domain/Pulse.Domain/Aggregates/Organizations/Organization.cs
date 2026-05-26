@@ -6,6 +6,8 @@ using Pulse.Domain.Common.Services;
 
 namespace Pulse.Domain.Aggregates.Organizations;
 
+public sealed record OrganizationId : EntityId<OrganizationId, Organization>;
+
 public sealed class Organization : DomainEntity<OrganizationId>, INamed
 {
     public string Name { get; private set; } = null!;

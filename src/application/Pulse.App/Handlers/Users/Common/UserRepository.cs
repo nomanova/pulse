@@ -5,7 +5,7 @@ namespace Pulse.App.Handlers.Users.Common;
 
 public interface IUserRepository : IRepository<User>;
 
-public class UserRepository : Repository<User>, IUserRepository
+internal sealed class UserRepository : Repository<User>, IUserRepository
 {
     public UserRepository(IDatabaseContext context) : base(context.Users)
     {

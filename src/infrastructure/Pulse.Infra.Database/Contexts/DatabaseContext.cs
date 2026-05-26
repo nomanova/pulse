@@ -2,11 +2,19 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Pulse.App.Common.Database;
+using Pulse.Domain.Aggregates.Applications;
+using Pulse.Domain.Aggregates.Environments;
+using Pulse.Domain.Aggregates.Memberships;
+using Pulse.Domain.Aggregates.Organizations;
+using Pulse.Domain.Aggregates.Roles;
+using Pulse.Domain.Aggregates.Roles.Entities;
 using Pulse.Domain.Aggregates.Users;
 using Pulse.Domain.Common.Exceptions;
 using Pulse.Infra.Database.Configurations;
 using Pulse.Infra.Database.Converters;
 using Pulse.Infra.Database.Seeders;
+using ApplicationId = Pulse.Domain.Aggregates.Applications.ApplicationId;
+using Environment = Pulse.Domain.Aggregates.Environments.Environment;
 
 namespace Pulse.Infra.Database.Contexts;
 
@@ -15,6 +23,12 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
     private readonly DatabaseOptions _databaseOptions;
     
     public DbSet<User> Users { get; init; }
+    
+    public DbSet<Organization> Organizations { get; init; }
+    
+    public DbSet<Application> Applications { get; init; }
+    
+    public DbSet<Environment> Environments { get; init; }
     
     protected DatabaseContext(
         IOptions<DatabaseOptions> databaseOptions,
@@ -56,10 +70,20 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
     {
         configurationBuilder.Properties<UserId>().HaveConversion<EntityIdConverter<UserId>>();
+        configurationBuilder.Properties<OrganizationId>().HaveConversion<EntityIdConverter<OrganizationId>>();
+        configurationBuilder.Properties<ApplicationId>().HaveConversion<EntityIdConverter<ApplicationId>>();
+        configurationBuilder.Properties<EnvironmentId>().HaveConversion<EntityIdConverter<EnvironmentId>>();
+        
+        configurationBuilder.Properties<MembershipId>().HaveConversion<EntityIdConverter<MembershipId>>();
+        configurationBuilder.Properties<RoleId>().HaveConversion<EntityIdConverter<RoleId>>();
+        configurationBuilder.Properties<PermissionId>().HaveConversion<EntityIdConverter<PermissionId>>();
     }
 
     private static void ApplyConfigurations(ModelBuilder modelBuilder, DatabaseProvider provider)
     {
         modelBuilder.ApplyConfiguration(new UserConfiguration(provider));
+        modelBuilder.ApplyConfiguration(new OrganizationConfiguration(provider));
+        modelBuilder.ApplyConfiguration(new ApplicationConfiguration(provider));
+        modelBuilder.ApplyConfiguration(new EnvironmentConfiguration(provider));
     }
 }

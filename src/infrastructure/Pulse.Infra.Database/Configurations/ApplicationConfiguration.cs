@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pulse.Infra.Database.Configurations.Base;
 using Pulse.Domain.Aggregates.Applications;
+using Pulse.Domain.Aggregates.Organizations;
 
 namespace Pulse.Infra.Database.Configurations;
 
@@ -12,5 +13,19 @@ public sealed class ApplicationConfiguration : DomainEntityTypeConfiguration<App
 
     public override void Configure(EntityTypeBuilder<Application> builder)
     {
+        base.Configure(builder);
+        
+        builder.HasKey(application => application.Id);
+        
+        builder.HasOne<Organization>()
+            .WithMany()
+            .HasForeignKey(application => application.OrganizationId)
+            .IsRequired();
+        
+        builder.Property(application => application.Name)
+            .IsRequired();
+
+        builder.Property(application => application.NormalizedName)
+            .IsRequired();
     }
 }

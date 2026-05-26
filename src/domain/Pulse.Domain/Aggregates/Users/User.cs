@@ -6,6 +6,8 @@ using Pulse.Domain.Common.Services;
 
 namespace Pulse.Domain.Aggregates.Users;
 
+public sealed record UserId : EntityId<UserId, User>;
+
 public class User : DomainEntity<UserId>
 {
     public Username Username { get; private set; } = null!;
