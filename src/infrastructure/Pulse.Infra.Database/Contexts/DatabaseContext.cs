@@ -30,6 +30,12 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
     
     public DbSet<Environment> Environments { get; init; }
     
+    public DbSet<Membership> Memberships { get; init; }
+    
+    public DbSet<Role> Roles { get; init; }
+    
+    public DbSet<Permission> Permissions { get; init; }
+    
     protected DatabaseContext(
         IOptions<DatabaseOptions> databaseOptions,
         DbContextOptions contextOptions) : base(contextOptions)
@@ -85,5 +91,9 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
         modelBuilder.ApplyConfiguration(new OrganizationConfiguration(provider));
         modelBuilder.ApplyConfiguration(new ApplicationConfiguration(provider));
         modelBuilder.ApplyConfiguration(new EnvironmentConfiguration(provider));
+        
+        modelBuilder.ApplyConfiguration(new MembershipConfiguration(provider));
+        modelBuilder.ApplyConfiguration(new RoleConfiguration(provider));
+        modelBuilder.ApplyConfiguration(new PermissionConfiguration());
     }
 }

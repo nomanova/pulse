@@ -5,6 +5,7 @@ using Pulse.App.Common.Behaviors;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Handlers.Applications.Common;
 using Pulse.App.Handlers.Environments.Common;
+using Pulse.App.Handlers.Memberships.Common;
 using Pulse.App.Handlers.Organizations.Common;
 using Pulse.App.Handlers.Users.Common;
 
@@ -31,6 +32,8 @@ public static class Setup
         services.AddScoped<IOrganizationRepository, OrganizationRepository>();
         services.AddScoped<IApplicationRepository, ApplicationRepository>();
         services.AddScoped<IEnvironmentRepository, EnvironmentRepository>();
+        
+        services.AddScoped<IMembershipRepository, MembershipRepository>();
     }
 
 }

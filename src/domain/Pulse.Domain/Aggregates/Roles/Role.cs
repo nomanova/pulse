@@ -37,15 +37,15 @@ public class Role : DomainEntity<RoleId>, INamed
 
     private Role(
         RoleId id,
-        Scope scope,
         Source source,
+        Scope scope,
         OrganizationId organizationId,
         string name,
         string normalizedName,
         string? description) : base(id)
     {
-        Scope = scope;
         Source = source;
+        Scope = scope;
         OrganizationId = organizationId;
         Name = name;
         NormalizedName = normalizedName;
@@ -76,8 +76,8 @@ public class Role : DomainEntity<RoleId>, INamed
         
         var role = new Role(
             roleId,
-            scope,
             Source.System,
+            scope,
             organization.Id,
             nameValue,
             nameValue.AsNormalizedQueryable(),

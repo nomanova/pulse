@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\presentation\Pulse.Api\Pulse.Api.csproj" />
+    <ProjectReference Include="..\presentation\Pulse.Api\Pulse.Api.csproj" />
   </ItemGroup>
 
   <ItemGroup>

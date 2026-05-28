@@ -54,9 +54,9 @@ public sealed record Password
     {
         public PasswordValidator()
         {
-            RuleFor(p => p.Value).NotNull().NotEmpty().WithError(BusinessErrors.User.PasswordRequired);
-            RuleFor(p => p.Value).MinimumLength(MinLength).WithError(BusinessErrors.User.PasswordTooShort);
-            RuleFor(p => p.Value).MaximumLength(MaxLength).WithError(BusinessErrors.User.PasswordTooLong);
+            RuleFor(p => p.Value).NotNull().NotEmpty().WithError(DomainErrors.User.PasswordRequired);
+            RuleFor(p => p.Value).MinimumLength(MinLength).WithError(DomainErrors.User.PasswordTooShort);
+            RuleFor(p => p.Value).MaximumLength(MaxLength).WithError(DomainErrors.User.PasswordTooLong);
         }
     }
 }

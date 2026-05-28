@@ -68,7 +68,7 @@ public class User : DomainEntity<UserId>
 
     public void SetEmailConfirmed()
     {
-        BusinessErrors.User.EmailAddressRequired.Assert(() => EmailAddress != null);
+        DomainErrors.User.EmailAddressRequired.Assert(() => EmailAddress != null);
 
         EmailAddress!.SetConfirmed();
         SetModified();

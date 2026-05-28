@@ -10,6 +10,7 @@ public sealed class PermissionConfiguration : IEntityTypeConfiguration<Permissio
     {
         builder.HasKey(permission => permission.Id);
         
-        // TODO
+        builder.Property(permission => permission.Key)
+            .IsRequired();
     }
 }

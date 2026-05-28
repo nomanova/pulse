@@ -40,7 +40,7 @@ public sealed record EmailAddress
     {
         if (string.IsNullOrEmpty(value))
         {
-            return BusinessErrors.User.EmailAddressRequired;
+            return DomainErrors.User.EmailAddressRequired;
         }
 
         var normalizedValue = value.Normalize().ToLowerInvariant();
@@ -67,13 +67,13 @@ public sealed record EmailAddress
         public EmailAddressValidator()
         {
             RuleFor(model => model.Value).NotEmpty()
-                .WithError(BusinessErrors.User.EmailAddressRequired);
+                .WithError(DomainErrors.User.EmailAddressRequired);
             RuleFor(model => model.Value).Must(value => value.All(c => AllowedCharacters.Contains(c)))
-                .WithError(BusinessErrors.User.EmailAddressForbiddenCharacter);
+                .WithError(DomainErrors.User.EmailAddressForbiddenCharacter);
             RuleFor(model => model.Value).EmailAddress()
-                .WithError(BusinessErrors.User.EmailAddressInvalidFormat);
+                .WithError(DomainErrors.User.EmailAddressInvalidFormat);
             RuleFor(model => model.Value).MaximumLength(MaxLength)
-                .WithError(BusinessErrors.User.EmailAddressTooLong);
+                .WithError(DomainErrors.User.EmailAddressTooLong);
         }
     }
 }

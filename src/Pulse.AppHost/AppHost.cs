@@ -73,7 +73,7 @@ public static class BuilderExtensions
 
             var postgres = builder
                 .AddPostgres("postgres", dbUsernameParameter, dbPasswordParameter, 5432)
-                .WithDataVolume()
+                .WithDataVolume("pulse")
                 .WithLifetime(ContainerLifetime.Persistent);
 
             const string databaseName = "pulse";

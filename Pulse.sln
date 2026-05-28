@@ -40,9 +40,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Infra.Database", "src
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.App.Dto", "src\application\Pulse.App.Dto\Pulse.App.Dto.csproj", "{06A6C98C-3C79-42B7-A1FA-1DFA9C341839}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.AppHost", "Pulse.AppHost\Pulse.AppHost.csproj", "{64BF1AE7-FD69-4800-99E9-2A2C8E3FBF51}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Domain.Tests", "src\domain\Pulse.Domain.Tests\Pulse.Domain.Tests.csproj", "{80F0F127-442C-481B-9F8C-CEB90C590808}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.AppHost", "src\Pulse.AppHost\Pulse.AppHost.csproj", "{F11E4191-CE0C-4A1D-9C88-D6E3FE815DBE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -113,13 +113,13 @@ Global
 		{06A6C98C-3C79-42B7-A1FA-1DFA9C341839}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{06A6C98C-3C79-42B7-A1FA-1DFA9C341839}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{06A6C98C-3C79-42B7-A1FA-1DFA9C341839}.Release|Any CPU.Build.0 = Release|Any CPU
-		{64BF1AE7-FD69-4800-99E9-2A2C8E3FBF51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{64BF1AE7-FD69-4800-99E9-2A2C8E3FBF51}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{64BF1AE7-FD69-4800-99E9-2A2C8E3FBF51}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{64BF1AE7-FD69-4800-99E9-2A2C8E3FBF51}.Release|Any CPU.Build.0 = Release|Any CPU
 		{80F0F127-442C-481B-9F8C-CEB90C590808}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{80F0F127-442C-481B-9F8C-CEB90C590808}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80F0F127-442C-481B-9F8C-CEB90C590808}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80F0F127-442C-481B-9F8C-CEB90C590808}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F11E4191-CE0C-4A1D-9C88-D6E3FE815DBE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F11E4191-CE0C-4A1D-9C88-D6E3FE815DBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F11E4191-CE0C-4A1D-9C88-D6E3FE815DBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F11E4191-CE0C-4A1D-9C88-D6E3FE815DBE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

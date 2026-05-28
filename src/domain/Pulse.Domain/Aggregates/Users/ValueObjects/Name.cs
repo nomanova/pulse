@@ -35,7 +35,7 @@ public record Name
     {
         if (string.IsNullOrWhiteSpace(firstName) || string.IsNullOrWhiteSpace(lastName))
         {
-            return BusinessErrors.User.UsernameRequired;
+            return DomainErrors.User.UsernameRequired;
         }
 
         var firstNameResult = firstName.AsName(nameof(FirstName));

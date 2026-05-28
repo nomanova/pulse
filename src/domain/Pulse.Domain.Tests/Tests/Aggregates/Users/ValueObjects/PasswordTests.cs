@@ -33,7 +33,7 @@ public class PasswordTests
 
         // Assert
         Assert.True(result.IsError);
-        Assert.Contains(BusinessErrors.User.PasswordRequired, result.Errors);
+        Assert.Contains(DomainErrors.User.PasswordRequired, result.Errors);
     }
 
     [Fact]
@@ -44,7 +44,7 @@ public class PasswordTests
 
         // Assert
         Assert.True(result.IsError);
-        Assert.Contains(BusinessErrors.User.PasswordRequired, result.Errors);
+        Assert.Contains(DomainErrors.User.PasswordRequired, result.Errors);
     }
 
     [Fact]
@@ -58,7 +58,7 @@ public class PasswordTests
 
         // Assert
         Assert.True(result.IsError);
-        Assert.Contains(BusinessErrors.User.PasswordTooShort, result.Errors);
+        Assert.Contains(DomainErrors.User.PasswordTooShort, result.Errors);
     }
 
     [Fact]
@@ -72,7 +72,7 @@ public class PasswordTests
 
         // Assert
         Assert.True(result.IsError);
-        Assert.Contains(BusinessErrors.User.PasswordTooLong, result.Errors);
+        Assert.Contains(DomainErrors.User.PasswordTooLong, result.Errors);
     }
 
     [Fact]

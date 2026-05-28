@@ -37,7 +37,7 @@ public sealed record Username
     {
         if (string.IsNullOrWhiteSpace(value))
         {
-            return BusinessErrors.User.UsernameRequired;
+            return DomainErrors.User.UsernameRequired;
         }
 
         var normalizedValue = value.Normalize().ToLowerInvariant();
@@ -59,13 +59,13 @@ public sealed record Username
         public UsernameValidator()
         {
             RuleFor(model => model.Value).NotEmpty()
-                .WithError(BusinessErrors.User.UsernameRequired);
+                .WithError(DomainErrors.User.UsernameRequired);
             RuleFor(model => model.Value).Must(value => value.All(c => AllowedCharacters.Contains(c)))
-                .WithError(BusinessErrors.User.UsernameForbiddenCharacter);
+                .WithError(DomainErrors.User.UsernameForbiddenCharacter);
             RuleFor(model => model.Value).Matches("^[a-zA-Z0-9]([a-zA-Z0-9-._]*[a-zA-Z0-9])?$")
-                .WithError(BusinessErrors.User.UsernameInvalidFormat);
+                .WithError(DomainErrors.User.UsernameInvalidFormat);
             RuleFor(model => model.Value).MaximumLength(MaxLength)
-                .WithError(BusinessErrors.User.UsernameTooLong);
+                .WithError(DomainErrors.User.UsernameTooLong);
         }
     }
 }

@@ -14,17 +14,17 @@ public class TextValidator : AbstractValidator<string?>
 
         RuleFor(text => text)
             .NotEmpty()
-            .WithError(BusinessErrors.Text.Required(property));
+            .WithError(DomainErrors.Text.Required(property));
 
         RuleFor(text => text)
             .MaximumLength((int)maxLength)
-            .WithError(BusinessErrors.Text.TooLong(property, maxLength));
+            .WithError(DomainErrors.Text.TooLong(property, maxLength));
 
         if (minLength.HasValue)
         {
             RuleFor(text => text)
                 .MinimumLength((int)minLength.Value)
-                .WithError(BusinessErrors.Text.TooShort(property, minLength.Value));
+                .WithError(DomainErrors.Text.TooShort(property, minLength.Value));
         }
     }
 
@@ -33,7 +33,7 @@ public class TextValidator : AbstractValidator<string?>
         if (context.InstanceToValidate == null)
         {
             result.Errors.Add(new ValidationFailure(_property,
-                BusinessErrors.Text.Required(_property).Description));
+                DomainErrors.Text.Required(_property).Description));
             return false;
         }
 
