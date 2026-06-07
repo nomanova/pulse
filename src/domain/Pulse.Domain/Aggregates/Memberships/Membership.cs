@@ -12,7 +12,7 @@ namespace Pulse.Domain.Aggregates.Memberships;
 
 public sealed record MembershipId : EntityId<MembershipId, Membership>;
 
-public sealed class Membership : DomainEntity<MembershipId>, IOrganizationScoped
+public sealed class Membership : DomainEntity<MembershipId>, IOrganizationScoped<OrganizationId>
 {
     public Scope Scope { get; private set; }
 

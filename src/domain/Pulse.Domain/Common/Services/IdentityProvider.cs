@@ -22,6 +22,12 @@ public static class IdentityProvider
         return Base36.Encode(bigInt);
     }
 
+    public static string New(Guid guid)
+    {
+        var bigInt = GuidToBigIntPositive(guid);
+        return Base36.Encode(bigInt);
+    }
+    
     public static T New<T>() where T : EntityId, INew<T>
     {
         return T.New(New());
@@ -54,12 +60,6 @@ public static class IdentityProvider
         {
             return false;
         }
-    }
-
-    private static string New(Guid guid)
-    {
-        var bigInt = GuidToBigIntPositive(guid);
-        return Base36.Encode(bigInt);
     }
 
     private static BigInteger GuidToBigIntPositive(Guid guid)

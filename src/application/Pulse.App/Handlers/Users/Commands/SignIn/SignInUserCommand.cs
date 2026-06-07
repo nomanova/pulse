@@ -1,4 +1,5 @@
 using ErrorOr;
+using Pulse.App.Common.Authorization.Policies;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Dto.Users;
 
@@ -10,3 +11,5 @@ public sealed record SignInUserCommand : ICommand<ErrorOr<AuthDto>>
 
     public string? Password { get; init; }
 }
+
+public sealed class SignInUserCommandAuthorizer : AnonymousAuthorizer<SignInUserCommand>;

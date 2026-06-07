@@ -21,3 +21,6 @@ appsettings.Local.json
 appsettings.Integration.Local.json
 
 TestResults/
+
+http-client.private.env.json
+

@@ -9,7 +9,8 @@ namespace Pulse.Domain.Aggregates.Applications;
 
 public sealed record ApplicationId : EntityId<ApplicationId, Application>;
 
-public sealed class Application : DomainEntity<ApplicationId>, IOrganizationScoped, INamed
+public sealed class Application : DomainEntity<ApplicationId>, 
+    IOrganizationScoped<OrganizationId>, INamed
 {
     public OrganizationId OrganizationId { get; } = null!;
 

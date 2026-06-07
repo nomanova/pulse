@@ -43,6 +43,7 @@ public class JwtProvider : IJwtProvider
         {
             new(JwtRegisteredClaimNames.Sub, user.Id.Value),
             new(JwtRegisteredClaimNames.Jti, IdentityProvider.New()),
+            new(type: UserClaims.Id, value: user.Id.Value),
             new(type: UserClaims.SecurityStamp, value: userSecurityStamp)
         };
         

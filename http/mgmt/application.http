@@ -1,0 +1,9 @@
+### Create
+POST {{root}}/mgmt/v1/applications
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "organizationId": "{{organizationId}}",
+  "name": "Jenkins"
+}

@@ -6,6 +6,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Files", "_Files", "{4F0C2C
 		LICENSE = LICENSE
 		global.json = global.json
 		Directory.Build.props = Directory.Build.props
+		TODO.md = TODO.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{F1A107C0-C18F-454C-82C5-1B0FD8512123}"
@@ -44,6 +45,20 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Domain.Tests", "src\d
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.AppHost", "src\Pulse.AppHost\Pulse.AppHost.csproj", "{F11E4191-CE0C-4A1D-9C88-D6E3FE815DBE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.App.Tests", "src\application\Pulse.App.Tests\Pulse.App.Tests.csproj", "{797B01BB-B5E0-4A8C-9405-BAE9352376A5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Http", "_Http", "{9FF4066B-B02F-4C09-B460-3C0CACBCEEF4}"
+	ProjectSection(SolutionItems) = preProject
+		http\http-client.private.env.json = http\http-client.private.env.json
+		http\http-client.env.json = http\http-client.env.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mgmt", "mgmt", "{F5C5DF9A-A5F9-4FCF-B478-EF27D2CD5F69}"
+	ProjectSection(SolutionItems) = preProject
+		http\mgmt\application.http = http\mgmt\application.http
+		http\mgmt\user.http = http\mgmt\user.http
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +78,8 @@ Global
 		{8FF5AF09-C353-41A5-A035-95F09587D97E} = {89A8C8E4-02E1-45AE-8B43-28E62013EADE}
 		{06A6C98C-3C79-42B7-A1FA-1DFA9C341839} = {FB4FE66A-E49C-4A1A-AC40-6F6172A7AD1F}
 		{80F0F127-442C-481B-9F8C-CEB90C590808} = {FB35BCD8-1BC7-4BD6-8452-03EF5ED474A8}
+		{797B01BB-B5E0-4A8C-9405-BAE9352376A5} = {FB4FE66A-E49C-4A1A-AC40-6F6172A7AD1F}
+		{F5C5DF9A-A5F9-4FCF-B478-EF27D2CD5F69} = {9FF4066B-B02F-4C09-B460-3C0CACBCEEF4}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{25CDAA92-F4FE-41AA-ABFF-20167D395406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -121,5 +138,9 @@ Global
 		{F11E4191-CE0C-4A1D-9C88-D6E3FE815DBE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F11E4191-CE0C-4A1D-9C88-D6E3FE815DBE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F11E4191-CE0C-4A1D-9C88-D6E3FE815DBE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{797B01BB-B5E0-4A8C-9405-BAE9352376A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{797B01BB-B5E0-4A8C-9405-BAE9352376A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{797B01BB-B5E0-4A8C-9405-BAE9352376A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{797B01BB-B5E0-4A8C-9405-BAE9352376A5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,8 +1,12 @@
 namespace Pulse.Domain.Common.Models.Enums;
 
+/**
+ * Numbering on Scope is important as it is used for authorization purposes.
+ * The scopes should be ordered from most-to-least specific.
+ */
 public enum Scope
 {
-    Organization,
-    Application,
-    Environment
+    Environment = 0,
+    Application = 1,
+    Organization = 2
 }

@@ -54,5 +54,6 @@ internal sealed class DispatcherRegistry(
     FrozenDictionary<Type, NotificationHandlerBase> notificationWrappers)
 {
     public FrozenDictionary<Type, RequestHandlerBase> RequestWrappers { get; } = requestWrappers;
+    
     public FrozenDictionary<Type, NotificationHandlerBase> NotificationWrappers { get; } = notificationWrappers;
 }

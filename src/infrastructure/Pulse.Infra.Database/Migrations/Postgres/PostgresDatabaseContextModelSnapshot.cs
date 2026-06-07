@@ -256,31 +256,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                     b.ToTable("organizations", (string)null);
                 });
 
-            modelBuilder.Entity("Pulse.Domain.Aggregates.Roles.Entities.Permission", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("text")
-                        .HasColumnName("id");
-
-                    b.Property<string>("Key")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("key");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("role_id");
-
-                    b.HasKey("Id")
-                        .HasName("pk_permissions");
-
-                    b.HasIndex("RoleId")
-                        .HasDatabaseName("ix_permissions_role_id");
-
-                    b.ToTable("permissions", (string)null);
-                });
-
             modelBuilder.Entity("Pulse.Domain.Aggregates.Roles.Role", b =>
                 {
                     b.Property<string>("Id")
@@ -295,9 +270,9 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("text")
-                        .HasColumnName("description");
+                    b.Property<bool>("IsBuiltIn")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_built_in");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean")
@@ -317,19 +292,10 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         .HasColumnType("text")
                         .HasColumnName("normalized_name");
 
-                    b.Property<string>("OrganizationId")
-                        .HasColumnType("text")
-                        .HasColumnName("organization_id");
-
                     b.Property<string>("Scope")
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("scope");
-
-                    b.Property<string>("Source")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("source");
 
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
@@ -447,16 +413,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         .HasConstraintName("fk_memberships_users_user_id");
                 });
 
-            modelBuilder.Entity("Pulse.Domain.Aggregates.Roles.Entities.Permission", b =>
-                {
-                    b.HasOne("Pulse.Domain.Aggregates.Roles.Role", null)
-                        .WithMany("Permission")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_permissions_roles_role_id");
-                });
-
             modelBuilder.Entity("Pulse.Domain.Aggregates.Users.User", b =>
                 {
                     b.OwnsOne("Pulse.Domain.Aggregates.Users.ValueObjects.EmailAddress", "EmailAddress", b1 =>
@@ -557,11 +513,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
 
                     b.Navigation("Username")
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Pulse.Domain.Aggregates.Roles.Role", b =>
-                {
-                    b.Navigation("Permission");
                 });
 #pragma warning restore 612, 618
         }

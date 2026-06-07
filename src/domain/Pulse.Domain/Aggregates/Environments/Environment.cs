@@ -10,7 +10,8 @@ namespace Pulse.Domain.Aggregates.Environments;
 
 public sealed record EnvironmentId : EntityId<EnvironmentId, Environment>;
 
-public class Environment : DomainEntity<EnvironmentId>, IOrganizationScoped, IApplicationScoped, INamed
+public class Environment : DomainEntity<EnvironmentId>, 
+    IOrganizationScoped<OrganizationId>, IApplicationScoped, INamed
 {
     public OrganizationId OrganizationId { get; } = null!;
 

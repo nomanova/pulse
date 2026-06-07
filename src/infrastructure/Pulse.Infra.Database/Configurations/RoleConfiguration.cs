@@ -17,10 +17,6 @@ public sealed class RoleConfiguration : DomainEntityTypeConfiguration<Role>
 
         builder.HasKey(role => role.Id);
 
-        builder.Property(role => role.Source)
-            .IsRequired()
-            .HasConversion<string>();
-
         builder.Property(role => role.Scope)
             .IsRequired()
             .HasConversion<string>();
@@ -30,14 +26,5 @@ public sealed class RoleConfiguration : DomainEntityTypeConfiguration<Role>
 
         builder.Property(role => role.NormalizedName)
             .IsRequired();
-
-        builder.HasMany(role => role.Permission)
-            .WithOne()
-            .HasForeignKey(permission => permission.RoleId)
-            .IsRequired()
-            .HasPrincipalKey(role => role.Id)
-            .OnDelete(DeleteBehavior.Cascade);
-
-        builder.Navigation(role => role.Permission).AutoInclude();
     }
 }

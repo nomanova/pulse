@@ -7,7 +7,6 @@ using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Aggregates.Memberships;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.Roles;
-using Pulse.Domain.Aggregates.Roles.Entities;
 using Pulse.Domain.Aggregates.Users;
 using Pulse.Domain.Common.Exceptions;
 using Pulse.Infra.Database.Configurations;
@@ -33,8 +32,6 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
     public DbSet<Membership> Memberships { get; init; }
     
     public DbSet<Role> Roles { get; init; }
-    
-    public DbSet<Permission> Permissions { get; init; }
     
     protected DatabaseContext(
         IOptions<DatabaseOptions> databaseOptions,
@@ -70,7 +67,8 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
             throw new AppException("Not all migrations were applied to the database");
         }
         
-        InitSeeder.Seed(serviceProvider).Wait();
+        BuiltInRoleSeeder.Seed(serviceProvider).Wait();
+        DefaultOrgSeeder.Seed(serviceProvider).Wait();
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)
@@ -82,7 +80,6 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
         
         configurationBuilder.Properties<MembershipId>().HaveConversion<EntityIdConverter<MembershipId>>();
         configurationBuilder.Properties<RoleId>().HaveConversion<EntityIdConverter<RoleId>>();
-        configurationBuilder.Properties<PermissionId>().HaveConversion<EntityIdConverter<PermissionId>>();
     }
 
     private static void ApplyConfigurations(ModelBuilder modelBuilder, DatabaseProvider provider)
@@ -94,6 +91,5 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
         
         modelBuilder.ApplyConfiguration(new MembershipConfiguration(provider));
         modelBuilder.ApplyConfiguration(new RoleConfiguration(provider));
-        modelBuilder.ApplyConfiguration(new PermissionConfiguration());
     }
 }

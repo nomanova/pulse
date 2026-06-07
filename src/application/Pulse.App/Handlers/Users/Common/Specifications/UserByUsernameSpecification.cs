@@ -6,7 +6,7 @@ using Pulse.Domain.Aggregates.Users.ValueObjects;
 
 namespace Pulse.App.Handlers.Users.Common.Specifications;
 
-public class UserByUsernameSpecification : Specification<User>
+public sealed class UserByUsernameSpecification : Specification<User>
 {
     private readonly string? _username;
     

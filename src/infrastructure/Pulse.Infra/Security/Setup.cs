@@ -2,6 +2,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pulse.Domain.Aggregates.Users.Services;
 using Pulse.Infra.Security.Authentication;
+using Pulse.Infra.Security.Authorization;
 using Pulse.Infra.Security.DataProtection;
 using Pulse.Infra.Security.Password;
 using Throw;
@@ -19,7 +20,8 @@ public static class Setup
         services
             .AddAppDataProtection(configuration)
             .AddAppUserServices()
-            .AddAppAuthentication(configuration);
+            .AddAppAuthentication(configuration)
+            .AddAppAuthorization();
         
         return services;
     }

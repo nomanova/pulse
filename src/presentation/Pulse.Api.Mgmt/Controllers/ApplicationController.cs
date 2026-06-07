@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Pulse.Api.Mgmt.Contract.Applications;
 using Pulse.Api.Mgmt.Controllers.Base;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Handlers.Applications.Commands;
@@ -20,15 +21,18 @@ public class ApplicationController : MgmtApiController
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    public async Task<IActionResult> Create(CancellationToken cancellationToken = default)
+    public async Task<IActionResult> Create(
+        [FromBody] CreateApplicationRequest request, 
+        CancellationToken cancellationToken = default)
     {
         var command = new CreateApplicationCommand
         {
-            Name = "Test"
+            OrganizationId = request.OrganizationId,
+            Name = request.Name
         };
         
         var result = await _sender.Send(command, cancellationToken);
         
-        return Ok(result);
+        return result.Match(Ok, Problem);
     }
 }
