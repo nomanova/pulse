@@ -1,5 +1,9 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Pulse.App.Common.Authorization;
 using Pulse.App.Common.Dispatcher;
+using Xunit;
 
 namespace Pulse.App.Tests.Tests;
 
@@ -26,7 +30,7 @@ public class ArchitectureTests
                 continue;
             }
 
-            var handlerGenericType = handlerType.GenericTypeArguments.First();
+            var handlerGenericType = handlerType.GenericTypeArguments[0];
             var hasAuthorizer = HasAuthorizerFor(authorizers, handlerGenericType);
 
             if (!hasAuthorizer)
@@ -39,7 +43,7 @@ public class ArchitectureTests
     private static bool HasAuthorizerFor(List<Type> authorizers, Type type)
     {
         return authorizers
-            .Select(authorizer => authorizer.GenericTypeArguments.First())
+            .Select(authorizer => authorizer.GenericTypeArguments[0])
             .Any(authorizerType => authorizerType == type);
     }
 
