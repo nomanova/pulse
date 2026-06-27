@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pulse.Database;
+using Pulse.Infra.Database;
 
 namespace Pulse.Infra.Security.Authentication.Cookie;
 

@@ -1,3 +1,4 @@
+using Pulse.Domain.Aggregates.Applications.Events;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Common.Errors;
 using Pulse.Domain.Common.Extensions;
@@ -45,7 +46,8 @@ public sealed class Application : DomainEntity<ApplicationId>,
             nameValue.AsNormalizedQueryable());
 
         application.SetCreated();
-
+        application.AddEvent(new ApplicationCreatedEvent(organization.Id, id));
+        
         return application;
     }
 

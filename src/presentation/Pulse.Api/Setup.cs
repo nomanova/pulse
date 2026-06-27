@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi;
 using Pulse.Api.Common;
-using Pulse.Database.Contexts;
+using Pulse.Infra.Database.Contexts;
 using Scalar.AspNetCore;
 
 namespace Pulse.Api;

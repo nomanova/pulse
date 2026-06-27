@@ -3,8 +3,8 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pulse.App;
-using Pulse.Database.Contexts;
 using Pulse.Infra;
+using Pulse.Infra.Database.Contexts;
 
 namespace Pulse.Api;
 

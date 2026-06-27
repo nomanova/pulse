@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Pulse.App.Common.Security.Interfaces;
 using Pulse.Database;
+using Pulse.Infra.Database;
 using Throw;
 
 namespace Pulse.Infra.Security.Authentication.Jwt;

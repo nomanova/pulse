@@ -16,4 +16,8 @@
       <ProjectReference Include="..\Pulse.Infra\Pulse.Infra.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Database\" />
+    </ItemGroup>
+
 </Project>
