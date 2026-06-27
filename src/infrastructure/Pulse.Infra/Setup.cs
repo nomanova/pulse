@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pulse.App.Common.Services.Interfaces;
-using Pulse.Infra.Database;
+using Pulse.Database;
 using Pulse.Infra.Security;
 using Pulse.Infra.Services;
 using Throw;

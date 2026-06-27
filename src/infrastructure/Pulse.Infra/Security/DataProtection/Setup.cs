@@ -3,7 +3,7 @@ using Azure.Identity;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Pulse.Infra.Database;
+using Pulse.Database;
 using Throw;
 
 namespace Pulse.Infra.Security.DataProtection;

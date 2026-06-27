@@ -13,7 +13,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Pulse.Domain.Tests.Shared\Pulse.Domain.Tests.Shared.csproj" />
+      <ProjectReference Include="..\Pulse.Tests.Shared\Pulse.Tests.Shared.csproj" />
     </ItemGroup>
 
 </Project>

@@ -2,7 +2,7 @@ using System;
 using Bogus;
 using Pulse.Domain.Aggregates.Users.ValueObjects;
 using Pulse.Domain.Common.Errors;
-using Pulse.Domain.Tests.Shared.Fakers;
+using Pulse.Tests.Shared.Fakers;
 using Xunit;
 
 namespace Pulse.Domain.Tests.Unit.Aggregates.Users.ValueObjects;

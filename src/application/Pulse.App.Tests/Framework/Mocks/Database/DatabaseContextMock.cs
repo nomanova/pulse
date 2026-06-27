@@ -1,8 +1,11 @@
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using MockQueryable;
 using MockQueryable.Moq;
 using Moq;
 using Pulse.App.Common.Database;
+using Pulse.Domain.Aggregates.Applications;
+using Pulse.Domain.Aggregates.Memberships;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.Users;
 
@@ -16,18 +19,41 @@ public static class DatabaseContextMock
 
         mock.WithUsers();
         mock.WithOrganizations();
+        mock.WithMemberships();
+        mock.WithApplications();
 
         return mock;
     }
 
-    public static void WithUsers(this Mock<IDatabaseContext> mock, params User[] users)
+    extension(Mock<IDatabaseContext> mock)
     {
-        mock.Setup(dbContext => dbContext.Users).Returns(ToSet(users).Object);
-    }
+        public void WithUsers(params User[] users)
+        {
+            mock.Setup(dbContext => dbContext.Users).Returns(ToSet(users).Object);
+        }
 
-    public static void WithOrganizations(this Mock<IDatabaseContext> mock, params Organization[] organizations)
-    {
-        mock.Setup(dbContext => dbContext.Organizations).Returns(ToSet(organizations).Object);
+        public void AddUsers(params User[] users)
+        {
+            var allUsers = mock.Object.Users.ToList();
+            allUsers.AddRange(users);
+        
+            mock.Setup(dbContext => dbContext.Users).Returns(ToSet(allUsers.ToArray()).Object);
+        }
+        
+        public void WithOrganizations(params Organization[] organizations)
+        {
+            mock.Setup(dbContext => dbContext.Organizations).Returns(ToSet(organizations).Object);
+        }
+
+        public void WithMemberships(params Membership[] memberships)
+        {
+            mock.Setup(dbContext => dbContext.Memberships).Returns(ToSet(memberships).Object);
+        }
+        
+        public void WithApplications(params Application[] applications)
+        {
+            mock.Setup(dbContext => dbContext.Applications).Returns(ToSet(applications).Object);
+        }
     }
 
     private static Mock<DbSet<T>> ToSet<T>(T[] items) where T : class
