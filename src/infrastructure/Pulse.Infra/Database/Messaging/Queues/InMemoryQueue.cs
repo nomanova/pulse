@@ -5,7 +5,7 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
-namespace Pulse.Infra.Database.Outbox.Queues;
+namespace Pulse.Infra.Database.Messaging.Queues;
 
 public sealed class InMemoryQueue : IQueue, IAsyncDisposable
 {

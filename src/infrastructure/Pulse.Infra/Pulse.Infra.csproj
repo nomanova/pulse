@@ -38,5 +38,9 @@
             <_Parameter1>$(AssemblyName).Tests</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Database\Messaging\Inbox\" />
+    </ItemGroup>
     
 </Project>

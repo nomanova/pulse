@@ -9,13 +9,13 @@ using Microsoft.Extensions.Options;
 using Pulse.App.Common.Services.Interfaces;
 using Pulse.Domain.Common.Services;
 using Pulse.Infra.Database.Contexts;
-using Pulse.Infra.Database.Outbox.Queues;
+using Pulse.Infra.Database.Messaging.Queues;
 
-namespace Pulse.Infra.Database.Outbox;
+namespace Pulse.Infra.Database.Messaging.Outbox;
 
 /*
  * Outbox processor with at-least-once delivery semantics.
- * 
+ *
  * - a message is not marked processed until it is sent to the queue
  * - if the app crashes after sending but before marking processed, the message may be sent again
  * - queue consumers should therefore be idempotent
@@ -40,7 +40,7 @@ public sealed class OutboxProcessor
         IDateTimeProvider dateTimeProvider,
         DatabaseContext context,
         IOptions<DatabaseOptions> databaseOptions,
-        IOptions<OutboxOptions> outboxOptions,
+        IOptions<MessagingOptions.OutboxOptions> outboxOptions,
         ILogger<OutboxProcessor> logger,
         IQueue queue)
     {
@@ -50,7 +50,7 @@ public sealed class OutboxProcessor
         _logger = logger;
         _queue = queue;
 
-        _batchSize = outboxOptions.Value.BatchSize;
+        _batchSize = outboxOptions.Value.ProcessBatchSize;
         _claimTimeout = TimeSpan.FromMinutes(outboxOptions.Value.ClaimTimeoutInMin);
     }
 

@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pulse.Infra.Database.Configurations.Base;
-using Pulse.Infra.Database.Outbox;
+using Pulse.Infra.Database.Messaging;
+using Pulse.Infra.Database.Messaging.Outbox;
 
 namespace Pulse.Infra.Database.Configurations;
 

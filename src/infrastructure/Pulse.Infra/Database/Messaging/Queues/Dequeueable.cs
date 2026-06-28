@@ -1,3 +1,3 @@
-namespace Pulse.Infra.Database.Outbox.Queues;
+namespace Pulse.Infra.Database.Messaging.Queues;
 
 public sealed record Dequeueable(string? Payload);

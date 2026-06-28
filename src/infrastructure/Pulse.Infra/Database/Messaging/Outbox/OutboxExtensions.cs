@@ -3,7 +3,7 @@ using Pulse.App.Common.Services.Interfaces;
 using Pulse.Domain.Common.Services;
 using Pulse.Infra.Database.Contexts;
 
-namespace Pulse.Infra.Database.Outbox;
+namespace Pulse.Infra.Database.Messaging.Outbox;
 
 internal static class OutboxExtensions
 {

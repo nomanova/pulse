@@ -3,7 +3,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Pulse.App.Common.Database;
 using Pulse.Infra.Database.Contexts;
-using Pulse.Infra.Database.Outbox;
+using Pulse.Infra.Database.Messaging;
 using Throw;
 
 namespace Pulse.Infra.Database;
@@ -43,7 +43,7 @@ public static class Setup
         services.AddScoped<IDatabaseContext>(provider =>
             provider.GetRequiredService<DatabaseContext>());
 
-        services.AddOutbox(configuration);
+        services.AddMessaging(configuration);
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         

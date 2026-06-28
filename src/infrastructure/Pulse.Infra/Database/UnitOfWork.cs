@@ -5,7 +5,8 @@ using Pulse.App.Common.Database;
 using Pulse.App.Common.Services.Interfaces;
 using Pulse.Domain.Common.Models.Events;
 using Pulse.Infra.Database.Contexts;
-using Pulse.Infra.Database.Outbox;
+using Pulse.Infra.Database.Messaging;
+using Pulse.Infra.Database.Messaging.Outbox;
 
 namespace Pulse.Infra.Database;
 

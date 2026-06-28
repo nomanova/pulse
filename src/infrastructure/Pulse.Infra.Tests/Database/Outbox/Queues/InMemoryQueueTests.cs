@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging.Abstractions;
-using Pulse.Infra.Database.Outbox.Queues;
+using Pulse.Infra.Database.Messaging.Queues;
 using Xunit;
 
 namespace Pulse.Infra.Tests.Database.Outbox.Queues;

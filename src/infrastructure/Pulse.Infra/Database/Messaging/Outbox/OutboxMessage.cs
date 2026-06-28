@@ -1,6 +1,6 @@
 using System;
 
-namespace Pulse.Infra.Database.Outbox;
+namespace Pulse.Infra.Database.Messaging.Outbox;
 
 public sealed class OutboxMessage
 {
