@@ -7,32 +7,32 @@ using Microsoft.Extensions.Options;
 using Pulse.App.Common.Services.Interfaces;
 using Pulse.Infra.Database.Contexts;
 
-namespace Pulse.Infra.Database.Messaging.Outbox;
+namespace Pulse.Infra.Database.Messaging.Events;
 
-public sealed class OutboxArchiver
+public sealed class EventArchiver
 {
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly DatabaseContext _context;
     private readonly DatabaseOptions _databaseOptions;
-    private readonly ILogger<OutboxArchiver> _logger;
+    private readonly ILogger<EventArchiver> _logger;
 
     private readonly uint _batchSize;
     private readonly TimeSpan _archiveTimeout;
 
-    public OutboxArchiver(
+    public EventArchiver(
         IDateTimeProvider dateTimeProvider,
         DatabaseContext context,
         IOptions<DatabaseOptions> databaseOptions,
-        IOptions<MessagingOptions.OutboxOptions> outboxOptions,
-        ILogger<OutboxArchiver> logger)
+        IOptions<MessagingOptions.EventOptions> eventOptions,
+        ILogger<EventArchiver> logger)
     {
         _dateTimeProvider = dateTimeProvider;
         _context = context;
         _databaseOptions = databaseOptions.Value;
         _logger = logger;
 
-        _batchSize = outboxOptions.Value.ArchiveBatchSize;
-        _archiveTimeout = TimeSpan.FromMinutes(outboxOptions.Value.ArchiveTimeoutInMin);
+        _batchSize = eventOptions.Value.ArchiveBatchSize;
+        _archiveTimeout = TimeSpan.FromMinutes(eventOptions.Value.ArchiveTimeoutInMin);
     }
 
     public async Task Execute(CancellationToken cancellationToken = default)
@@ -41,27 +41,25 @@ public sealed class OutboxArchiver
 
         var archivedCount = _databaseOptions.Provider switch
         {
-            DatabaseProvider.Postgres => await ArchivePostgresMessages(
+            DatabaseProvider.Postgres => await ArchivePostgresEvents(
                 processedBefore,
                 cancellationToken),
 
-            DatabaseProvider.Sqlite => await ArchiveSqliteMessages(
+            DatabaseProvider.Sqlite => await ArchiveSqliteEvents(
                 processedBefore,
                 cancellationToken),
 
             _ => throw new NotSupportedException(
-                $"Database provider '{_databaseOptions.Provider}' is not supported by the outbox archiver")
+                $"Database provider '{_databaseOptions.Provider}' is not supported by the event archiver")
         };
 
         if (archivedCount > 0)
         {
-            _logger.LogInformation(
-                "Archived {OutboxMessageCount} outbox message(s)",
-                archivedCount);
+            _logger.LogInformation("Archived {EventCount} event(s)", archivedCount);
         }
     }
 
-    private async Task<int> ArchivePostgresMessages(
+    private async Task<int> ArchivePostgresEvents(
         DateTime processedBefore,
         CancellationToken cancellationToken)
     {
@@ -70,16 +68,16 @@ public sealed class OutboxArchiver
         var archivedCount = await _context.Database.ExecuteSqlInterpolatedAsync($"""
              WITH archived AS (
                  SELECT id
-                 FROM outbox_messages
+                 FROM events
                  WHERE processed_on IS NOT NULL
                    AND processed_on < {processedBefore}
-                 ORDER BY processed_on
+                 ORDER BY processed_on, id
                  LIMIT {_batchSize}
                  FOR UPDATE SKIP LOCKED
              )
-             DELETE FROM outbox_messages message
+             DELETE FROM events AS e
              USING archived
-             WHERE message.id = archived.id
+             WHERE e.id = archived.id
              """, cancellationToken);
 
         await transaction.CommitAsync(cancellationToken);
@@ -87,20 +85,20 @@ public sealed class OutboxArchiver
         return archivedCount;
     }
 
-    private async Task<int> ArchiveSqliteMessages(
+    private async Task<int> ArchiveSqliteEvents(
         DateTime processedBefore,
         CancellationToken cancellationToken)
     {
         await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 
         var archivedCount = await _context.Database.ExecuteSqlInterpolatedAsync($"""
-             DELETE FROM outbox_messages
+             DELETE FROM events
              WHERE id IN (
                  SELECT id
-                 FROM outbox_messages
+                 FROM events
                  WHERE processed_on IS NOT NULL
                    AND processed_on < {processedBefore}
-                 ORDER BY processed_on
+                 ORDER BY processed_on, id
                  LIMIT {_batchSize}
              )
              """, cancellationToken);

@@ -2,12 +2,13 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
+using Pulse.Domain.Common.Models.Events;
 
 namespace Pulse.App.Common.Dispatcher;
 
 internal abstract class NotificationHandlerBase
 {
-    public abstract ValueTask Handle(
+    public abstract Task Handle(
         object notification,
         IServiceProvider provider,
         CancellationToken cancellationToken);
@@ -16,7 +17,7 @@ internal abstract class NotificationHandlerBase
 internal sealed class NotificationHandlerWrapper<TNotification> : NotificationHandlerBase
     where TNotification : INotification
 {
-    public override async ValueTask Handle(
+    public override async Task Handle(
         object notification,
         IServiceProvider provider,
         CancellationToken cancellationToken)

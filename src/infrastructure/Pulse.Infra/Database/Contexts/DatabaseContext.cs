@@ -11,11 +11,10 @@ using Pulse.Domain.Aggregates.Users;
 using Pulse.Domain.Common.Exceptions;
 using Pulse.Infra.Database.Configurations;
 using Pulse.Infra.Database.Converters;
-using Pulse.Infra.Database.Messaging;
-using Pulse.Infra.Database.Messaging.Outbox;
 using Pulse.Infra.Database.Seeders;
 using ApplicationId = Pulse.Domain.Aggregates.Applications.ApplicationId;
 using Environment = Pulse.Domain.Aggregates.Environments.Environment;
+using Event = Pulse.Infra.Database.Messaging.Events.Event;
 
 namespace Pulse.Infra.Database.Contexts;
 
@@ -23,7 +22,7 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
 {
     private readonly DatabaseOptions _databaseOptions;
  
-    public DbSet<OutboxMessage> OutboxMessages { get; init; }
+    public DbSet<Event> Events { get; init; }
     
     public DbSet<User> Users { get; init; }
     
@@ -88,7 +87,7 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
 
     private static void ApplyConfigurations(ModelBuilder modelBuilder, DatabaseProvider provider)
     {
-        modelBuilder.ApplyConfiguration(new OutboxMessageConfiguration(provider));
+        modelBuilder.ApplyConfiguration(new EventConfiguration(provider));
         
         modelBuilder.ApplyConfiguration(new UserConfiguration(provider));
         modelBuilder.ApplyConfiguration(new OrganizationConfiguration(provider));

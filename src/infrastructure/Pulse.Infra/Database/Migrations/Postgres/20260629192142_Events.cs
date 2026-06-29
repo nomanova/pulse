@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Pulse.Infra.Database.Migrations.Postgres
 {
     /// <inheritdoc />
-    public partial class Outbox : Migration
+    public partial class Events : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "outbox_messages",
+                name: "events",
                 columns: table => new
                 {
                     id = table.Column<string>(type: "text", nullable: false),
@@ -26,12 +26,12 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_outbox_messages", x => x.id);
+                    table.PrimaryKey("pk_events", x => x.id);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_outbox_messages_occurred_on",
-                table: "outbox_messages",
+                name: "ix_events_occurred_on",
+                table: "events",
                 column: "occurred_on",
                 filter: "processed_on IS NULL");
         }
@@ -40,7 +40,7 @@ namespace Pulse.Infra.Database.Migrations.Postgres
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "outbox_messages");
+                name: "events");
         }
     }
 }

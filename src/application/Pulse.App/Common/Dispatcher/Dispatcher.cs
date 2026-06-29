@@ -2,6 +2,7 @@ using System;
 using System.Collections.Frozen;
 using System.Threading;
 using System.Threading.Tasks;
+using Pulse.Domain.Common.Models.Events;
 
 namespace Pulse.App.Common.Dispatcher;
 
@@ -30,7 +31,7 @@ internal sealed class Dispatcher(
         return ((RequestHandlerBase<TResponse>)wrapper).Handle(request, provider, cancellationToken);
     }
 
-    public ValueTask Publish<TNotification>(
+    public Task Publish<TNotification>(
         TNotification notification,
         CancellationToken cancellationToken = default)
         where TNotification : INotification
@@ -39,7 +40,7 @@ internal sealed class Dispatcher(
 
         if (!registry.NotificationWrappers.TryGetValue(notification.GetType(), out var wrapper))
         {
-            return ValueTask.CompletedTask;
+            return Task.CompletedTask;
         }
 
         return wrapper.Handle(notification, provider, cancellationToken);

@@ -1,11 +1,11 @@
 using System;
 
-namespace Pulse.Infra.Database.Messaging.Outbox;
+namespace Pulse.Infra.Database.Messaging.Events;
 
-public sealed class OutboxMessage
+public sealed class Event
 {
     public required string Id { get; init; }
-
+    
     public required string Type { get; init; }
     
     public required string Content { get; init; }

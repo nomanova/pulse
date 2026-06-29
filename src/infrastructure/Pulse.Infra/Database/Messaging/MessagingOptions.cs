@@ -6,14 +6,9 @@ public sealed record MessagingOptions
 {
     public const string Section = "Messaging";
 
-    public enum QueueType
+    public sealed record EventOptions
     {
-        InMemory
-    }
-
-    public sealed record OutboxOptions
-    {
-        public const string Section = "Outbox";
+        public const string Section = "Events";
 
         [Range(1, 60)] public uint ProcessFrequencyInSec { get; set; }
 
@@ -28,14 +23,5 @@ public sealed record MessagingOptions
         [Range(1, 10080)] public uint ArchiveTimeoutInMin { get; set; }
     }
 
-    public sealed record InboxOptions
-    {
-        public const string Section = "Inbox";
-    }
-
-    [Required] public QueueType Queue { get; set; }
-
-    [Required] public OutboxOptions? Outbox { get; set; }
-
-    //[Required] public InboxOptions? Inbox { get; set; }
+    [Required] public EventOptions? Events { get; set; }
 }

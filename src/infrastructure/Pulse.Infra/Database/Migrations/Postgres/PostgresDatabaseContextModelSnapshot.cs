@@ -352,7 +352,7 @@ namespace Pulse.Database.Migrations.Postgres
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("Pulse.Infra.Database.Outbox.OutboxMessage", b =>
+            modelBuilder.Entity("Pulse.Infra.Database.Messaging.Events.Event", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -389,13 +389,13 @@ namespace Pulse.Database.Migrations.Postgres
                         .HasColumnName("type");
 
                     b.HasKey("Id")
-                        .HasName("pk_outbox_messages");
+                        .HasName("pk_events");
 
                     b.HasIndex("OccurredOn")
-                        .HasDatabaseName("ix_outbox_messages_occurred_on")
+                        .HasDatabaseName("ix_events_occurred_on")
                         .HasFilter("processed_on IS NULL");
 
-                    b.ToTable("outbox_messages", (string)null);
+                    b.ToTable("events", (string)null);
                 });
 
             modelBuilder.Entity("Pulse.Domain.Aggregates.Applications.Application", b =>
