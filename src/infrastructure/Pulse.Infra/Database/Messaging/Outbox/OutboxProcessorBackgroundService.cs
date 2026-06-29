@@ -5,18 +5,18 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
-namespace Pulse.Infra.Database.Messaging.Events;
+namespace Pulse.Infra.Database.Messaging.Outbox;
 
-public class EventProcessorBackgroundService : RecurringBackgroundService
+public class OutboxProcessorBackgroundService : RecurringBackgroundService
 {
-    private readonly ILogger<EventProcessorBackgroundService> _logger;
+    private readonly ILogger<OutboxProcessorBackgroundService> _logger;
     private readonly IServiceScopeFactory _serviceScopeFactory;
 
-    public EventProcessorBackgroundService(
-        ILogger<EventProcessorBackgroundService> logger,
-        IOptions<MessagingOptions.EventOptions> options,
+    public OutboxProcessorBackgroundService(
+        ILogger<OutboxProcessorBackgroundService> logger,
+        IOptions<MessagingOptions.OutboxOptions> options,
         IServiceScopeFactory serviceScopeFactory) :
-        base(logger, options.Value.ProcessFrequencyInSec, nameof(EventProcessorBackgroundService))
+        base(logger, options.Value.ProcessFrequencyInSec, nameof(OutboxProcessorBackgroundService))
     {
         _logger = logger;
         _serviceScopeFactory = serviceScopeFactory;
@@ -27,9 +27,9 @@ public class EventProcessorBackgroundService : RecurringBackgroundService
         try
         {
             using var scope = _serviceScopeFactory.CreateScope();
-            var eventProcessor = scope.ServiceProvider.GetRequiredService<EventProcessor>();
+            var outboxProcessor = scope.ServiceProvider.GetRequiredService<OutboxProcessor>();
 
-            await eventProcessor.Execute(stoppingToken);
+            await outboxProcessor.Execute(stoppingToken);
         }
         catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
         {
@@ -37,7 +37,7 @@ public class EventProcessorBackgroundService : RecurringBackgroundService
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Event processor iteration failed");
+            _logger.LogError(ex, "Outbox processor iteration failed");
         }
     }
 }

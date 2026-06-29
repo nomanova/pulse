@@ -1,8 +1,8 @@
 using System;
 
-namespace Pulse.Infra.Database.Messaging.Events;
+namespace Pulse.Infra.Database.Messaging.Outbox;
 
-public sealed class Event
+public sealed class OutboxMessage
 {
     public required string Id { get; init; }
     

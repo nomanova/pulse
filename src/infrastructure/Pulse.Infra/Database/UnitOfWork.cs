@@ -5,7 +5,7 @@ using Pulse.App.Common.Database;
 using Pulse.App.Common.Services.Interfaces;
 using Pulse.Domain.Common.Models.Events;
 using Pulse.Infra.Database.Contexts;
-using Pulse.Infra.Database.Messaging.Events;
+using Pulse.Infra.Database.Messaging.Outbox;
 
 namespace Pulse.Infra.Database;
 
@@ -36,7 +36,7 @@ public class UnitOfWork : IUnitOfWork
 
         foreach (var domainEvent in domainEvents)
         {
-            _context.InsertEvent(_dateTimeProvider, domainEvent);
+            _context.InsertOutboxMessage(_dateTimeProvider, domainEvent);
         }
 
         await _context.SaveChangesAsync(cancellationToken);

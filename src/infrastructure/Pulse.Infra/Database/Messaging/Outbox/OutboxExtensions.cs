@@ -3,16 +3,16 @@ using Pulse.App.Common.Services.Interfaces;
 using Pulse.Domain.Common.Services;
 using Pulse.Infra.Database.Contexts;
 
-namespace Pulse.Infra.Database.Messaging.Events;
+namespace Pulse.Infra.Database.Messaging.Outbox;
 
-internal static class EventExtensions
+internal static class OutboxExtensions
 {
-    internal static void InsertEvent<T>(
+    internal static void InsertOutboxMessage<T>(
         this DatabaseContext context,
         IDateTimeProvider dateTimeProvider,
         T message) where T : notnull
     {
-        var databaseEvent = new Event
+        var outboxMessage = new OutboxMessage
         {
             Id = IdentityProvider.New(),
             Type = message.GetType().FullName!,
@@ -20,6 +20,6 @@ internal static class EventExtensions
             OccurredOn = dateTimeProvider.UtcNow
         };
 
-        context.Events.Add(databaseEvent);
+        context.OutboxMessages.Add(outboxMessage);
     }
 }

@@ -352,7 +352,38 @@ namespace Pulse.Database.Migrations.Postgres
                     b.ToTable("users", (string)null);
                 });
 
-            modelBuilder.Entity("Pulse.Infra.Database.Messaging.Events.Event", b =>
+            modelBuilder.Entity("Pulse.Infra.Database.Messaging.Inbox.InboxMessage", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text")
+                        .HasColumnName("id");
+
+                    b.Property<string>("Handler")
+                        .HasColumnType("text")
+                        .HasColumnName("handler");
+
+                    b.Property<string>("Error")
+                        .HasColumnType("text")
+                        .HasColumnName("error");
+
+                    b.Property<DateTime?>("ProcessedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("processed_on");
+
+                    b.Property<DateTime>("ReceivedOn")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("received_on");
+
+                    b.HasKey("Id", "Handler")
+                        .HasName("pk_inbox_messages");
+
+                    b.HasIndex("ProcessedOn")
+                        .HasDatabaseName("ix_inbox_messages_processed_on");
+
+                    b.ToTable("inbox_messages", (string)null);
+                });
+
+            modelBuilder.Entity("Pulse.Infra.Database.Messaging.Outbox.OutboxMessage", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text")
@@ -389,13 +420,17 @@ namespace Pulse.Database.Migrations.Postgres
                         .HasColumnName("type");
 
                     b.HasKey("Id")
-                        .HasName("pk_events");
+                        .HasName("pk_outbox_messages");
 
                     b.HasIndex("OccurredOn")
-                        .HasDatabaseName("ix_events_occurred_on")
+                        .HasDatabaseName("ix_outbox_messages_occurred_on")
                         .HasFilter("processed_on IS NULL");
 
-                    b.ToTable("events", (string)null);
+                    b.HasIndex("ProcessedOn")
+                        .HasDatabaseName("ix_outbox_messages_processed_on")
+                        .HasFilter("processed_on IS NOT NULL");
+
+                    b.ToTable("outbox_messages", (string)null);
                 });
 
             modelBuilder.Entity("Pulse.Domain.Aggregates.Applications.Application", b =>

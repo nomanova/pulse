@@ -1,27 +1,29 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pulse.Infra.Database.Configurations.Base;
-using Pulse.Infra.Database.Messaging.Events;
+using Pulse.Infra.Database.Messaging.Outbox;
 
 namespace Pulse.Infra.Database.Configurations;
 
-public sealed class EventConfiguration : EntityTypeConfiguration<Event>
+public sealed class OutboxMessageConfiguration : EntityTypeConfiguration<OutboxMessage>
 {
-    public EventConfiguration(DatabaseProvider provider) : base(provider)
+    public OutboxMessageConfiguration(DatabaseProvider provider) : base(provider)
     {
     }
 
-    public override void Configure(EntityTypeBuilder<Event> builder)
+    public override void Configure(EntityTypeBuilder<OutboxMessage> builder)
     {
-        builder.HasKey(@event => @event.Id);
+        builder.HasKey(message => message.Id);
         
         if (Provider == DatabaseProvider.Postgres)
         {
-            // On postgres, a partial index can be used as 
-            // processed messages are no longer relevant to the processor.
+            // Use a partial index on OccurredOn, as processed messages
+            // are no longer relevant to the processor.
             builder.HasIndex(message => message.OccurredOn)
                 .HasFilter("processed_on IS NULL");
 
+            // Use a partial index on ProcessedOn, as processed messages
+            // are the only ones relevant to the archiver.
             builder.HasIndex(message => message.ProcessedOn)
                 .HasFilter("processed_on IS NOT NULL");
             

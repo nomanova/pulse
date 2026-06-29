@@ -13,39 +13,43 @@ using Pulse.Domain.Common.Models.Events;
 using Pulse.Domain.Common.Services;
 using Pulse.Infra.Database.Contexts;
 
-namespace Pulse.Infra.Database.Messaging.Events;
+namespace Pulse.Infra.Database.Messaging.Outbox;
 
 /**
- * The implementation provides at-least-once processing with a single active claim per event.
- * To make event handling effectively exactly once, each handler should be idempotent.
+ * The implementation provides at-least-once processing with a single active claim per message.
+ * To make message handling effectively exactly once, each handler should be made idempotent by
+ * means of an inbox mechanism.
  */
-public sealed class EventProcessor
+public sealed class OutboxProcessor
 {
+    private readonly ILogger<OutboxProcessor> _logger;
     private readonly IDateTimeProvider _dateTimeProvider;
     private readonly DatabaseContext _context;
     private readonly DatabaseOptions _databaseOptions;
-    private readonly ILogger<EventProcessor> _logger;
+    private readonly INotificationContext _notificationContext;
     private readonly IPublisher _publisher;
 
     private readonly uint _batchSize;
     private readonly TimeSpan _claimTimeout;
 
-    public EventProcessor(
+    public OutboxProcessor(
+        ILogger<OutboxProcessor> logger,
         IDateTimeProvider dateTimeProvider,
         DatabaseContext context,
         IOptions<DatabaseOptions> databaseOptions,
-        IOptions<MessagingOptions.EventOptions> eventOptions,
-        ILogger<EventProcessor> logger,
+        IOptions<MessagingOptions.OutboxOptions> outboxOptions,
+        INotificationContext notificationContext,
         IPublisher publisher)
     {
+        _logger = logger;
         _dateTimeProvider = dateTimeProvider;
         _context = context;
         _databaseOptions = databaseOptions.Value;
-        _logger = logger;
+        _notificationContext = notificationContext;
         _publisher = publisher;
 
-        _batchSize = eventOptions.Value.ProcessBatchSize;
-        _claimTimeout = TimeSpan.FromMinutes(eventOptions.Value.ClaimTimeoutInMin);
+        _batchSize = outboxOptions.Value.ProcessBatchSize;
+        _claimTimeout = TimeSpan.FromMinutes(outboxOptions.Value.ClaimTimeoutInMin);
     }
 
     public async Task Execute(CancellationToken cancellationToken = default)
@@ -54,34 +58,34 @@ public sealed class EventProcessor
         var now = _dateTimeProvider.UtcNow;
         var claimExpiredBefore = now.Subtract(_claimTimeout);
 
-        var claimedEvents = await ClaimEvents(
+        var claimedMessages = await ClaimMessages(
             processingId,
             now,
             claimExpiredBefore,
             cancellationToken);
 
-        if (claimedEvents.Count == 0)
+        if (claimedMessages.Count == 0)
         {
             return;
         }
 
-        foreach (var @event in claimedEvents)
+        foreach (var message in claimedMessages)
         {
             try
             {
-                await PublishEvent(@event, cancellationToken);
+                await PublishEvent(message, cancellationToken);
 
-                @event.ProcessedOn = _dateTimeProvider.UtcNow;
-                @event.ProcessingId = null;
-                @event.ProcessingOn = null;
-                @event.Error = null;
+                message.ProcessedOn = _dateTimeProvider.UtcNow;
+                message.ProcessingId = null;
+                message.ProcessingOn = null;
+                message.Error = null;
 
                 await _context.SaveChangesAsync(cancellationToken);
 
                 _logger.LogInformation(
                     "Processed event {EventId} of type {EventType}",
-                    @event.Id,
-                    @event.Type);
+                    message.Id,
+                    message.Type);
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -89,9 +93,9 @@ public sealed class EventProcessor
             }
             catch (Exception ex)
             {
-                @event.ProcessingId = null;
-                @event.ProcessingOn = null;
-                @event.Error = ex.ToString();
+                message.ProcessingId = null;
+                message.ProcessingOn = null;
+                message.Error = ex.ToString();
 
                 try
                 {
@@ -102,19 +106,19 @@ public sealed class EventProcessor
                     _logger.LogError(
                         saveException,
                         "Failed to release claimed event {EventId} after handler failure",
-                        @event.Id);
+                        message.Id);
                 }
 
                 _logger.LogError(
                     ex,
                     "Failed to process event {EventId} of type {EventType}",
-                    @event.Id,
-                    @event.Type);
+                    message.Id,
+                    message.Type);
             }
         }
     }
 
-    private async Task<List<Event>> ClaimEvents(
+    private async Task<List<OutboxMessage>> ClaimMessages(
         string processingId,
         DateTime processingOn,
         DateTime claimExpiredBefore,
@@ -122,24 +126,24 @@ public sealed class EventProcessor
     {
         return _databaseOptions.Provider switch
         {
-            DatabaseProvider.Postgres => await ClaimPostgresEvents(
+            DatabaseProvider.Postgres => await ClaimPostgresMessages(
                 processingId,
                 processingOn,
                 claimExpiredBefore,
                 cancellationToken),
 
-            DatabaseProvider.Sqlite => await ClaimSqliteEvents(
+            DatabaseProvider.Sqlite => await ClaimSqliteMessages(
                 processingId,
                 processingOn,
                 claimExpiredBefore,
                 cancellationToken),
 
             _ => throw new NotSupportedException(
-                $"Database provider '{_databaseOptions.Provider}' is not supported by the event processor")
+                $"Database provider '{_databaseOptions.Provider}' is not supported by the outbox processor")
         };
     }
 
-    private async Task<List<Event>> ClaimPostgresEvents(
+    private async Task<List<OutboxMessage>> ClaimPostgresMessages(
         string processingId,
         DateTime processingOn,
         DateTime claimExpiredBefore,
@@ -147,11 +151,11 @@ public sealed class EventProcessor
     {
         await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 
-        var events = await _context.Events
+        var messages = await _context.OutboxMessages
             .FromSqlInterpolated($"""
                                   WITH claimed AS (
                                       SELECT id
-                                      FROM events
+                                      FROM outbox_messages
                                       WHERE processed_on IS NULL
                                         AND (
                                             processing_on IS NULL
@@ -161,21 +165,21 @@ public sealed class EventProcessor
                                       LIMIT {_batchSize}
                                       FOR UPDATE SKIP LOCKED
                                   )
-                                  UPDATE events event
+                                  UPDATE outbox_messages message
                                   SET processing_id = {processingId},
                                       processing_on = {processingOn}
                                   FROM claimed
-                                  WHERE event.id = claimed.id
-                                  RETURNING event.*
+                                  WHERE message.id = claimed.id
+                                  RETURNING message.*
                                   """)
             .ToListAsync(cancellationToken);
 
         await transaction.CommitAsync(cancellationToken);
 
-        return events;
+        return messages;
     }
 
-    private async Task<List<Event>> ClaimSqliteEvents(
+    private async Task<List<OutboxMessage>> ClaimSqliteMessages(
         string processingId,
         DateTime processingOn,
         DateTime claimExpiredBefore,
@@ -183,14 +187,14 @@ public sealed class EventProcessor
     {
         await using var transaction = await _context.Database.BeginTransactionAsync(cancellationToken);
 
-        var events = await _context.Events
+        var events = await _context.OutboxMessages
             .FromSqlInterpolated($"""
-                                  UPDATE events
+                                  UPDATE outbox_messages
                                   SET processing_id = {processingId},
                                       processing_on = {processingOn}
                                   WHERE id IN (
                                       SELECT id
-                                      FROM events
+                                      FROM outbox_messages
                                       WHERE processed_on IS NULL
                                         AND (
                                             processing_on IS NULL
@@ -209,32 +213,41 @@ public sealed class EventProcessor
     }
 
     private async Task PublishEvent(
-        Event @event,
+        OutboxMessage message,
         CancellationToken cancellationToken)
     {
-        var eventType = ResolveEventType(@event.Type);
+        var eventType = ResolveEventType(message.Type);
 
         if (eventType is null)
         {
             throw new InvalidOperationException(
-                $"Event type '{@event.Type}' could not be resolved.");
+                $"Event type '{message.Type}' could not be resolved.");
         }
 
         if (!typeof(INotification).IsAssignableFrom(eventType))
         {
             throw new InvalidOperationException(
-                $"Event type '{@event.Type}' does not implement {nameof(INotification)}.");
+                $"Event type '{message.Type}' does not implement {nameof(INotification)}.");
         }
 
-        var notification = JsonSerializer.Deserialize(@event.Content, eventType);
+        var notification = JsonSerializer.Deserialize(message.Content, eventType);
 
         if (notification is null)
         {
             throw new InvalidOperationException(
-                $"Event '{@event.Id}' of type '{@event.Type}' could not be deserialized.");
+                $"Event '{message.Id}' of type '{message.Type}' could not be deserialized.");
         }
 
-        await PublishDynamic((dynamic)notification, cancellationToken);
+        try
+        {
+            _notificationContext.SetNotificationId(message.Id);
+            
+            await PublishDynamic((dynamic)notification, cancellationToken);
+        }
+        finally
+        {
+            _notificationContext.Clear();
+        }
     }
 
     private static Type? ResolveEventType(string eventType)
