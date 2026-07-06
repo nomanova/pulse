@@ -1,10 +1,13 @@
+using System.Collections.Generic;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using MockQueryable;
 using MockQueryable.Moq;
 using Moq;
 using Pulse.App.Common.Database;
 using Pulse.Domain.Aggregates.Applications;
+using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Aggregates.Memberships;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.Users;
@@ -21,6 +24,7 @@ public static class DatabaseContextMock
         mock.WithOrganizations();
         mock.WithMemberships();
         mock.WithApplications();
+        mock.WithEnvironments();
 
         return mock;
     }
@@ -36,10 +40,10 @@ public static class DatabaseContextMock
         {
             var allUsers = mock.Object.Users.ToList();
             allUsers.AddRange(users);
-        
+
             mock.Setup(dbContext => dbContext.Users).Returns(ToSet(allUsers.ToArray()).Object);
         }
-        
+
         public void WithOrganizations(params Organization[] organizations)
         {
             mock.Setup(dbContext => dbContext.Organizations).Returns(ToSet(organizations).Object);
@@ -49,15 +53,37 @@ public static class DatabaseContextMock
         {
             mock.Setup(dbContext => dbContext.Memberships).Returns(ToSet(memberships).Object);
         }
-        
+
         public void WithApplications(params Application[] applications)
         {
             mock.Setup(dbContext => dbContext.Applications).Returns(ToSet(applications).Object);
         }
+
+        public void WithEnvironments(params Environment[] environments)
+        {
+            mock.Setup(dbContext => dbContext.Environments).Returns(ToSet(environments).Object);
+        }
     }
 
-    private static Mock<DbSet<T>> ToSet<T>(T[] items) where T : class
+    private static Mock<DbSet<T>> ToSet<T>(params T[] items) where T : class
     {
-        return items.BuildMock().BuildMockDbSet();
+        var backingStore = new List<T>(items);
+        var dbSet = backingStore.BuildMock().BuildMockDbSet();
+
+        dbSet.Setup(set => set.Add(It.IsAny<T>()))
+            .Callback<T>(backingStore.Add)
+            .Returns((EntityEntry<T>)null!);
+
+        dbSet.Setup(set => set.AddRange(It.IsAny<IEnumerable<T>>()))
+            .Callback<IEnumerable<T>>(backingStore.AddRange);
+
+        dbSet.Setup(set => set.AddRange(It.IsAny<T[]>()))
+            .Callback<T[]>(backingStore.AddRange);
+
+        dbSet.Setup(set => set.Remove(It.IsAny<T>()))
+            .Callback<T>(entity => backingStore.Remove(entity))
+            .Returns((EntityEntry<T>)null!);
+
+        return dbSet;
     }
 }

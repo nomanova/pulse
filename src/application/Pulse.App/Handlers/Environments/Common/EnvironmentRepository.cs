@@ -5,9 +5,9 @@ namespace Pulse.App.Handlers.Environments.Common;
 
 public interface IEnvironmentRepository : IRepository<Environment>;
 
-public class EnvironmentRepository : Repository<Environment>, IEnvironmentRepository
+internal sealed class EnvironmentRepository : Repository<Environment>, IEnvironmentRepository
 {
-    protected EnvironmentRepository(IDatabaseContext context) : base(context.Environments)
+    public EnvironmentRepository(IDatabaseContext context) : base(context.Environments)
     {
     }
 }

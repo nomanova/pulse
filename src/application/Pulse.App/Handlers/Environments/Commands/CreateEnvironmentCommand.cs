@@ -8,72 +8,76 @@ using Pulse.App.Common.Mappers;
 using Pulse.App.Common.Security.Interfaces;
 using Pulse.App.Dto.Common;
 using Pulse.App.Handlers.Applications.Common;
+using Pulse.App.Handlers.Applications.Common.Specifications;
+using Pulse.App.Handlers.Environments.Common;
 using Pulse.App.Handlers.Memberships.Common;
-using Pulse.App.Handlers.Organizations.Common;
-using Pulse.App.Handlers.Organizations.Common.Specifications;
 using Pulse.Domain.Aggregates.Applications;
+using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Aggregates.Memberships;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.Roles;
 
-namespace Pulse.App.Handlers.Applications.Commands;
+namespace Pulse.App.Handlers.Environments.Commands;
 
-public sealed record CreateApplicationCommand : IOrganizationScoped, ICommand<ErrorOr<IdentityDto>>
+public sealed record CreateEnvironmentCommand :
+    IApplicationScoped, ICommand<ErrorOr<IdentityDto>>
 {
     public required OrganizationId OrganizationId { get; init; }
+
+    public required ApplicationId ApplicationId { get; init; }
 
     public string? Name { get; init; }
 }
 
-public sealed class CreateApplicationCommandAuthorizer : PermissionAuthorizer<CreateApplicationCommand>;
+public sealed class CreateEnvironmentCommandAuthorizer : PermissionAuthorizer<CreateEnvironmentCommand>;
 
-public class CreateApplicationCommandHandler : ICommandHandler<CreateApplicationCommand, ErrorOr<IdentityDto>>
+public class CreateApplicationCommandHandler : ICommandHandler<CreateEnvironmentCommand, ErrorOr<IdentityDto>>
 {
     private readonly ICachedUserProvider _cachedUserProvider;
-    private readonly IOrganizationRepository _organizationRepository;
     private readonly IApplicationRepository _applicationRepository;
+    private readonly IEnvironmentRepository _environmentRepository;
     private readonly IMembershipRepository _membershipRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateApplicationCommandHandler(
         ICachedUserProvider cachedUserProvider,
-        IOrganizationRepository organizationRepository,
         IApplicationRepository applicationRepository,
+        IEnvironmentRepository environmentRepository,
         IMembershipRepository membershipRepository,
         IUnitOfWork unitOfWork)
     {
         _cachedUserProvider = cachedUserProvider;
-        _organizationRepository = organizationRepository;
         _applicationRepository = applicationRepository;
+        _environmentRepository = environmentRepository;
         _membershipRepository = membershipRepository;
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<ErrorOr<IdentityDto>> Handle(CreateApplicationCommand command,
+    public async Task<ErrorOr<IdentityDto>> Handle(CreateEnvironmentCommand command,
         CancellationToken cancellationToken)
     {
         var user = await _cachedUserProvider.Get(cancellationToken);
 
-        // Find organization
-        var organization = await _organizationRepository.SearchOne(
-            new OrganizationByIdSpecification(command.OrganizationId),
+        // Find application
+        var application = await _applicationRepository.SearchOne(
+            new ApplicationByIdSpecification(command.OrganizationId, command.ApplicationId),
             cancellationToken);
 
-        if (organization is null)
+        if (application is null)
         {
             return Error.NotFound();
         }
 
-        // Create application
-        var application = Application.Create(command.Name, organization);
-        _applicationRepository.Add(application);
+        // Create environment
+        var environment = Environment.Create(command.Name, application);
+        _environmentRepository.Add(environment);
 
-        // Set the creating user as the initial owner of the application
-        var membership = Membership.Create(user, Role.BuiltIn.AppOwner, application);
+        // Set the creating user as the initial owner of the environment
+        var membership = Membership.Create(user, Role.BuiltIn.EnvOwner, environment);
         _membershipRepository.Add(membership);
 
         await _unitOfWork.Commit(cancellationToken);
 
-        return application.ToIdentityDto();
+        return environment.ToIdentityDto();
     }
 }

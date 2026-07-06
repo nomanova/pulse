@@ -1,0 +1,10 @@
+### Create
+POST {{root}}/mgmt/v1/environments
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "organizationId": "{{organizationId}}",
+  "applicationId": "{{applicationId}}",
+  "name": "Production"
+}

@@ -8,6 +8,8 @@ using Pulse.Domain.Aggregates.Memberships;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.Roles;
 using Pulse.Domain.Aggregates.Users;
+using Pulse.Domain.Aggregates.Workflows;
+using Pulse.Domain.Aggregates.Workflows.Entities;
 using Pulse.Domain.Common.Exceptions;
 using Pulse.Infra.Database.Configurations;
 using Pulse.Infra.Database.Converters;
@@ -38,6 +40,10 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
     public DbSet<Membership> Memberships { get; init; }
     
     public DbSet<Role> Roles { get; init; }
+    
+    public DbSet<Workflow> Workflows { get; init; }
+    
+    public DbSet<WorkflowStep> WorkflowSteps { get; init; }
     
     protected DatabaseContext(
         IOptions<DatabaseOptions> databaseOptions,
@@ -100,5 +106,8 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
         
         modelBuilder.ApplyConfiguration(new MembershipConfiguration(provider));
         modelBuilder.ApplyConfiguration(new RoleConfiguration(provider));
+        
+        modelBuilder.ApplyConfiguration(new WorkflowConfiguration(provider));
+        modelBuilder.ApplyConfiguration(new WorkflowStepConfiguration(provider));
     }
 }

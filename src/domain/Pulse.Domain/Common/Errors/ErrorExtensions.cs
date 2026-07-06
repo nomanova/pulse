@@ -12,16 +12,6 @@ namespace Pulse.Domain.Common.Errors;
 
 public static class ErrorExtensions
 {
-    public static void Assert(this Error error, Func<bool> validate)
-    {
-        var isValid = validate();
-
-        if (!isValid)
-        {
-            error.Throw();
-        }
-    }
-
     public static T Assert<T>(this ErrorOr<T> result)
     {
         if (result.IsError)
@@ -78,14 +68,24 @@ public static class ErrorExtensions
 
     extension(Error error)
     {
+        public void Assert(Func<bool> validate)
+        {
+            var isValid = validate();
+
+            if (!isValid)
+            {
+                error.Throw();
+            }
+        }
+        
+        public void Throw()
+        {
+            throw new DomainException([error]);
+        }
+        
         private string Serialize()
         {
             return $"{error.Code} - {error.Description}";
-        }
-
-        private void Throw()
-        {
-            throw new DomainException([error]);
         }
     }
 

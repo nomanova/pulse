@@ -2,21 +2,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Pulse.Api.Mgmt.Contract.Applications;
+using Pulse.Api.Mgmt.Contract.Environments;
 using Pulse.Api.Mgmt.Controllers.Base;
 using Pulse.App.Common.Dispatcher;
-using Pulse.App.Handlers.Applications.Commands;
+using Pulse.App.Handlers.Environments.Commands;
+using Pulse.Domain.Aggregates.Applications;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Common.Models.Entities;
 
 namespace Pulse.Api.Mgmt.Controllers;
 
-[Route("mgmt/v1/applications")]
-public class ApplicationController : MgmtApiController
+[Route("mgmt/v1/environments")]
+public class EnvironmentController : MgmtApiController
 {
     private readonly ISender _sender;
     
-    public ApplicationController(ISender sender)
+    public EnvironmentController(ISender sender)
     {
         _sender = sender;
     }
@@ -24,12 +25,13 @@ public class ApplicationController : MgmtApiController
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Create(
-        [FromBody] CreateApplicationRequest request, 
+        [FromBody] CreateEnvironmentRequest request,
         CancellationToken cancellationToken = default)
     {
-        var command = new CreateApplicationCommand
+        var command = new CreateEnvironmentCommand
         {
             OrganizationId = request.OrganizationId.AsIdentity<OrganizationId>(),
+            ApplicationId = request.ApplicationId.AsIdentity<ApplicationId>(),
             Name = request.Name
         };
         

@@ -4,6 +4,9 @@ namespace Pulse.Domain.Common.Errors;
 
 public static partial class DomainErrors
 {
+    public static readonly Error InvalidIdentity = Error.Validation(
+        "Identity.InvalidIdentity", "Invalid identity");
+    
     private static Error TooShort(string code, string property, uint minLength)
     {
         return Error.Validation(code, $"{property} should be at least {minLength} characters");

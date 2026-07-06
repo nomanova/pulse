@@ -1,6 +1,6 @@
 namespace Pulse.Domain.Aggregates.Organizations;
 
-public interface IOrganizationScoped<T>
+public interface IOrganizationScoped
 {
-    T OrganizationId { get; }
+    OrganizationId OrganizationId { get; }
 }

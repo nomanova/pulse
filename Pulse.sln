@@ -56,6 +56,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mgmt", "mgmt", "{F5C5DF9A-A
 	ProjectSection(SolutionItems) = preProject
 		http\mgmt\application.http = http\mgmt\application.http
 		http\mgmt\user.http = http\mgmt\user.http
+		http\mgmt\environment.http = http\mgmt\environment.http
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Tests.Shared", "src\domain\Pulse.Tests.Shared\Pulse.Tests.Shared.csproj", "{A21CCDDD-88B2-49BA-8637-FADB3D646D7D}"

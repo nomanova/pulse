@@ -5,6 +5,7 @@ using Pulse.Domain.Aggregates.Memberships;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.Roles;
 using Pulse.Domain.Aggregates.Users;
+using Pulse.Domain.Aggregates.Workflows;
 
 namespace Pulse.App.Common.Database;
 
@@ -21,4 +22,6 @@ public interface IDatabaseContext
     DbSet<Membership> Memberships { get; }
     
     DbSet<Role> Roles { get; }
+    
+    DbSet<Workflow> Workflows { get; init; }
 }
