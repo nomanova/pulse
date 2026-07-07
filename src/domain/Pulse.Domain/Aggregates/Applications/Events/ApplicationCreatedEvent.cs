@@ -3,7 +3,7 @@ using Pulse.Domain.Common.Models.Events;
 
 namespace Pulse.Domain.Aggregates.Applications.Events;
 
-public class ApplicationCreatedEvent : IDomainEvent
+public sealed class ApplicationCreatedEvent : IDomainEvent
 {
     public OrganizationId OrganizationId { get; }
 

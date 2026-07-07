@@ -1,5 +1,5 @@
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.WorkflowInstances;
@@ -28,9 +28,18 @@ public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INa
 
     public string NormalizedName { get; private set; } = null!;
 
-    private readonly List<WorkflowStep> _steps = [];
+    public WorkflowVersionId? PublishedVersionId { get; private set; }
+    
+    private readonly List<WorkflowVersion> _versions = [];
 
-    public IReadOnlyCollection<WorkflowStep> Steps => _steps.AsReadOnly();
+    public IReadOnlyCollection<WorkflowVersion> Versions => _versions
+        .OrderBy(version => version.Version)
+        .ToList()
+        .AsReadOnly();
+
+    public WorkflowVersion? PublishedVersion => PublishedVersionId is null
+        ? null
+        : _versions.Single(version => version.Id == PublishedVersionId);
     
     private Workflow()
     {
@@ -64,14 +73,77 @@ public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INa
             nameValue,
             nameValue.AsNormalizedQueryable());
 
+        workflow.CreateDraftVersion();
+
         workflow.SetCreated();
 
         return workflow;
     }
 
+    public void Rename(string? name)
+    {
+        var nameValue = name.AsName().Assert();
+
+        if (Name == nameValue)
+        {
+            return;
+        }
+
+        Name = nameValue;
+        NormalizedName = nameValue.AsNormalizedQueryable();
+
+        SetModified();
+    }
+
+    public WorkflowVersion CreateDraftVersion()
+    {
+        DomainErrors.Workflow.DraftAlreadyExists.Assert(() =>
+            !_versions.Any(version => version.IsDraft));
+
+        var versionNumber = _versions.Count == 0
+            ? 1
+            : _versions.Max(version => version.Version) + 1;
+
+        var draft = PublishedVersion is null
+            ? WorkflowVersion.CreateDraft(this, versionNumber)
+            : WorkflowVersion.CreateDraftFrom(this, versionNumber, PublishedVersion);
+
+        _versions.Add(draft);
+
+        SetModified();
+
+        return draft;
+    }
+
+    public WorkflowVersion GetDraftVersion()
+    {
+        var draft = _versions.SingleOrDefault(version => version.IsDraft);
+
+        DomainErrors.Workflow.NoDraftVersion.Assert(() => draft != null);
+
+        return draft!;
+    }
+
+    public WorkflowVersion PublishDraftVersion()
+    {
+        var draft = GetDraftVersion();
+
+        DomainErrors.Workflow.NoSteps.Assert(() => draft.Steps.Any());
+
+        PublishedVersion?.Archive();
+        draft.Publish();
+
+        PublishedVersionId = draft.Id;
+
+        SetModified();
+
+        return draft;
+    }
+
     public WorkflowInstance Trigger()
     {
-        throw new NotImplementedException();
+        DomainErrors.Workflow.NoPublishedVersion.Assert(() => PublishedVersion != null);
+        return WorkflowInstance.Create(this, PublishedVersion!);
     }
 
     public override string ToString()

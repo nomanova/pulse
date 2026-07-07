@@ -3,22 +3,24 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pulse.Domain.Aggregates.Applications;
 using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Aggregates.Organizations;
+using Pulse.Domain.Aggregates.WorkflowInstances;
 using Pulse.Domain.Aggregates.Workflows;
+using Pulse.Domain.Aggregates.Workflows.Entities;
 using Pulse.Infra.Database.Configurations.Base;
 
 namespace Pulse.Infra.Database.Configurations;
 
-public sealed class WorkflowConfiguration : DomainEntityTypeConfiguration<Workflow>
+public sealed class WorkflowInstanceConfiguration : DomainEntityTypeConfiguration<WorkflowInstance>
 {
-    public WorkflowConfiguration(DatabaseProvider provider) : base(provider)
+    public WorkflowInstanceConfiguration(DatabaseProvider provider) : base(provider)
     {
     }
 
-    public override void Configure(EntityTypeBuilder<Workflow> builder)
+    public override void Configure(EntityTypeBuilder<WorkflowInstance> builder)
     {
         base.Configure(builder);
 
-        builder.HasKey(workflow => workflow.Id);
+        builder.HasKey(instance => instance.Id);
 
         builder.HasOne<Organization>()
             .WithMany()
@@ -35,19 +37,27 @@ public sealed class WorkflowConfiguration : DomainEntityTypeConfiguration<Workfl
             .HasForeignKey(workflow => workflow.EnvironmentId)
             .IsRequired();
 
-        builder.Property(workflow => workflow.Name)
+        builder.HasOne<Workflow>()
+            .WithMany()
+            .HasForeignKey(instance => instance.WorkflowId)
             .IsRequired();
 
-        builder.Property(workflow => workflow.NormalizedName)
+        builder.HasOne<WorkflowVersion>()
+            .WithMany()
+            .HasForeignKey(instance => instance.WorkflowVersionId)
             .IsRequired();
 
-        builder.HasMany(workflow => workflow.Versions)
-            .WithOne()
-            .HasForeignKey(version => version.WorkflowId)
+        builder.Property(instance => instance.Status)
             .IsRequired()
-            .HasPrincipalKey(workflow => workflow.Id)
+            .HasConversion<string>();
+
+        builder.HasMany(instance => instance.Steps)
+            .WithOne()
+            .HasForeignKey(step => step.WorkflowInstanceId)
+            .IsRequired()
+            .HasPrincipalKey(instance => instance.Id)
             .OnDelete(DeleteBehavior.Cascade);
 
-        builder.Navigation(workflow => workflow.Versions).AutoInclude();
+        builder.Navigation(instance => instance.Steps).AutoInclude();
     }
 }

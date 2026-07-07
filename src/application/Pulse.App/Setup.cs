@@ -12,6 +12,8 @@ using Pulse.App.Handlers.Memberships.Common;
 using Pulse.App.Handlers.Organizations.Common;
 using Pulse.App.Handlers.Roles.Common;
 using Pulse.App.Handlers.Users.Common;
+using Pulse.App.Handlers.WorkflowInstances.Common;
+using Pulse.App.Handlers.Workflows.Common;
 
 namespace Pulse.App;
 
@@ -60,6 +62,14 @@ public static class Setup
         
             services.AddScoped<IMembershipRepository, MembershipRepository>();
             services.AddScoped<IRoleRepository, RoleRepository>();
+            
+            services.AddScoped<IWorkflowRepository, WorkflowRepository>();
+            services.AddScoped<IWorkflowInstanceRepository, WorkflowInstanceRepository>();
+        }
+
+        private void AddServices()
+        {
+            services.AddScoped<IWorkflowStepExecutor, WorkflowStepExecutor>();
         }
     }
 }

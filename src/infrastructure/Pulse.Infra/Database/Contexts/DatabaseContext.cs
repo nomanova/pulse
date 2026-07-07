@@ -8,6 +8,8 @@ using Pulse.Domain.Aggregates.Memberships;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.Roles;
 using Pulse.Domain.Aggregates.Users;
+using Pulse.Domain.Aggregates.WorkflowInstances;
+using Pulse.Domain.Aggregates.WorkflowInstances.Entities;
 using Pulse.Domain.Aggregates.Workflows;
 using Pulse.Domain.Aggregates.Workflows.Entities;
 using Pulse.Domain.Common.Exceptions;
@@ -43,7 +45,13 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
     
     public DbSet<Workflow> Workflows { get; init; }
     
-    public DbSet<WorkflowStep> WorkflowSteps { get; init; }
+    public DbSet<WorkflowVersion> WorkflowVersions { get; init; }
+    
+    public DbSet<WorkflowVersionStep> WorkflowVersionSteps { get; init; }
+    
+    public DbSet<WorkflowInstance> WorkflowInstances { get; init; }
+    
+    public DbSet<WorkflowInstanceStep> WorkflowInstanceSteps { get; init; }
     
     protected DatabaseContext(
         IOptions<DatabaseOptions> databaseOptions,
@@ -92,6 +100,12 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
         
         configurationBuilder.Properties<MembershipId>().HaveConversion<EntityIdConverter<MembershipId>>();
         configurationBuilder.Properties<RoleId>().HaveConversion<EntityIdConverter<RoleId>>();
+        
+        configurationBuilder.Properties<WorkflowId>().HaveConversion<EntityIdConverter<WorkflowId>>();
+        configurationBuilder.Properties<WorkflowVersionId>().HaveConversion<EntityIdConverter<WorkflowVersionId>>();
+        configurationBuilder.Properties<WorkflowVersionStepId>().HaveConversion<EntityIdConverter<WorkflowVersionStepId>>();
+        configurationBuilder.Properties<WorkflowInstanceId>().HaveConversion<EntityIdConverter<WorkflowInstanceId>>();
+        configurationBuilder.Properties<WorkflowInstanceStepId>().HaveConversion<EntityIdConverter<WorkflowInstanceStepId>>();
     }
 
     private static void ApplyConfigurations(ModelBuilder modelBuilder, DatabaseProvider provider)
@@ -108,6 +122,10 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
         modelBuilder.ApplyConfiguration(new RoleConfiguration(provider));
         
         modelBuilder.ApplyConfiguration(new WorkflowConfiguration(provider));
-        modelBuilder.ApplyConfiguration(new WorkflowStepConfiguration(provider));
+        modelBuilder.ApplyConfiguration(new WorkflowVersionConfiguration(provider));
+        modelBuilder.ApplyConfiguration(new WorkflowVersionStepConfiguration(provider));
+        
+        modelBuilder.ApplyConfiguration(new WorkflowInstanceConfiguration(provider));
+        modelBuilder.ApplyConfiguration(new WorkflowInstanceStepConfiguration(provider));
     }
 }
