@@ -22,7 +22,7 @@ public class EnvironmentController : CtrlApiController
         _sender = sender;
     }
 
-    [HttpPost]
+    [HttpPost("create")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Create(
         [FromBody] CreateEnvironmentRequest request,

@@ -1,5 +1,5 @@
 ### Create
-POST {{root}}/api/ctrl/v1/applications
+POST {{root}}/api/ctrl/v1/applications/create
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
