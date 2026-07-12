@@ -13,8 +13,8 @@ internal static class Setup
 {
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
-        var mgmtAssembly = typeof(Mgmt.AssemblyReference).Assembly;
-        services.AddEndpoints(mgmtAssembly);
+        var ctrlAssembly = typeof(Ctrl.AssemblyReference).Assembly;
+        services.AddEndpoints(ctrlAssembly);
 
         services.AddOpenApi(options =>
         {

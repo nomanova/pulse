@@ -16,11 +16,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Api", "src\presentati
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Api.Client", "src\presentation\Pulse.Api.Client\Pulse.Api.Client.csproj", "{A906DF96-5605-4EEB-BB92-DD537B0E4744}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Api.Mgmt", "src\presentation\Pulse.Api.Mgmt\Pulse.Api.Mgmt.csproj", "{49194F1C-E548-409B-8312-5375DEBBEE95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Api.Ctrl", "src\presentation\Pulse.Api.Ctrl\Pulse.Api.Ctrl.csproj", "{49194F1C-E548-409B-8312-5375DEBBEE95}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Api.Mgmt.Contract", "src\presentation\Pulse.Api.Mgmt.Contract\Pulse.Api.Mgmt.Contract.csproj", "{C232D603-BB8C-4A5A-9612-B0F7B0FD72A3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Api.Ctrl.Contract", "src\presentation\Pulse.Api.Ctrl.Contract\Pulse.Api.Ctrl.Contract.csproj", "{C232D603-BB8C-4A5A-9612-B0F7B0FD72A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Api.Mgmt.Client", "src\presentation\Pulse.Api.Mgmt.Client\Pulse.Api.Mgmt.Client.csproj", "{3769A7A9-E357-45A6-A67A-25F3FA98386D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Api.Ctrl.Client", "src\presentation\Pulse.Api.Ctrl.Client\Pulse.Api.Ctrl.Client.csproj", "{3769A7A9-E357-45A6-A67A-25F3FA98386D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Api.Shared", "src\presentation\Pulse.Api.Shared\Pulse.Api.Shared.csproj", "{28149B92-936A-4176-869C-C2D77932618D}"
 EndProject
@@ -52,11 +52,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Http", "_Http", "{9FF4066B
 		http\http-client.env.json = http\http-client.env.json
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "mgmt", "mgmt", "{F5C5DF9A-A5F9-4FCF-B478-EF27D2CD5F69}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ctrl", "ctrl", "{F5C5DF9A-A5F9-4FCF-B478-EF27D2CD5F69}"
 	ProjectSection(SolutionItems) = preProject
-		http\mgmt\application.http = http\mgmt\application.http
-		http\mgmt\user.http = http\mgmt\user.http
-		http\mgmt\environment.http = http\mgmt\environment.http
+		http\ctrl\application.http = http\ctrl\application.http
+		http\ctrl\user.http = http\ctrl\user.http
+		http\ctrl\environment.http = http\ctrl\environment.http
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Tests.Shared", "src\domain\Pulse.Tests.Shared\Pulse.Tests.Shared.csproj", "{A21CCDDD-88B2-49BA-8637-FADB3D646D7D}"

@@ -1,4 +1,4 @@
-namespace Pulse.Api.Mgmt.Contract.Applications;
+namespace Pulse.Api.Ctrl.Contract.Applications;
 
 public sealed record CreateApplicationRequest
 {

@@ -11,7 +11,7 @@
 This repository is arranged using the clean architecture pattern.
 
 - `src/presentation`: hosts the ASP.NET API endpoints and request response models
-- `src/application`: hosts the command and query handlers, as well as the DTO models
+- `src/application`: hosts the command, query, and event handlers, as well as the DTO models
 - `src/domain`: hosts the domain entities, using a DDD approach
 - `src/infrastructure`: hosts the database and other infrastructure components
 

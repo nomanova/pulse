@@ -1,5 +1,5 @@
 ### Sign In
-POST {{root}}/mgmt/v1/users/sign-in
+POST {{root}}/api/ctrl/v1/users/sign-in
 Content-Type: application/json
 
 {

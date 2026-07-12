@@ -7,7 +7,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\application\Pulse.App.Dto\Pulse.App.Dto.csproj" />
       <ProjectReference Include="..\..\application\Pulse.App\Pulse.App.csproj" />
-      <ProjectReference Include="..\Pulse.Api.Mgmt.Contract\Pulse.Api.Mgmt.Contract.csproj" />
+      <ProjectReference Include="..\Pulse.Api.Ctrl.Contract\Pulse.Api.Ctrl.Contract.csproj" />
       <ProjectReference Include="..\Pulse.Api.Shared\Pulse.Api.Shared.csproj" />
     </ItemGroup>
 

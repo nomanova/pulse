@@ -1,3 +1,3 @@
-namespace Pulse.Api.Mgmt;
+namespace Pulse.Api.Ctrl;
 
 public static class AssemblyReference;

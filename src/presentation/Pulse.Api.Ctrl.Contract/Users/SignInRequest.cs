@@ -1,4 +1,4 @@
-namespace Pulse.Api.Mgmt.Contract.Users;
+namespace Pulse.Api.Ctrl.Contract.Users;
 
 public sealed record SignInRequest
 {

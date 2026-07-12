@@ -1,4 +1,4 @@
-namespace Pulse.Api.Mgmt.Contract.Environments;
+namespace Pulse.Api.Ctrl.Contract.Environments;
 
 public sealed record CreateEnvironmentRequest
 {

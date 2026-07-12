@@ -2,17 +2,17 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Pulse.Api.Mgmt.Contract.Applications;
-using Pulse.Api.Mgmt.Controllers.Base;
+using Pulse.Api.Ctrl.Controllers.Base;
+using Pulse.Api.Ctrl.Contract.Applications;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Handlers.Applications.Commands;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Common.Models.Entities;
 
-namespace Pulse.Api.Mgmt.Controllers;
+namespace Pulse.Api.Ctrl.Controllers;
 
-[Route("mgmt/v1/applications")]
-public class ApplicationController : MgmtApiController
+[Route("api/ctrl/v1/applications")]
+public class ApplicationController : CtrlApiController
 {
     private readonly ISender _sender;
     

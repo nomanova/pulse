@@ -3,16 +3,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Pulse.Api.Mgmt.Contract.Users;
-using Pulse.Api.Mgmt.Controllers.Base;
+using Pulse.Api.Ctrl.Controllers.Base;
+using Pulse.Api.Ctrl.Contract.Users;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Dto.Users;
 using Pulse.App.Handlers.Users.Commands.SignIn;
 
-namespace Pulse.Api.Mgmt.Controllers;
+namespace Pulse.Api.Ctrl.Controllers;
 
-[Route("mgmt/v1/users")]
-public class UserController : MgmtApiController
+[Route("api/ctrl/v1/users")]
+public class UserController : CtrlApiController
 {
     private readonly ISender _sender;
     
