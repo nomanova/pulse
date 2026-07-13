@@ -8,7 +8,7 @@ namespace Pulse.App.Handlers.Applications.Common.Specifications;
 
 public sealed class ApplicationByNameSpecification(
     OrganizationId organizationId,
-    string applicationName,
+    string? applicationName,
     bool includeDeleted = false) : Specification<Application>
 {
     public override Expression<Func<Application, bool>> ToExpression()

@@ -5,10 +5,12 @@ using Pulse.App.Common.Authorization.Policies;
 using Pulse.App.Common.Context;
 using Pulse.App.Common.Database;
 using Pulse.App.Common.Dispatcher;
+using Pulse.App.Common.Errors;
 using Pulse.App.Common.Mappers;
 using Pulse.App.Common.Security.Interfaces;
 using Pulse.App.Dto.Common;
 using Pulse.App.Handlers.Applications.Common;
+using Pulse.App.Handlers.Applications.Common.Specifications;
 using Pulse.App.Handlers.Memberships.Common;
 using Pulse.Domain.Aggregates.Applications;
 using Pulse.Domain.Aggregates.Memberships;
@@ -52,7 +54,17 @@ public class CreateApplicationCommandHandler : ICommandHandler<CreateApplication
     {
         var user = await _userProvider.Get(cancellationToken);
         var organization = _contextProvider.Organization;
+        
+        // Duplicate name detection
+        var existingApplication =
+            await _applicationRepository.SearchOne(
+                new ApplicationByNameSpecification(organization.Id, command.ApplicationName), cancellationToken);
 
+        if (existingApplication != null)
+        {
+            return ApplicationErrors.NameInUse;
+        }
+        
         // Create application
         var application = Application.Create(command.ApplicationName, organization);
         _applicationRepository.Add(application);

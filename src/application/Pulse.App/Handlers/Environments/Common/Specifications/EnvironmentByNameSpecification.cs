@@ -10,7 +10,7 @@ namespace Pulse.App.Handlers.Environments.Common.Specifications;
 public sealed class EnvironmentByNameSpecification(
     OrganizationId organizationId,
     ApplicationId applicationId,
-    string environmentName,
+    string? environmentName,
     bool includeDeleted = false) : Specification<Environment>
 {
     public override Expression<Func<Environment, bool>> ToExpression()
