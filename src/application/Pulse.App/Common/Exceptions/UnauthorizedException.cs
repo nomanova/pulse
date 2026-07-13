@@ -3,7 +3,7 @@ using Pulse.Domain.Common.Exceptions;
 
 namespace Pulse.App.Common.Exceptions;
 
-public class UnauthorizedException : AppException
+public sealed class UnauthorizedException : AppException
 {
     public UnauthorizedException()
     {

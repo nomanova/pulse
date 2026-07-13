@@ -32,13 +32,6 @@ public class ReadRepository<TEntity> : IReadOnlyRepository<TEntity> where TEntit
         return await queryable.FirstOrDefaultAsync(cancellationToken);
     }
 
-    public async Task<uint> Count(
-        Specification<TEntity> specification, CancellationToken cancellationToken = default)
-    {
-        var queryable = _dbSet.WithSpecification(specification);
-        return (uint)await queryable.CountAsync(cancellationToken);
-    }
-
     public async Task<TEntity?> SearchOne(
         Specification<TEntity> specification,
         IOrderBySpecification<TEntity> orderBy,
@@ -48,7 +41,14 @@ public class ReadRepository<TEntity> : IReadOnlyRepository<TEntity> where TEntit
         queryable = orderBy.ApplyOrdering(queryable);
         return await queryable.FirstOrDefaultAsync(cancellationToken);
     }
-
+    
+    public async Task<uint> Count(
+        Specification<TEntity> specification, CancellationToken cancellationToken = default)
+    {
+        var queryable = _dbSet.WithSpecification(specification);
+        return (uint)await queryable.CountAsync(cancellationToken);
+    }
+    
     public async Task<SearchResult<TEntity>> SearchCursor(
         Specification<TEntity> searchBy,
         IOrderBySpecification<TEntity> orderBy,

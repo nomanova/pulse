@@ -9,6 +9,7 @@ using Pulse.App.Tests.Framework.Contexts;
 using Pulse.App.Tests.Framework.Mocks.Database;
 using Pulse.App.Tests.Framework.Mocks.Security;
 using Pulse.App.Tests.Framework.Mocks.Services;
+using Pulse.Domain.Aggregates.Applications;
 using Pulse.Domain.Aggregates.Memberships;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.Roles;
@@ -62,7 +63,7 @@ public abstract class AppTests
         _userPasswordHasher = new FakePasswordHasher();
         _serviceCollection.AddScoped<IUserPasswordHasher>(_ => _userPasswordHasher);
 
-        _serviceCollection.AddScoped<ICachedUserProvider, CachedUserProvider>();
+        _serviceCollection.AddScoped<IUserProvider, UserProvider>();
 
         _userClaimProvider = UserClaimProviderMock.Default();
         _serviceCollection.AddScoped<IUserClaimProvider>(_ => _userClaimProvider.Object);
@@ -70,23 +71,23 @@ public abstract class AppTests
 
     protected UserContext EnsureUser()
     {
-        var userContext = AddUser();
+        var userContext = AddDefaultUser();
         _userClaimProvider = UserClaimProviderMock.For(userContext.User);
         return userContext;
     }
 
     protected OrganizationContext EnsureOwnedOrganization()
     {
-        var organization = AddOrganization();
-        var userContext = AddUser();
-        AddOwnership(userContext.User, organization);
+        var organization = AddDefaultOrganization();
+        var userContext = AddDefaultUser();
+        AddDefaultOwnership(userContext.User, organization);
 
         _userClaimProvider = UserClaimProviderMock.For(userContext.User);
         
         return new OrganizationContext(userContext.Password, userContext.User, organization);
     }
-
-    private UserContext AddUser()
+    
+    private UserContext AddDefaultUser()
     {
         var user = UserBuilder.New().WithPassword(DefaultUserPassword).Build();
         DatabaseContext.WithUsers(user);
@@ -94,7 +95,7 @@ public abstract class AppTests
         return new UserContext(DefaultUserPassword, user);
     }
 
-    private Organization AddOrganization()
+    private Organization AddDefaultOrganization()
     {
         var organization = OrganizationBuilder.New().Build();
         DatabaseContext.WithOrganizations(organization);
@@ -102,7 +103,7 @@ public abstract class AppTests
         return organization;
     }
 
-    private void AddOwnership(User user, Organization organization)
+    private void AddDefaultOwnership(User user, Organization organization)
     {
         var membership = Membership.Create(user, Role.BuiltIn.OrgOwner, organization);
         DatabaseContext.WithMemberships(membership);

@@ -23,7 +23,7 @@ public static class DefaultOrgSeeder
     public static async Task Seed(IServiceProvider sp)
     {
         var user = await SeedUser(sp, "admin", "admin@admin.com", "Admin123456");
-        await SeedOrganization(sp, "Pulse", user);
+        await SeedOrganization(sp, "pulse", user);
     }
 
     private static async Task<User> SeedUser(

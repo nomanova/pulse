@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pulse.Domain.Aggregates.Roles;
 using Pulse.Infra.Database.Configurations.Base;
@@ -20,10 +21,20 @@ public sealed class RoleConfiguration : DomainEntityTypeConfiguration<Role>
             .IsRequired()
             .HasConversion<string>();
 
-        builder.Property(role => role.Name)
-            .IsRequired();
+        builder.OwnsOne(role => role.Name, roleBuilder =>
+        {
+            roleBuilder
+                .Property(name => name.Value)
+                .IsRequired()
+                .HasColumnName("name");
 
-        builder.Property(role => role.NormalizedName)
-            .IsRequired();
+            roleBuilder
+                .Property(name => name.NormalizedValue)
+                .IsRequired()
+                .HasColumnName("normalized_name");
+            
+            roleBuilder.HasIndex(name => name.Value)
+                .IsUnique();
+        });
     }
 }

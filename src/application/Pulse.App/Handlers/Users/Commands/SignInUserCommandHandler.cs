@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ErrorOr;
+using Pulse.App.Common.Authorization.Policies;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Common.Errors;
 using Pulse.App.Common.Security.Interfaces;
@@ -10,6 +11,15 @@ using Pulse.App.Handlers.Users.Common.Specifications;
 using Pulse.Domain.Aggregates.Users.Services;
 
 namespace Pulse.App.Handlers.Users.Commands.SignIn;
+
+public sealed record SignInUserCommand : ICommand<ErrorOr<AuthDto>>
+{
+    public string? Username { get; init; }
+
+    public string? Password { get; init; }
+}
+
+public sealed class SignInUserCommandAuthorizer : AnonymousAuthorizer<SignInUserCommand>;
 
 public sealed class SignInUserCommandHandler : ICommandHandler<SignInUserCommand, ErrorOr<AuthDto>>
 {

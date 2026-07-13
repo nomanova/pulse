@@ -15,7 +15,11 @@ public sealed class ApplicationBuilder : IBuilder<Application>
 
     public static ApplicationBuilder New(Organization organization)
     {
-        return new ApplicationBuilder { _organization = organization };
+        return new ApplicationBuilder
+        {
+            _organization = organization,
+            _name = "app"
+        };
     }
 
     public ApplicationBuilder WithName(string name)

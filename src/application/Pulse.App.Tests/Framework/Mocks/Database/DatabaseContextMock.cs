@@ -59,6 +59,14 @@ public static class DatabaseContextMock
             mock.Setup(dbContext => dbContext.Applications).Returns(ToSet(applications).Object);
         }
 
+        public void AddApplications(params Application[] applications)
+        {
+            var allApplications = mock.Object.Applications.ToList();
+            allApplications.AddRange(applications);
+
+            mock.Setup(dbContext => dbContext.Applications).Returns(ToSet(allApplications.ToArray()).Object);
+        }
+
         public void WithEnvironments(params Environment[] environments)
         {
             mock.Setup(dbContext => dbContext.Environments).Returns(ToSet(environments).Object);

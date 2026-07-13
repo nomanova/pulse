@@ -8,9 +8,9 @@ namespace Pulse.App.Tests.Framework.Mocks.Security;
 
 public static class CachedUserProviderMock
 {
-    public static Mock<ICachedUserProvider> Default()
+    public static Mock<IUserProvider> Default()
     {
-        var mock = new Mock<ICachedUserProvider>();
+        var mock = new Mock<IUserProvider>();
 
         mock.Setup(m => m.Get(It.IsAny<CancellationToken>()))
             .ThrowsAsync(new UnauthorizedException());
@@ -18,9 +18,9 @@ public static class CachedUserProviderMock
         return mock;
     }
 
-    public static Mock<ICachedUserProvider> For(User user)
+    public static Mock<IUserProvider> For(User user)
     {
-        var mock = new Mock<ICachedUserProvider>();
+        var mock = new Mock<IUserProvider>();
 
         mock.Setup(m => m.Get(It.IsAny<CancellationToken>()))
             .ReturnsAsync(user);

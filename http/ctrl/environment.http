@@ -4,7 +4,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationId": "{{organizationId}}",
-  "applicationId": "{{applicationId}}",
+  "organizationName": "{{organizationName}}",
+  "applicationName": "{{applicationName}}",
   "name": "Production"
 }

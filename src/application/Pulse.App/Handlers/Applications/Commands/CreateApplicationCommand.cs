@@ -2,6 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using ErrorOr;
 using Pulse.App.Common.Authorization.Policies;
+using Pulse.App.Common.Context;
 using Pulse.App.Common.Database;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Common.Mappers;
@@ -9,41 +10,38 @@ using Pulse.App.Common.Security.Interfaces;
 using Pulse.App.Dto.Common;
 using Pulse.App.Handlers.Applications.Common;
 using Pulse.App.Handlers.Memberships.Common;
-using Pulse.App.Handlers.Organizations.Common;
-using Pulse.App.Handlers.Organizations.Common.Specifications;
 using Pulse.Domain.Aggregates.Applications;
 using Pulse.Domain.Aggregates.Memberships;
-using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.Roles;
 
 namespace Pulse.App.Handlers.Applications.Commands;
 
-public sealed record CreateApplicationCommand : IOrganizationScoped, ICommand<ErrorOr<IdentityDto>>
+public sealed record CreateApplicationCommand : IOrganizationRequest, ICommand<ErrorOr<IdentityDto>>
 {
-    public required OrganizationId OrganizationId { get; init; }
+    public required string? OrganizationName { get; init; }
 
-    public string? Name { get; init; }
+    public required string? ApplicationName { get; init; }
 }
 
 public sealed class CreateApplicationCommandAuthorizer : PermissionAuthorizer<CreateApplicationCommand>;
 
 public class CreateApplicationCommandHandler : ICommandHandler<CreateApplicationCommand, ErrorOr<IdentityDto>>
 {
-    private readonly ICachedUserProvider _cachedUserProvider;
-    private readonly IOrganizationRepository _organizationRepository;
+    private readonly IUserProvider _userProvider;
+    private readonly IContextProvider _contextProvider;
     private readonly IApplicationRepository _applicationRepository;
     private readonly IMembershipRepository _membershipRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public CreateApplicationCommandHandler(
-        ICachedUserProvider cachedUserProvider,
-        IOrganizationRepository organizationRepository,
+        IUserProvider userProvider,
+        IContextProvider contextProvider,
         IApplicationRepository applicationRepository,
         IMembershipRepository membershipRepository,
         IUnitOfWork unitOfWork)
     {
-        _cachedUserProvider = cachedUserProvider;
-        _organizationRepository = organizationRepository;
+        _userProvider = userProvider;
+        _contextProvider = contextProvider;
         _applicationRepository = applicationRepository;
         _membershipRepository = membershipRepository;
         _unitOfWork = unitOfWork;
@@ -52,20 +50,11 @@ public class CreateApplicationCommandHandler : ICommandHandler<CreateApplication
     public async Task<ErrorOr<IdentityDto>> Handle(CreateApplicationCommand command,
         CancellationToken cancellationToken)
     {
-        var user = await _cachedUserProvider.Get(cancellationToken);
-
-        // Find organization
-        var organization = await _organizationRepository.SearchOne(
-            new OrganizationByIdSpecification(command.OrganizationId),
-            cancellationToken);
-
-        if (organization is null)
-        {
-            return Error.NotFound();
-        }
+        var user = await _userProvider.Get(cancellationToken);
+        var organization = _contextProvider.Organization;
 
         // Create application
-        var application = Application.Create(command.Name, organization);
+        var application = Application.Create(command.ApplicationName, organization);
         _applicationRepository.Add(application);
 
         // Set the creating user as the initial owner of the application

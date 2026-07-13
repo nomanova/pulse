@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using Pulse.Domain.Common.Errors;
 using Pulse.Domain.Common.Models.Enums;
+using Pulse.Domain.Common.Models.ValueObjects;
 using Pulse.Domain.Common.Services;
 
 namespace Pulse.Domain.Aggregates.Roles;
@@ -19,13 +21,13 @@ public partial class Role
             IdentityProvider.New(new Guid("00000000-0000-0000-0003-000000000001")));
 
         public static readonly Role OrgOwner = new(
-            OrgOwnerRoleId, true, Scope.Organization, "Organization Owner");
+            OrgOwnerRoleId, true, Scope.Organization, ObjectName.Create("org-owner").Assert());
 
         public static readonly Role AppOwner = new(
-            AppOwnerRoleId, true, Scope.Application, "Application Owner");
+            AppOwnerRoleId, true, Scope.Application, ObjectName.Create("app-owner").Assert());
 
         public static readonly Role EnvOwner = new(
-            EnvOwnerRoleId, true, Scope.Environment, "Environment Owner");
+            EnvOwnerRoleId, true, Scope.Environment, ObjectName.Create("env-owner").Assert());
 
         public static readonly IReadOnlyCollection<Role> All =
         [

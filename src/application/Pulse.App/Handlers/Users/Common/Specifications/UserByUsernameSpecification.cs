@@ -2,7 +2,7 @@ using System;
 using System.Linq.Expressions;
 using Pulse.App.Common.Database.Specifications.Base;
 using Pulse.Domain.Aggregates.Users;
-using Pulse.Domain.Aggregates.Users.ValueObjects;
+using Pulse.Domain.Common.Models.ValueObjects;
 
 namespace Pulse.App.Handlers.Users.Common.Specifications;
 
@@ -17,7 +17,7 @@ public sealed class UserByUsernameSpecification : Specification<User>
 
     private UserByUsernameSpecification(string? username)
     {
-        var usernameResult = Username.Create(username);
+        var usernameResult = ObjectName.Create(username);
         _username = usernameResult.IsError ? null : usernameResult.Value.Value;
     }
     

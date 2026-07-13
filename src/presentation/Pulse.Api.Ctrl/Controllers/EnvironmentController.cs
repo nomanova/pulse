@@ -6,9 +6,6 @@ using Pulse.Api.Ctrl.Controllers.Base;
 using Pulse.Api.Ctrl.Contract.Environments;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Handlers.Environments.Commands;
-using Pulse.Domain.Aggregates.Applications;
-using Pulse.Domain.Aggregates.Organizations;
-using Pulse.Domain.Common.Models.Entities;
 
 namespace Pulse.Api.Ctrl.Controllers;
 
@@ -30,9 +27,9 @@ public class EnvironmentController : CtrlApiController
     {
         var command = new CreateEnvironmentCommand
         {
-            OrganizationId = request.OrganizationId.AsIdentity<OrganizationId>(),
-            ApplicationId = request.ApplicationId.AsIdentity<ApplicationId>(),
-            Name = request.Name
+            OrganizationName = request.OrganizationName,
+            ApplicationName = request.ApplicationName,
+            EnvironmentName = request.EnvironmentName
         };
         
         var result = await _sender.Send(command, cancellationToken);

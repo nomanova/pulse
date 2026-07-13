@@ -8,14 +8,14 @@ using Pulse.Domain.Aggregates.Users;
 
 namespace Pulse.App.Common.Security;
 
-public sealed class CachedUserProvider : ICachedUserProvider
+public sealed class UserProvider : IUserProvider
 {
     private readonly IUserClaimProvider _userClaimProvider;
     private readonly IUserRepository _userRepository;
 
     private User? _user;
 
-    public CachedUserProvider(
+    public UserProvider(
         IUserClaimProvider userClaimProvider,
         IUserRepository userRepository)
     {

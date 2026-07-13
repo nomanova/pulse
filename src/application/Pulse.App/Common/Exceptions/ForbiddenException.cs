@@ -3,7 +3,7 @@ using Pulse.Domain.Common.Exceptions;
 
 namespace Pulse.App.Common.Exceptions;
 
-public class ForbiddenException : AppException
+public sealed class ForbiddenException : AppException
 {
     public ForbiddenException()
     {

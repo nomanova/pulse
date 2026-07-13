@@ -35,11 +35,18 @@ public sealed class WorkflowConfiguration : DomainEntityTypeConfiguration<Workfl
             .HasForeignKey(workflow => workflow.EnvironmentId)
             .IsRequired();
 
-        builder.Property(workflow => workflow.Name)
-            .IsRequired();
+        builder.OwnsOne(workflow => workflow.Name, workflowBuilder =>
+        {
+            workflowBuilder
+                .Property(name => name.Value)
+                .IsRequired()
+                .HasColumnName("name");
 
-        builder.Property(workflow => workflow.NormalizedName)
-            .IsRequired();
+            workflowBuilder
+                .Property(name => name.NormalizedValue)
+                .IsRequired()
+                .HasColumnName("normalized_name");
+        });
 
         builder.HasMany(workflow => workflow.Versions)
             .WithOne()
@@ -47,7 +54,33 @@ public sealed class WorkflowConfiguration : DomainEntityTypeConfiguration<Workfl
             .IsRequired()
             .HasPrincipalKey(workflow => workflow.Id)
             .OnDelete(DeleteBehavior.Cascade);
-
+        
         builder.Navigation(workflow => workflow.Versions).AutoInclude();
+        
+        // As long as https://github.com/dotnet/efcore/issues/38276 is not implemented,
+        // the code below does not work (nested property in owned entity cannot be accessed).
+
+        // builder.HasIndex(workflow => new
+        //     {
+        //         workflow.OrganizationId,
+        //         workflow.ApplicationId,
+        //         workflow.EnvironmentId,
+        //         workflow.Name.Value
+        //     })
+        //     .IsUnique();
+
+        // Best alternative at the moment is to define the index manually in the migration.
+
+        // Up
+        // migrationBuilder.CreateIndex(
+        //     name: "ix_workflows_organization_id_application_id_environment_id_name",
+        //     table: "workflows",
+        //     columns: new[] { "organization_id", "application_id", "environment_id", "name" },
+        //     unique: true);
+
+        // Down
+        // migrationBuilder.DropIndex(
+        //     name: "ix_workflows_organization_id_application_id_environment_id_name",
+        //     table: "applications");
     }
 }

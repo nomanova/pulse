@@ -8,7 +8,7 @@ using Pulse.Infra.Database.Contexts;
 
 #nullable disable
 
-namespace Pulse.Database.Migrations.Postgres
+namespace Pulse.Infra.Database.Migrations.Postgres
 {
     [DbContext(typeof(PostgresDatabaseContext))]
     partial class PostgresDatabaseContextModelSnapshot : ModelSnapshot
@@ -43,16 +43,6 @@ namespace Pulse.Database.Migrations.Postgres
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("modified_at");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<string>("NormalizedName")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("normalized_name");
 
                     b.Property<string>("OrganizationId")
                         .IsRequired()
@@ -100,16 +90,6 @@ namespace Pulse.Database.Migrations.Postgres
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("modified_at");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<string>("NormalizedName")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("normalized_name");
 
                     b.Property<string>("OrganizationId")
                         .IsRequired()
@@ -234,16 +214,6 @@ namespace Pulse.Database.Migrations.Postgres
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("modified_at");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<string>("NormalizedName")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("normalized_name");
-
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -281,16 +251,6 @@ namespace Pulse.Database.Migrations.Postgres
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("modified_at");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<string>("NormalizedName")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("normalized_name");
 
                     b.Property<string>("Scope")
                         .IsRequired()
@@ -572,16 +532,6 @@ namespace Pulse.Database.Migrations.Postgres
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("modified_at");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<string>("NormalizedName")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("normalized_name");
-
                     b.Property<string>("OrganizationId")
                         .IsRequired()
                         .HasColumnType("text")
@@ -701,6 +651,34 @@ namespace Pulse.Database.Migrations.Postgres
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_applications_organizations_organization_id");
+
+                    b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectName", "Name", b1 =>
+                        {
+                            b1.Property<string>("ApplicationId")
+                                .HasColumnType("text")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("NormalizedValue")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("normalized_name");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("name");
+
+                            b1.HasKey("ApplicationId");
+
+                            b1.ToTable("applications");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ApplicationId")
+                                .HasConstraintName("fk_applications_applications_id");
+                        });
+
+                    b.Navigation("Name")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Pulse.Domain.Aggregates.Environments.Environment", b =>
@@ -718,6 +696,34 @@ namespace Pulse.Database.Migrations.Postgres
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_environments_organizations_organization_id");
+
+                    b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectName", "Name", b1 =>
+                        {
+                            b1.Property<string>("EnvironmentId")
+                                .HasColumnType("text")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("NormalizedValue")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("normalized_name");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("name");
+
+                            b1.HasKey("EnvironmentId");
+
+                            b1.ToTable("environments");
+
+                            b1.WithOwner()
+                                .HasForeignKey("EnvironmentId")
+                                .HasConstraintName("fk_environments_environments_id");
+                        });
+
+                    b.Navigation("Name")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Pulse.Domain.Aggregates.Memberships.Membership", b =>
@@ -754,8 +760,107 @@ namespace Pulse.Database.Migrations.Postgres
                         .HasConstraintName("fk_memberships_users_user_id");
                 });
 
+            modelBuilder.Entity("Pulse.Domain.Aggregates.Organizations.Organization", b =>
+                {
+                    b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectName", "Name", b1 =>
+                        {
+                            b1.Property<string>("OrganizationId")
+                                .HasColumnType("text")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("NormalizedValue")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("normalized_name");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("name");
+
+                            b1.HasKey("OrganizationId");
+
+                            b1.HasIndex("Value")
+                                .IsUnique()
+                                .HasDatabaseName("ix_organizations_name");
+
+                            b1.ToTable("organizations");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrganizationId")
+                                .HasConstraintName("fk_organizations_organizations_id");
+                        });
+
+                    b.Navigation("Name")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Pulse.Domain.Aggregates.Roles.Role", b =>
+                {
+                    b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectName", "Name", b1 =>
+                        {
+                            b1.Property<string>("RoleId")
+                                .HasColumnType("text")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("NormalizedValue")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("normalized_name");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("name");
+
+                            b1.HasKey("RoleId");
+
+                            b1.HasIndex("Value")
+                                .IsUnique()
+                                .HasDatabaseName("ix_roles_name");
+
+                            b1.ToTable("roles");
+
+                            b1.WithOwner()
+                                .HasForeignKey("RoleId")
+                                .HasConstraintName("fk_roles_roles_id");
+                        });
+
+                    b.Navigation("Name")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Pulse.Domain.Aggregates.Users.User", b =>
                 {
+                    b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectName", "Username", b1 =>
+                        {
+                            b1.Property<string>("UserId")
+                                .HasColumnType("text")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("NormalizedValue")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("normalized_username");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("username");
+
+                            b1.HasKey("UserId");
+
+                            b1.HasIndex("Value")
+                                .IsUnique()
+                                .HasDatabaseName("ix_users_username");
+
+                            b1.ToTable("users");
+
+                            b1.WithOwner()
+                                .HasForeignKey("UserId")
+                                .HasConstraintName("fk_users_users_id");
+                        });
+
                     b.OwnsOne("Pulse.Domain.Aggregates.Users.ValueObjects.EmailAddress", "EmailAddress", b1 =>
                         {
                             b1.Property<string>("UserId")
@@ -811,35 +916,6 @@ namespace Pulse.Database.Migrations.Postgres
                                 .HasColumnName("normalized_name");
 
                             b1.HasKey("UserId");
-
-                            b1.ToTable("users");
-
-                            b1.WithOwner()
-                                .HasForeignKey("UserId")
-                                .HasConstraintName("fk_users_users_id");
-                        });
-
-                    b.OwnsOne("Pulse.Domain.Aggregates.Users.ValueObjects.Username", "Username", b1 =>
-                        {
-                            b1.Property<string>("UserId")
-                                .HasColumnType("text")
-                                .HasColumnName("id");
-
-                            b1.Property<string>("NormalizedValue")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("normalized_username");
-
-                            b1.Property<string>("Value")
-                                .IsRequired()
-                                .HasColumnType("text")
-                                .HasColumnName("username");
-
-                            b1.HasKey("UserId");
-
-                            b1.HasIndex("Value")
-                                .IsUnique()
-                                .HasDatabaseName("ix_users_username");
 
                             b1.ToTable("users");
 
@@ -953,6 +1029,34 @@ namespace Pulse.Database.Migrations.Postgres
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_workflows_organizations_organization_id");
+
+                    b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectName", "Name", b1 =>
+                        {
+                            b1.Property<string>("WorkflowId")
+                                .HasColumnType("text")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("NormalizedValue")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("normalized_name");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("name");
+
+                            b1.HasKey("WorkflowId");
+
+                            b1.ToTable("workflows");
+
+                            b1.WithOwner()
+                                .HasForeignKey("WorkflowId")
+                                .HasConstraintName("fk_workflows_workflows_id");
+                        });
+
+                    b.Navigation("Name")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Pulse.Domain.Aggregates.WorkflowInstances.WorkflowInstance", b =>

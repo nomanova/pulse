@@ -19,11 +19,18 @@ public static class DispatcherRegistration
 
         foreach (var type in assembly.GetTypes())
         {
-            if (type.IsAbstract || type.IsInterface) continue;
+            if (type.IsAbstract || type.IsInterface)
+            {
+                continue;
+            }
 
             foreach (var iface in type.GetInterfaces())
             {
-                if (!iface.IsGenericType) continue;
+                if (!iface.IsGenericType)
+                {
+                    continue;
+                }
+
                 var def = iface.GetGenericTypeDefinition();
 
                 if (def == typeof(IRequestHandler<,>))

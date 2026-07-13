@@ -4,6 +4,6 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationId": "{{organizationId}}",
-  "name": "Jenkins"
+  "organizationName": "{{organizationName}}",
+  "applicationName": "{{applicationName}}"
 }

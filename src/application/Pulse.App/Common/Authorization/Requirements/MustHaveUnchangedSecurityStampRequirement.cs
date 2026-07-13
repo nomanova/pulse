@@ -11,21 +11,21 @@ public sealed class MustHaveUnchangedSecurityStampRequirementHandler :
     IAuthorizationHandler<MustHaveUnchangedSecurityStampRequirement>
 {
     private readonly IUserClaimProvider _userClaimProvider;
-    private readonly ICachedUserProvider _cachedUserProvider;
+    private readonly IUserProvider _userProvider;
     
     public MustHaveUnchangedSecurityStampRequirementHandler(
         IUserClaimProvider userClaimProvider, 
-        ICachedUserProvider cachedUserProvider)
+        IUserProvider userProvider)
     {
         _userClaimProvider = userClaimProvider;
-        _cachedUserProvider = cachedUserProvider;
+        _userProvider = userProvider;
     }
     
     public async Task<ErrorOr<Success>> Handle(MustHaveUnchangedSecurityStampRequirement request,
         CancellationToken cancellationToken)
     {
         var claimedSecurityStamp = _userClaimProvider.SecurityStamp;
-        var user = await _cachedUserProvider.Get(cancellationToken);
+        var user = await _userProvider.Get(cancellationToken);
         
         if (user.SecurityStamp.Value != claimedSecurityStamp)
         {

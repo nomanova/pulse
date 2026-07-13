@@ -13,7 +13,7 @@ public sealed class OrganizationBuilder : IBuilder<Organization>
     public static OrganizationBuilder New()
     {
         return new OrganizationBuilder()
-            .WithName("Princeton-Plainsboro");
+            .WithName("princeton-plainsboro");
     }
 
     public OrganizationBuilder WithName(string name)

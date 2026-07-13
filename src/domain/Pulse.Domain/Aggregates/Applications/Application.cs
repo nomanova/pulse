@@ -1,23 +1,20 @@
 using Pulse.Domain.Aggregates.Applications.Events;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Common.Errors;
-using Pulse.Domain.Common.Extensions;
 using Pulse.Domain.Common.Models.Entities;
-using Pulse.Domain.Common.Models.Text;
+using Pulse.Domain.Common.Models.ValueObjects;
 using Pulse.Domain.Common.Services;
 
 namespace Pulse.Domain.Aggregates.Applications;
 
 public sealed record ApplicationId : EntityId<ApplicationId, Application>;
 
-public sealed class Application : DomainEntity<ApplicationId>, 
-    IOrganizationScoped, INamed
+public sealed class Application : DomainEntity<ApplicationId>,
+    IOrganizationScoped, INamedObject
 {
     public OrganizationId OrganizationId { get; } = null!;
 
-    public string Name { get; private set; } = null!;
-
-    public string NormalizedName { get; private set; } = null!;
+    public ObjectName Name { get; private set; } = null!;
 
     private Application()
     {
@@ -26,33 +23,30 @@ public sealed class Application : DomainEntity<ApplicationId>,
     private Application(
         ApplicationId id,
         OrganizationId organizationId,
-        string name,
-        string normalizedName) : base(id)
+        ObjectName name) : base(id)
     {
         OrganizationId = organizationId;
         Name = name;
-        NormalizedName = normalizedName;
     }
 
     public static Application Create(string? name, Organization organization)
     {
-        var nameValue = name.AsName().Assert();
+        var objectName = ObjectName.Create(name).Assert();
         var id = IdentityProvider.New<ApplicationId>();
 
         var application = new Application(
             id,
             organization.Id,
-            nameValue,
-            nameValue.AsNormalizedQueryable());
+            objectName);
 
         application.SetCreated();
         application.AddEvent(new ApplicationCreatedEvent(organization.Id, id));
-        
+
         return application;
     }
 
     public override string ToString()
     {
-        return $"[{Id.Value}] {Name}";
+        return $"[{Id.Value}] {Name.Value}";
     }
 }

@@ -8,5 +8,6 @@ public enum Scope
 {
     Environment = 0,
     Application = 1,
-    Organization = 2
+    Organization = 2,
+    Server = 3
 }

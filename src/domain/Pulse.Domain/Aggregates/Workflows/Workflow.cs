@@ -5,9 +5,8 @@ using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.WorkflowInstances;
 using Pulse.Domain.Aggregates.Workflows.Entities;
 using Pulse.Domain.Common.Errors;
-using Pulse.Domain.Common.Extensions;
 using Pulse.Domain.Common.Models.Entities;
-using Pulse.Domain.Common.Models.Text;
+using Pulse.Domain.Common.Models.ValueObjects;
 using Pulse.Domain.Common.Services;
 using ApplicationId = Pulse.Domain.Aggregates.Applications.ApplicationId;
 using Environment = Pulse.Domain.Aggregates.Environments.Environment;
@@ -16,7 +15,7 @@ namespace Pulse.Domain.Aggregates.Workflows;
 
 public sealed record WorkflowId : EntityId<WorkflowId, Workflow>;
 
-public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INamed
+public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INamedObject
 {
     public OrganizationId OrganizationId { get; private set; } = null!;
 
@@ -24,9 +23,7 @@ public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INa
 
     public EnvironmentId EnvironmentId { get; private set; } = null!;
 
-    public string Name { get; private set; } = null!;
-
-    public string NormalizedName { get; private set; } = null!;
+    public ObjectName Name { get; private set; } = null!;
 
     public WorkflowVersionId? PublishedVersionId { get; private set; }
     
@@ -50,19 +47,17 @@ public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INa
         OrganizationId organizationId,
         ApplicationId applicationId,
         EnvironmentId environmentId,
-        string name,
-        string normalizedName) : base(id)
+        ObjectName name) : base(id)
     {
         OrganizationId = organizationId;
         ApplicationId = applicationId;
         EnvironmentId = environmentId;
         Name = name;
-        NormalizedName = normalizedName;
     }
 
     public static Workflow Create(Environment environment, string? name)
     {
-        var nameValue = name.AsName().Assert();
+        var objectName = ObjectName.Create(name).Assert();
         var id = IdentityProvider.New<WorkflowId>();
 
         var workflow = new Workflow(
@@ -70,11 +65,9 @@ public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INa
             environment.OrganizationId,
             environment.ApplicationId,
             environment.Id,
-            nameValue,
-            nameValue.AsNormalizedQueryable());
+            objectName);
 
         workflow.CreateDraftVersion();
-
         workflow.SetCreated();
 
         return workflow;
@@ -82,16 +75,14 @@ public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INa
 
     public void Rename(string? name)
     {
-        var nameValue = name.AsName().Assert();
+        var objectName = ObjectName.Create(name).Assert();
 
-        if (Name == nameValue)
+        if (Name == objectName)
         {
             return;
         }
 
-        Name = nameValue;
-        NormalizedName = nameValue.AsNormalizedQueryable();
-
+        Name = objectName;
         SetModified();
     }
 

@@ -2,6 +2,7 @@ using Pulse.Domain.Aggregates.Users.Services;
 using Pulse.Domain.Aggregates.Users.ValueObjects;
 using Pulse.Domain.Common.Errors;
 using Pulse.Domain.Common.Models.Entities;
+using Pulse.Domain.Common.Models.ValueObjects;
 using Pulse.Domain.Common.Services;
 
 namespace Pulse.Domain.Aggregates.Users;
@@ -10,7 +11,7 @@ public sealed record UserId : EntityId<UserId, User>;
 
 public class User : DomainEntity<UserId>
 {
-    public Username Username { get; private set; } = null!;
+    public ObjectName Username { get; private set; } = null!;
 
     public Name? Name { get; private set; }
     
@@ -26,7 +27,7 @@ public class User : DomainEntity<UserId>
 
     private User(
         UserId id,
-        Username username) : base(id)
+        ObjectName username) : base(id)
     {
         Username = username;
         SecurityStamp = SecurityStamp.Create();
@@ -34,7 +35,7 @@ public class User : DomainEntity<UserId>
 
     public static User Create(string? username)
     {
-        var usernameValue = Username.Create(username).Assert();
+        var usernameValue = ObjectName.Create(username).Assert();
         var id = IdentityProvider.New<UserId>();
 
         var user = new User(id, usernameValue);

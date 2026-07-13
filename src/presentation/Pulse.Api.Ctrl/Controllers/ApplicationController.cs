@@ -6,8 +6,6 @@ using Pulse.Api.Ctrl.Controllers.Base;
 using Pulse.Api.Ctrl.Contract.Applications;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Handlers.Applications.Commands;
-using Pulse.Domain.Aggregates.Organizations;
-using Pulse.Domain.Common.Models.Entities;
 
 namespace Pulse.Api.Ctrl.Controllers;
 
@@ -29,8 +27,8 @@ public class ApplicationController : CtrlApiController
     {
         var command = new CreateApplicationCommand
         {
-            OrganizationId = request.OrganizationId.AsIdentity<OrganizationId>(),
-            Name = request.Name
+            OrganizationName = request.OrganizationName,
+            ApplicationName = request.ApplicationName
         };
         
         var result = await _sender.Send(command, cancellationToken);

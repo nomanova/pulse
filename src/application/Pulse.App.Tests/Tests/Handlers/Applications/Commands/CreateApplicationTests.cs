@@ -15,8 +15,8 @@ public class CreateApplicationTests : AppTests
         
         var command = new CreateApplicationCommand
         {
-            OrganizationId = context.Organization.Id,
-            Name = "Test Application"
+            OrganizationName = context.Organization.Name.Value,
+            ApplicationName = "test-app"
         };
         
         // Act

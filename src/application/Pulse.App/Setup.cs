@@ -2,6 +2,7 @@ using System.Reflection;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Pulse.App.Common.Authorization;
+using Pulse.App.Common.Context;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Common.Security;
 using Pulse.App.Common.Security.Interfaces;
@@ -26,8 +27,8 @@ public static class Setup
         public IServiceCollection AddApplication()
         {
             services.AddRequestPipeline();
-            services.AddSecurity();
             services.AddRepositories();
+            services.AddServices();
         
             return services;
         }
@@ -35,21 +36,18 @@ public static class Setup
         private void AddRequestPipeline()
         {
             services.AddDispatcher(Assembly.GetExecutingAssembly());
-        
+
             // Validators
             services.AddPipelineBehavior(typeof(ValidationBehavior<,>));
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             
+            // Context
+            services.AddPipelineBehavior(typeof(ContextProviderBehavior<,>));
+            
             // Authorizers
-            services.AddPipelineBehavior(typeof(ResourceAuthorizationContextBehavior<,>));
             services.AddPipelineBehavior(typeof(AuthorizationBehavior<,>));
             services.AddAuthorizersFromAssembly(Assembly.GetExecutingAssembly());
-        }
-
-        private void AddSecurity()
-        {
-            services.AddScoped<ICachedUserProvider, CachedUserProvider>();
-            services.AddScoped<IResourceAuthorizationContextProvider, ResourceAuthorizationContextProvider>();
+            services.AddAuthorizationRequirementsFromAssembly(Assembly.GetExecutingAssembly());
         }
 
         private void AddRepositories()
@@ -69,6 +67,9 @@ public static class Setup
 
         private void AddServices()
         {
+            services.AddScoped<IUserProvider, UserProvider>();
+            services.AddScoped<IContextProvider, ContextProvider>();
+            
             services.AddScoped<IWorkflowStepExecutor, WorkflowStepExecutor>();
         }
     }

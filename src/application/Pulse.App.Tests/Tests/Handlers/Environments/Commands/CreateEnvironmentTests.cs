@@ -1,9 +1,8 @@
 using System.Threading.Tasks;
-using Pulse.App.Handlers.Applications.Commands;
 using Pulse.App.Handlers.Environments.Commands;
 using Pulse.App.Tests.Framework;
-using Pulse.Domain.Aggregates.Applications;
-using Pulse.Domain.Common.Models.Entities;
+using Pulse.App.Tests.Framework.Mocks.Database;
+using Pulse.Tests.Shared.Builders;
 using Xunit;
 
 namespace Pulse.App.Tests.Tests.Handlers.Environments.Commands;
@@ -16,22 +15,14 @@ public class CreateEnvironmentTests : AppTests
         // Arrange
         var context = EnsureOwnedOrganization();
         
-        var createApplicationCommand = new CreateApplicationCommand
-        {
-            OrganizationId = context.Organization.Id,
-            Name = "Test Application"
-        };
+        var application = ApplicationBuilder.New(context.Organization).Build();
+        DatabaseContext.AddApplications(application);
         
-        var createApplicationResult = await Sender.Send(createApplicationCommand);
-        Assert.False(createApplicationResult.IsError);
-        
-        var application = createApplicationResult.Value;
-
         var command = new CreateEnvironmentCommand
         {
-            OrganizationId = context.Organization.Id,
-            ApplicationId = application.Id.AsIdentity<ApplicationId>(),
-            Name = "Test Environment"
+            OrganizationName = context.Organization.Name.Value,
+            ApplicationName = application.Name.Value,
+            EnvironmentName = "test-env"
         };
 
         // Act

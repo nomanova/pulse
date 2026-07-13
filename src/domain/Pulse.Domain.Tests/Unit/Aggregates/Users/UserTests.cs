@@ -16,7 +16,7 @@ public class UserTests
     public void Create_WithValidUsername_ShouldSucceed()
     {
         // Arrange
-        var username = _faker.Internet.UserName();
+        const string username = "admin";
 
         // Act
         var user = User.Create(username);
@@ -34,7 +34,7 @@ public class UserTests
     public void SetName_WithValidData_ShouldUpdateName()
     {
         // Arrange
-        var user = User.Create(_faker.Internet.UserName());
+        var user = User.Create("admin");
         var firstName = _faker.Name.FirstName();
         var lastName = _faker.Name.LastName();
 
@@ -52,7 +52,7 @@ public class UserTests
     public void SetPassword_WithValidPassword_ShouldUpdatePasswordAndResetSecurityStamp()
     {
         // Arrange
-        var user = User.Create(_faker.Internet.UserName());
+        var user = User.Create("admin");
         var initialSecurityStamp = user.SecurityStamp.Value;
         var password = _faker.Internet.Password(Password.MinLength);
 
@@ -70,7 +70,7 @@ public class UserTests
     public void SetEmail_WithValidEmail_ShouldUpdateEmail()
     {
         // Arrange
-        var user = User.Create(_faker.Internet.UserName());
+        var user = User.Create("admin");
         var email = _faker.Internet.Email();
 
         // Act
@@ -87,7 +87,7 @@ public class UserTests
     public void SetEmailConfirmed_WithEmailSet_ShouldConfirmEmail()
     {
         // Arrange
-        var user = User.Create(_faker.Internet.UserName());
+        var user = User.Create("admin");
         user.SetEmail(_faker.Internet.Email());
 
         // Act
@@ -102,7 +102,7 @@ public class UserTests
     public void SetEmailConfirmed_WithoutEmailSet_ShouldThrowDomainException()
     {
         // Arrange
-        var user = User.Create(_faker.Internet.UserName());
+        var user = User.Create("admin");
 
         // Act & Assert
         Assert.Throws<DomainException>(user.SetEmailConfirmed);
@@ -112,7 +112,7 @@ public class UserTests
     public void IsMatchingPassword_WithCorrectPassword_ShouldReturnTrue()
     {
         // Arrange
-        var user = User.Create(_faker.Internet.UserName());
+        var user = User.Create("admin");
         var password = _faker.Internet.Password(Password.MinLength);
         user.SetPassword(password, _passwordHasher);
 
@@ -127,7 +127,7 @@ public class UserTests
     public void IsMatchingPassword_WithIncorrectPassword_ShouldReturnFalse()
     {
         // Arrange
-        var user = User.Create(_faker.Internet.UserName());
+        var user = User.Create("admin");
         var password = _faker.Internet.Password(Password.MinLength);
         user.SetPassword(password, _passwordHasher);
 
@@ -142,7 +142,7 @@ public class UserTests
     public void IsMatchingPassword_WithNoPasswordSet_ShouldReturnFalse()
     {
         // Arrange
-        var user = User.Create(_faker.Internet.UserName());
+        var user = User.Create("admin");
 
         // Act
         var result = user.IsMatchingPassword("any-password", _passwordHasher);
@@ -155,7 +155,7 @@ public class UserTests
     public void ToString_ShouldReturnFormattedString()
     {
         // Arrange
-        var user = User.Create(_faker.Internet.UserName());
+        var user = User.Create("admin");
         var firstName = _faker.Name.FirstName();
         var lastName = _faker.Name.LastName();
         user.SetName(firstName, lastName);
@@ -180,7 +180,7 @@ public class UserTests
     public void SetName_WithInvalidData_ShouldThrowDomainException()
     {
         // Arrange
-        var user = User.Create(_faker.Internet.UserName());
+        var user = User.Create("admin");
 
         // Act & Assert
         Assert.Throws<DomainException>(() => user.SetName("", ""));
@@ -190,7 +190,7 @@ public class UserTests
     public void SetPassword_WithInvalidPassword_ShouldThrowDomainException()
     {
         // Arrange
-        var user = User.Create(_faker.Internet.UserName());
+        var user = User.Create("admin");
         var invalidPassword = _faker.Random.String2(Password.MinLength - 1);
 
         // Act & Assert
@@ -201,7 +201,7 @@ public class UserTests
     public void SetEmail_WithInvalidEmail_ShouldThrowDomainException()
     {
         // Arrange
-        var user = User.Create(_faker.Internet.UserName());
+        var user = User.Create("admin");
 
         // Act & Assert
         Assert.Throws<DomainException>(() => user.SetEmail("invalid-email"));

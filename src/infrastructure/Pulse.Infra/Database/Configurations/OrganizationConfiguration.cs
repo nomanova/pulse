@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Infra.Database.Configurations.Base;
@@ -13,13 +14,23 @@ public sealed class OrganizationConfiguration : DomainEntityTypeConfiguration<Or
     public override void Configure(EntityTypeBuilder<Organization> builder)
     {
         base.Configure(builder);
-        
+
         builder.HasKey(user => user.Id);
-        
-        builder.Property(organization => organization.Name)
-            .IsRequired();
-        
-        builder.Property(organization => organization.NormalizedName)
-            .IsRequired();
+
+        builder.OwnsOne(organization => organization.Name, organizationBuilder =>
+        {
+            organizationBuilder
+                .Property(name => name.Value)
+                .IsRequired()
+                .HasColumnName("name");
+
+            organizationBuilder
+                .Property(name => name.NormalizedValue)
+                .IsRequired()
+                .HasColumnName("normalized_name");
+            
+            organizationBuilder.HasIndex(name => name.Value)
+                .IsUnique();
+        });
     }
 }

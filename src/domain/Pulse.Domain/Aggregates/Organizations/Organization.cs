@@ -1,18 +1,15 @@
 using Pulse.Domain.Common.Errors;
-using Pulse.Domain.Common.Extensions;
 using Pulse.Domain.Common.Models.Entities;
-using Pulse.Domain.Common.Models.Text;
+using Pulse.Domain.Common.Models.ValueObjects;
 using Pulse.Domain.Common.Services;
 
 namespace Pulse.Domain.Aggregates.Organizations;
 
 public sealed record OrganizationId : EntityId<OrganizationId, Organization>;
 
-public sealed class Organization : DomainEntity<OrganizationId>, INamed
+public sealed class Organization : DomainEntity<OrganizationId>, INamedObject
 {
-    public string Name { get; private set; } = null!;
-
-    public string NormalizedName { get; private set; } = null!;
+    public ObjectName Name { get; private set; } = null!;
 
     private Organization()
     {
@@ -20,23 +17,17 @@ public sealed class Organization : DomainEntity<OrganizationId>, INamed
 
     private Organization(
         OrganizationId id,
-        string name,
-        string normalizedName) : base(id)
+        ObjectName name) : base(id)
     {
         Name = name;
-        NormalizedName = normalizedName;
     }
 
     public static Organization Create(string? name)
     {
-        var nameValue = name.AsName().Assert();
+        var objectName = ObjectName.Create(name).Assert();
         var id = IdentityProvider.New<OrganizationId>();
 
-        var organization = new Organization(
-            id,
-            nameValue,
-            nameValue.AsNormalizedQueryable());
-
+        var organization = new Organization(id, objectName);
         organization.SetCreated();
 
         return organization;
@@ -44,6 +35,6 @@ public sealed class Organization : DomainEntity<OrganizationId>, INamed
 
     public override string ToString()
     {
-        return $"[{Id.Value}] {Name}";
+        return $"[{Id.Value}] {Name.Value}";
     }
 }

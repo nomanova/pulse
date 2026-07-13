@@ -8,13 +8,14 @@ using Pulse.App.Common.Dispatcher;
 namespace Pulse.App.Common.Authorization;
 
 public sealed class AuthorizationBehavior<TRequest, TResponse>(
-    IEnumerable<IAuthorizer<TRequest>> authorizers, ISender sender) : IPipelineBehavior<TRequest, TResponse>
+    IEnumerable<IAuthorizer<TRequest>> authorizers,
+    IAuthorizationSender sender) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     where TResponse : IErrorOr
 {
     public async Task<TResponse> Handle(
-        TRequest request, 
-        RequestHandlerDelegate<TResponse> next, 
+        TRequest request,
+        RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
         var requirements = new List<IAuthorizationRequirement>();
@@ -24,7 +25,7 @@ public sealed class AuthorizationBehavior<TRequest, TResponse>(
             authorizer.BuildPolicy(request);
             requirements.AddRange(authorizer.Requirements);
         }
-        
+
         foreach (var requirement in requirements.Distinct())
         {
             var result = await sender.Send(requirement, cancellationToken);
