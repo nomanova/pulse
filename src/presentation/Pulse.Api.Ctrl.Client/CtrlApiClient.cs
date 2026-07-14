@@ -1,0 +1,20 @@
+using Pulse.Api.Client;
+using Pulse.Api.Client.Common;
+using Pulse.Api.Ctrl.Client.Users;
+
+namespace Pulse.Api.Ctrl.Client;
+
+public class CtrlApiClient : ApiClient, ICtrlApiClient
+{
+    public IUsersService Users { get; private set; } = null!;
+    
+    public CtrlApiClient(ApiClientOptions options) : base(options)
+    {
+        CreateServices(options.ApiEndpointProvider);
+    }
+
+    private void CreateServices(IApiEndpointProvider? endpointProvider = null)
+    {
+        Users = new UsersService(endpointProvider, HttpClient);
+    }
+}

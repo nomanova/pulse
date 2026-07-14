@@ -29,10 +29,19 @@ public sealed class ServerListCommand : Command<ServerListCommand.Settings>
             return Constants.ExitSuccess;
         }
 
+        var table = new Table();
+
+        table.AddColumn("");
+        table.AddColumn("Name");
+        table.AddColumn("Url");
+
         foreach (var server in config.Servers)
         {
-            _console.WriteLine($"{server.Key} - {server.Value.Url}");
+            var isSelected = config.Context.ServerName == server.Key;
+            table.AddRow(isSelected ? ">" : "", server.Key, server.Value.Url);
         }
+
+        _console.Write(table);
 
         return Constants.ExitSuccess;
     }

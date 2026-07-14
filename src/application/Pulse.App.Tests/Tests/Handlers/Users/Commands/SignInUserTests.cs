@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Moq;
-using Pulse.App.Handlers.Users.Commands.SignIn;
+using Pulse.App.Handlers.Users.Commands;
 using Pulse.App.Tests.Framework;
 using Pulse.Domain.Aggregates.Users;
 using Xunit;

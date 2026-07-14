@@ -26,5 +26,42 @@ public sealed record Config
 
     public Dictionary<string, Server> Servers { get; init; } = [];
 
-    public Context Context { get; init; } = new();
+    public Context Context { get; private set; } = new();
+
+    public void SetServer(string name)
+    {
+        Context = new Context
+        {
+            ServerName = name
+        };
+    }
+
+    public void ClearServer()
+    {
+        Context = new Context();
+    }
+
+    public bool HasServer()
+    {
+        return Context.ServerName is not null &&
+               Servers.ContainsKey(Context.ServerName);
+    }
+
+    public Server? CurrentServer()
+    {
+        return Context.ServerName is null ? null : Servers[Context.ServerName];
+    }
+    
+    public void SignIn(string accessToken)
+    {
+        if (!HasServer())
+        {
+            throw new CliException("No server selected");
+        }
+
+        Servers[Context.ServerName!] = Servers[Context.ServerName!] with
+        {
+            AccessToken = accessToken
+        };
+    }
 }

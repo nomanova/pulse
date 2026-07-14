@@ -67,6 +67,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Tools", "_Tools", "{B23455
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Cli", "src\tools\Pulse.Cli\Pulse.Cli.csproj", "{3DD20860-8E3D-4B4C-8B0E-4E29D373E244}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Cli.Tests", "src\tools\Pulse.Cli.Tests\Pulse.Cli.Tests.csproj", "{FAEF8D66-DE17-4BE0-AE5B-DB47A93A97E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -90,6 +92,7 @@ Global
 		{A21CCDDD-88B2-49BA-8637-FADB3D646D7D} = {FB35BCD8-1BC7-4BD6-8452-03EF5ED474A8}
 		{5EF1DA89-5E85-4472-8EBA-0EE4650BBEA4} = {89A8C8E4-02E1-45AE-8B43-28E62013EADE}
 		{3DD20860-8E3D-4B4C-8B0E-4E29D373E244} = {B234551D-56DC-4EED-B5CC-78F93E0B1285}
+		{FAEF8D66-DE17-4BE0-AE5B-DB47A93A97E1} = {B234551D-56DC-4EED-B5CC-78F93E0B1285}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{25CDAA92-F4FE-41AA-ABFF-20167D395406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -160,5 +163,9 @@ Global
 		{3DD20860-8E3D-4B4C-8B0E-4E29D373E244}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3DD20860-8E3D-4B4C-8B0E-4E29D373E244}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3DD20860-8E3D-4B4C-8B0E-4E29D373E244}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FAEF8D66-DE17-4BE0-AE5B-DB47A93A97E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FAEF8D66-DE17-4BE0-AE5B-DB47A93A97E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FAEF8D66-DE17-4BE0-AE5B-DB47A93A97E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FAEF8D66-DE17-4BE0-AE5B-DB47A93A97E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

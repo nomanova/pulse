@@ -6,17 +6,23 @@ public static class Setup
 {
     public static IConfigurator AddServer(this IConfigurator config)
     {
-        config.AddBranch("server", server =>
+        config.AddBranch("server", configurator =>
         {
-            server.SetDescription("Server commands");
+            configurator.SetDescription("Server commands");
 
-            server.AddCommand<ServerAddCommand>(ServerAddCommand.Name)
+            configurator.AddCommand<ServerAddCommand>(ServerAddCommand.Name)
                 .WithDescription("Add a new server");
-            
-            server.AddCommand<ServerListCommand>(ServerListCommand.Name)
+
+            configurator.AddCommand<ServerListCommand>(ServerListCommand.Name)
                 .WithDescription("List known servers");
+
+            configurator.AddCommand<ServerSelectCommand>(ServerSelectCommand.Name)
+                .WithDescription("Select a server");
+
+            configurator.AddCommand<ServerRemoveCommand>(ServerRemoveCommand.Name)
+                .WithDescription("Remove a server");
         });
-        
+
         return config;
     }
 }

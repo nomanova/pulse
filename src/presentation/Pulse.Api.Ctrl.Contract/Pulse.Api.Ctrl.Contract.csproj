@@ -4,4 +4,9 @@
         <ProjectGuid>{A1EF0B40-5108-442C-90FD-282B8A9A35FD}</ProjectGuid>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\..\application\Pulse.App.Dto\Pulse.App.Dto.csproj" />
+      <ProjectReference Include="..\Pulse.Api.Shared.Contract\Pulse.Api.Shared.Contract.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -7,7 +7,7 @@ using Pulse.Api.Ctrl.Controllers.Base;
 using Pulse.Api.Ctrl.Contract.Users;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Dto.Users;
-using Pulse.App.Handlers.Users.Commands.SignIn;
+using Pulse.App.Handlers.Users.Commands;
 
 namespace Pulse.Api.Ctrl.Controllers;
 

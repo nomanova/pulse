@@ -4,4 +4,13 @@
         <ProjectGuid>{BA9B8D45-0B5F-4129-9B30-CFB57427AF46}</ProjectGuid>
     </PropertyGroup>
 
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Net.Http.Headers" Version="10.0.10" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+      <ProjectReference Include="..\Pulse.Api.Shared.Contract\Pulse.Api.Shared.Contract.csproj" />
+    </ItemGroup>
+
 </Project>

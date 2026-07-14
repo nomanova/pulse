@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Pulse.Cli.Commands.Server;
+using Pulse.Cli.Commands.User;
 using Spectre.Console.Cli;
 
 namespace Pulse.Cli;
@@ -14,8 +15,9 @@ public static class Program
         app.Configure(config =>
         {
             config.SetApplicationName("pulse");
-            
+
             config.AddServer();
+            config.AddUser();
         });
 
         return await app.RunAsync(args);

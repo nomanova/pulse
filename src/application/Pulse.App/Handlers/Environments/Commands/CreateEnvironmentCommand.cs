@@ -30,7 +30,7 @@ public sealed record CreateEnvironmentCommand :
 
 public sealed class CreateEnvironmentCommandAuthorizer : PermissionAuthorizer<CreateEnvironmentCommand>;
 
-public class CreateApplicationCommandHandler : ICommandHandler<CreateEnvironmentCommand, ErrorOr<IdentityDto>>
+public class CreateEnvironmentCommandHandler : ICommandHandler<CreateEnvironmentCommand, ErrorOr<IdentityDto>>
 {
     private readonly IUserProvider _userProvider;
     private readonly IContextProvider _contextProvider;
@@ -38,7 +38,7 @@ public class CreateApplicationCommandHandler : ICommandHandler<CreateEnvironment
     private readonly IMembershipRepository _membershipRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateApplicationCommandHandler(
+    public CreateEnvironmentCommandHandler(
         IUserProvider userProvider,
         IContextProvider contextProvider,
         IEnvironmentRepository environmentRepository,

@@ -6,4 +6,9 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Pulse.Api.Client\Pulse.Api.Client.csproj" />
+      <ProjectReference Include="..\Pulse.Api.Ctrl.Contract\Pulse.Api.Ctrl.Contract.csproj" />
+    </ItemGroup>
+
 </Project>

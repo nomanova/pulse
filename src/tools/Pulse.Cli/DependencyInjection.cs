@@ -1,5 +1,7 @@
 using System;
 using Microsoft.Extensions.DependencyInjection;
+using Pulse.Api.Client.Common;
+using Pulse.Api.Ctrl.Client;
 using Pulse.Cli.Services;
 using Spectre.Console.Cli;
 
@@ -27,9 +29,14 @@ public static class DependencyInjection
     public static ITypeRegistrar GetRegistrar()
     {
         var services = new ServiceCollection();
-        
+
         services.AddSingleton<IFileService, FileService>();
         services.AddSingleton<IConfigService, ConfigService>();
+        services.AddSingleton<IApiEndpointProvider, ApiEndpointProvider>();
+
+        services.AddSingleton<ICtrlApiClient>(provider => new CtrlApiClientBuilder()
+            .WithApiEndpoint(provider.GetRequiredService<IApiEndpointProvider>())
+            .Build());
 
         return new TypeRegistrar(services);
     }

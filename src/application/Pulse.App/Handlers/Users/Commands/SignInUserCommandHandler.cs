@@ -10,7 +10,7 @@ using Pulse.App.Handlers.Users.Common;
 using Pulse.App.Handlers.Users.Common.Specifications;
 using Pulse.Domain.Aggregates.Users.Services;
 
-namespace Pulse.App.Handlers.Users.Commands.SignIn;
+namespace Pulse.App.Handlers.Users.Commands;
 
 public sealed record SignInUserCommand : ICommand<ErrorOr<AuthDto>>
 {
