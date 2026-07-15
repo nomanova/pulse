@@ -43,7 +43,7 @@ jobs:
 
       - name: Pack
         run: >
-          dotnet pack ./src/Pulse.Cli/Pulse.Cli.csproj
+          dotnet pack ./src/tools/Pulse.Cli/Pulse.Cli.csproj
           -c Release
           -o ./artifacts
           /p:Version=${{ env.PACKAGE_VERSION }}
