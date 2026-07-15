@@ -1,24 +1,7 @@
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace Pulse.Cli.Models;
-
-public sealed record Server
-{
-    public required string Url { get; init; }
-
-    public string? AccessToken { get; init; }
-}
-
-public sealed record Context
-{
-    public string? ServerName { get; init; }
-
-    public string? OrganizationName { get; init; }
-
-    public string? ApplicationName { get; init; }
-
-    public string? EnvironmentName { get; init; }
-}
 
 public sealed record Config
 {
@@ -26,6 +9,7 @@ public sealed record Config
 
     public Dictionary<string, Server> Servers { get; init; } = [];
 
+    [JsonInclude]
     public Context Context { get; private set; } = new();
 
     public void SetServer(string name)

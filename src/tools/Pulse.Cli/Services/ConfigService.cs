@@ -17,6 +17,11 @@ public sealed class ConfigService : IConfigService
     private const string ConfigurationDirectory = "Pulse";
     private const string ConfigurationFileName = "config.json";
 
+    private static readonly JsonSerializerOptions SerializerOptions = new()
+    {
+        WriteIndented = true
+    };
+    
     private readonly IFileService _fileService;
 
     public ConfigService(IFileService fileService)
@@ -29,14 +34,15 @@ public sealed class ConfigService : IConfigService
         _fileService.EnsureDirectory(ConfigurationPath);
         var configText = _fileService.ReadFile(ConfigurationFile);
         
-        return configText is null ? new Config() : JsonSerializer.Deserialize<Config>(configText)!;
+        return configText is null ? new Config() : 
+            JsonSerializer.Deserialize<Config>(configText, SerializerOptions)!;
     }
 
     public void Save(Config config)
     {
         _fileService.EnsureDirectory(ConfigurationPath);
 
-        var configText = JsonSerializer.Serialize(config);
+        var configText = JsonSerializer.Serialize(config, SerializerOptions);
         _fileService.WriteFile(ConfigurationFile, configText);
     }
 

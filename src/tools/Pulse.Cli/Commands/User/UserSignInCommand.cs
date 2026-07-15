@@ -64,7 +64,7 @@ public sealed class UserSignInCommand : AsyncCommand<UserSignInCommand.Settings>
 
         if (!result.Success)
         {
-            _console.WriteError($"Sign in failed - [{result.Problem?.Code}] {result.Problem?.Description}");
+            _console.WriteProblem(result.Problem!);
             return Constants.ExitError;
         }
 
@@ -73,6 +73,8 @@ public sealed class UserSignInCommand : AsyncCommand<UserSignInCommand.Settings>
         
         _configService.Save(config);
 
+        _console.WriteLine($"User '{username}' signed in");
+        
         return Constants.ExitSuccess;
     }
 }

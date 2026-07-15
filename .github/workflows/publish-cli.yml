@@ -1,0 +1,53 @@
+#
+# To publish a new version of the CLI
+# git tag cli/v1.2.3
+# git push origin cli/v1.2.3
+#
+name: Publish CLI
+
+on:
+  push:
+    tags:
+      - "cli/v*.*.*"
+
+jobs:
+  publish-cli:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "10.0.x"
+
+      - name: Restore
+        run: dotnet restore
+
+      - name: Derive and validate package version from tag
+        shell: bash
+        run: |
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#cli/v}"
+
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Invalid CLI version tag: $TAG"
+            echo "Expected format: cli/v1.2.3 or cli/v1.2.3-preview.1"
+            exit 1
+          fi
+
+          echo "PACKAGE_VERSION=$VERSION" >> "$GITHUB_ENV"
+
+      - name: Pack
+        run: >
+          dotnet pack ./src/Pulse.Cli/Pulse.Cli.csproj
+          -c Release
+          -o ./artifacts
+          /p:Version=${{ env.PACKAGE_VERSION }}
+
+      - name: Publish to NuGet
+        run: >
+          dotnet nuget push "./artifacts/*.nupkg"
+          --api-key "${{ secrets.NUGET_API_KEY }}"
+          --source https://api.nuget.org/v3/index.json
+          --skip-duplicate
