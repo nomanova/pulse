@@ -10,7 +10,7 @@
         <Description>Command-line tool for Pulse.</Description>
         <PackageTags>pulse;cli;tool</PackageTags>
         <RepositoryUrl>https://github.com/nomanova/pulse</RepositoryUrl>
-        <PackageLicenseExpression>AGPL-3.0</PackageLicenseExpression>
+        <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
         <PackageProjectUrl>https://github.com/nomanova/pulse</PackageProjectUrl>
         <RepositoryType>git</RepositoryType>
