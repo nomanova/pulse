@@ -5,7 +5,7 @@ using Pulse.App.Tests.Framework;
 using Pulse.Domain.Aggregates.Users;
 using Xunit;
 
-namespace Pulse.App.Tests.Tests.Handlers.Users.Commands;
+namespace Pulse.App.Tests.Unit.Handlers.Users.Commands;
 
 public class SignInUserTests : AppTests
 {

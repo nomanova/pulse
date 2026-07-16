@@ -5,11 +5,11 @@ namespace Pulse.Api.Client;
 
 public abstract class ApiClientBuilder<T> where T : ApiClient
 {
-    protected IApiEndpointProvider? ApiEndpointProvider;
+    protected IEndpointProvider? ApiEndpointProvider;
     protected TimeSpan? RequestTimeout;
     protected Func<IBearerTokenProvider>? BearerTokenProvider;
 
-    public ApiClientBuilder<T> WithApiEndpoint(IApiEndpointProvider provider)
+    public ApiClientBuilder<T> WithApiEndpoint(IEndpointProvider provider)
     {
         ApiEndpointProvider = provider;
         return this;

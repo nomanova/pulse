@@ -23,7 +23,7 @@ internal class BearerTokenRequestHandler : DelegatingHandler
         var tokenProvider = _tokenProviderFunc();
         tokenProvider.ThrowIfNull();
 
-        var bearerToken = await tokenProvider.GetToken();
+        var bearerToken = await tokenProvider.Get();
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
 
         return await base.SendAsync(request, cancellationToken);

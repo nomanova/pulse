@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Threading;
 using Pulse.Cli.Services;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -29,7 +30,7 @@ public sealed class ServerAddCommand : Command<ServerAddCommand.Settings>
         public required string Url { get; init; }
     }
 
-    public override int Execute(CommandContext context, Settings settings)
+    protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
         var name = settings.Name;
         var config = _configService.Load();
@@ -37,13 +38,13 @@ public sealed class ServerAddCommand : Command<ServerAddCommand.Settings>
         if (config.Servers.Count >= Constants.MaxServerCount)
         {
             _console.WriteError($"Maximum number of servers ({Constants.MaxServerCount}) reached");
-            return Constants.ExitError;
+            return Exit.Error;
         }
 
         if (config.Servers.ContainsKey(name))
         {
             _console.WriteError($"Server '{name}' exists");
-            return Constants.ExitError;
+            return Exit.Error;
         }
 
         config.Servers.Add(name, new Models.Server
@@ -54,6 +55,6 @@ public sealed class ServerAddCommand : Command<ServerAddCommand.Settings>
 
         _console.WriteLine($"Server '{name}' added");
 
-        return Constants.ExitSuccess;
+        return Exit.Success;
     }
 }

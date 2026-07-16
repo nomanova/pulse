@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Threading;
 using Pulse.Cli.Models;
 using Pulse.Cli.Services;
 using Spectre.Console;
@@ -26,7 +27,7 @@ public sealed class ServerRemoveCommand : Command<ServerRemoveCommand.Settings>
         public required string Name { get; init; }
     }
 
-    public override int Execute(CommandContext context, Settings settings)
+    protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
         var name = settings.Name;
         var config = _configService.Load();
@@ -34,7 +35,7 @@ public sealed class ServerRemoveCommand : Command<ServerRemoveCommand.Settings>
         if (!config.Servers.Remove(name))
         {
             _console.WriteError($"No server '{name}' found");
-            return Constants.ExitError;
+            return Exit.Error;
         }
 
         if (config.Context.ServerName == name)
@@ -46,6 +47,6 @@ public sealed class ServerRemoveCommand : Command<ServerRemoveCommand.Settings>
 
         _console.WriteLine($"Server '{name}' removed");
 
-        return Constants.ExitSuccess;
+        return Exit.Success;
     }
 }

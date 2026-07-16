@@ -5,7 +5,7 @@ namespace Pulse.Api.Client;
 
 public sealed record ApiClientOptions
 {
-    public IApiEndpointProvider? ApiEndpointProvider { get; init; }
+    public IEndpointProvider? ApiEndpointProvider { get; init; }
     
     public TimeSpan? RequestTimeout { get; init; }
     

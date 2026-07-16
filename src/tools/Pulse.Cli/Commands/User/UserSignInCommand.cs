@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Threading;
 using System.Threading.Tasks;
 using Pulse.Api.Ctrl.Client;
 using Pulse.Api.Ctrl.Contract.Users;
@@ -17,8 +18,8 @@ public sealed class UserSignInCommand : AsyncCommand<UserSignInCommand.Settings>
     private readonly ICtrlApiClient _ctrlApiClient;
 
     public UserSignInCommand(
-        IAnsiConsole console, 
-        IConfigService configService, 
+        IAnsiConsole console,
+        IConfigService configService,
         ICtrlApiClient ctrlApiClient)
     {
         _console = console;
@@ -33,14 +34,15 @@ public sealed class UserSignInCommand : AsyncCommand<UserSignInCommand.Settings>
         public string? Username { get; init; }
     }
 
-    public override async Task<int> ExecuteAsync(CommandContext context, Settings settings)
+    protected override async Task<int> ExecuteAsync(
+        CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
         var config = _configService.Load();
 
         if (!config.HasServer())
         {
             _console.WriteError("No server selected");
-            return Constants.ExitError;
+            return Exit.Error;
         }
 
         var username = settings.Username;
@@ -48,33 +50,33 @@ public sealed class UserSignInCommand : AsyncCommand<UserSignInCommand.Settings>
         if (username is null)
         {
             var usernamePrompt = new TextPrompt<string>("Username: ");
-            username = _console.Prompt(usernamePrompt);
+            username = await _console.PromptAsync(usernamePrompt, cancellationToken);
         }
 
         var passwordPrompt = new TextPrompt<string>("Password: ").Secret();
-        var password = _console.Prompt(passwordPrompt);
-        
+        var password = await _console.PromptAsync(passwordPrompt, cancellationToken);
+
         var request = new SignInRequest
         {
             Username = username,
             Password = password
         };
 
-        var result = await _ctrlApiClient.Users.SignIn(request);
+        var result = await _ctrlApiClient.Users.SignIn(request, cancellationToken);
 
         if (!result.Success)
         {
             _console.WriteProblem(result.Problem!);
-            return Constants.ExitError;
+            return Exit.Error;
         }
 
         var accessToken = result.Data!.AccessToken;
         config.SignIn(accessToken);
-        
+
         _configService.Save(config);
 
         _console.WriteLine($"User '{username}' signed in");
-        
-        return Constants.ExitSuccess;
+
+        return Exit.Success;
     }
 }

@@ -3,6 +3,11 @@
 # git tag cli/v1.2.3
 # git push origin cli/v1.2.3
 #
+# To re-assign a tag to a different commit (e.g. on failed build),
+# delete it and re-run the previous commands:
+# git tag -d cli/v1.2.3
+# git push origin :refs/tags/cli/v1.2.3
+#
 name: Publish CLI
 
 on:

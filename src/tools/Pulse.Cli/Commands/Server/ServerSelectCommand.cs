@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Linq;
+using System.Threading;
 using Pulse.Cli.Models;
 using Pulse.Cli.Services;
 using Spectre.Console;
@@ -27,7 +28,7 @@ public sealed class ServerSelectCommand : Command<ServerSelectCommand.Settings>
         public required string? Name { get; init; }
     }
 
-    public override int Execute(CommandContext context, Settings settings)
+    protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
         var name = settings.Name;
         var config = _configService.Load();
@@ -36,13 +37,13 @@ public sealed class ServerSelectCommand : Command<ServerSelectCommand.Settings>
         if (name is not null && config.Servers.ContainsKey(name))
         {
             SelectServer(config, name);
-            return Constants.ExitSuccess;
+            return Exit.Success;
         }
 
         if (name is not null && !config.Servers.ContainsKey(name))
         {
             _console.WriteError($"No server '{name}' found");
-            return Constants.ExitError;
+            return Exit.Error;
         }
 
         switch (config.Servers.Count)
@@ -50,12 +51,12 @@ public sealed class ServerSelectCommand : Command<ServerSelectCommand.Settings>
             // No servers available
             case 0:
                 _console.WriteError("No servers available");
-                return Constants.ExitError;
+                return Exit.Error;
             // Single server available
             case 1:
                 name = config.Servers.Keys.First();
                 SelectServer(config, name);
-                return Constants.ExitSuccess;
+                return Exit.Success;
         }
 
         // Selection menu
@@ -69,7 +70,7 @@ public sealed class ServerSelectCommand : Command<ServerSelectCommand.Settings>
 
         SelectServer(config, selectedServer);
 
-        return Constants.ExitSuccess;
+        return Exit.Success;
     }
 
     private void SelectServer(Config config, string name)

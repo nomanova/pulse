@@ -13,7 +13,7 @@ public class CtrlApiClient : ApiClient, ICtrlApiClient
         CreateServices(options.ApiEndpointProvider);
     }
 
-    private void CreateServices(IApiEndpointProvider? endpointProvider = null)
+    private void CreateServices(IEndpointProvider? endpointProvider = null)
     {
         Users = new UsersService(endpointProvider, HttpClient);
     }

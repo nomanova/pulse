@@ -1,3 +1,4 @@
+using System.Threading;
 using Pulse.Cli.Services;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -19,14 +20,14 @@ public sealed class ServerListCommand : Command<ServerListCommand.Settings>
 
     public sealed class Settings : ServerSettings;
 
-    public override int Execute(CommandContext context, Settings settings)
+    protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
         var config = _configService.Load();
 
         if (config.Servers.Count == 0)
         {
             _console.WriteLine("No servers found");
-            return Constants.ExitSuccess;
+            return Exit.Success;
         }
 
         var table = new Table();
@@ -43,6 +44,6 @@ public sealed class ServerListCommand : Command<ServerListCommand.Settings>
 
         _console.Write(table);
 
-        return Constants.ExitSuccess;
+        return Exit.Success;
     }
 }

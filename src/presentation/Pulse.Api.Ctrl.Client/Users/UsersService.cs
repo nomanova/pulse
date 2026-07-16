@@ -10,7 +10,7 @@ internal sealed class UsersService : BaseService, IUsersService
 {
     private const string BasePath = "/api/ctrl/v1/users";
 
-    public UsersService(IApiEndpointProvider? endpointProvider, ApiHttpClient? httpClient)
+    public UsersService(IEndpointProvider? endpointProvider, ApiHttpClient? httpClient)
         : base(endpointProvider, httpClient, BasePath)
     {
     }

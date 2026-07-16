@@ -25,12 +25,12 @@ public abstract class BaseService
         Converters = { new JsonStringEnumConverter() }
     };
 
-    private readonly IApiEndpointProvider? _endpointProvider;
+    private readonly IEndpointProvider? _endpointProvider;
     private readonly ApiHttpClient? _httpClient;
     private readonly string _basePath;
 
     protected BaseService(
-        IApiEndpointProvider? endpointProvider,
+        IEndpointProvider? endpointProvider,
         ApiHttpClient? httpClient,
         string basePath)
     {
@@ -229,7 +229,7 @@ public abstract class BaseService
             return new Uri(path);
         }
 
-        var endpoint = await _endpointProvider.GetApiEndpoint();
+        var endpoint = await _endpointProvider.Get();
 
         try
         {

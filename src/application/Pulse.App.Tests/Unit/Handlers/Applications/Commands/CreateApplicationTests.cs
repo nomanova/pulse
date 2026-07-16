@@ -1,59 +1,53 @@
 using System.Threading.Tasks;
 using Pulse.App.Common.Errors;
-using Pulse.App.Handlers.Environments.Commands;
+using Pulse.App.Handlers.Applications.Commands;
 using Pulse.App.Tests.Framework;
 using Pulse.App.Tests.Framework.Mocks.Database;
-using Pulse.Domain.Aggregates.Environments;
 using Pulse.Tests.Shared.Builders;
 using Xunit;
 
-namespace Pulse.App.Tests.Tests.Handlers.Environments.Commands;
+namespace Pulse.App.Tests.Unit.Handlers.Applications.Commands;
 
-public class CreateEnvironmentTests : AppTests
+public class CreateApplicationTests : AppTests
 {
     [Fact]
     public async Task Create_WithPermissionsAndValidData_ShouldSucceed()
     {
         // Arrange
         var context = EnsureOwnedOrganization();
-
-        var application = ApplicationBuilder.New(context.Organization).Build();
-        DatabaseContext.AddApplications(application);
-
-        var command = new CreateEnvironmentCommand
+        
+        var command = new CreateApplicationCommand
         {
             OrganizationName = context.Organization.Name.Value,
-            ApplicationName = application.Name.Value,
-            EnvironmentName = "test-env"
+            ApplicationName = "test-app"
         };
-
+        
         // Act
         var result = await Sender.Send(command);
 
         // Assert
         Assert.False(result.IsError);
-
+        
         Assert.NotNull(result.Value);
         Assert.NotNull(result.Value.Id);
     }
-
+    
     [Fact]
-    public async Task Create_WithDuplicateEnvironmentName_ShouldReturnNameInUseError()
+    public async Task Create_WithDuplicateApplicationName_ShouldReturnNameInUseError()
     {
         // Arrange
         var context = EnsureOwnedOrganization();
 
-        var application = ApplicationBuilder.New(context.Organization).Build();
+        var application = ApplicationBuilder.New(context.Organization)
+            .WithName("test-app")
+            .Build();
+
         DatabaseContext.AddApplications(application);
 
-        var environment = Environment.Create("test-env", application);
-        DatabaseContext.WithEnvironments(environment);
-
-        var command = new CreateEnvironmentCommand
+        var command = new CreateApplicationCommand
         {
             OrganizationName = context.Organization.Name.Value,
-            ApplicationName = application.Name.Value,
-            EnvironmentName = environment.Name.Value
+            ApplicationName = application.Name.Value
         };
 
         // Act

@@ -32,10 +32,10 @@ public static class DependencyInjection
 
         services.AddSingleton<IFileService, FileService>();
         services.AddSingleton<IConfigService, ConfigService>();
-        services.AddSingleton<IApiEndpointProvider, ApiEndpointProvider>();
+        services.AddSingleton<IEndpointProvider, EndpointProvider>();
 
         services.AddSingleton<ICtrlApiClient>(provider => new CtrlApiClientBuilder()
-            .WithApiEndpoint(provider.GetRequiredService<IApiEndpointProvider>())
+            .WithApiEndpoint(provider.GetRequiredService<IEndpointProvider>())
             .Build());
 
         return new TypeRegistrar(services);

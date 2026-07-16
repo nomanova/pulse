@@ -5,7 +5,7 @@ using Pulse.App.Common.Authorization;
 using Pulse.App.Common.Dispatcher;
 using Xunit;
 
-namespace Pulse.App.Tests.Tests;
+namespace Pulse.App.Tests.Unit;
 
 public class ArchitectureTests
 {
