@@ -33,10 +33,10 @@ jobs:
         run: dotnet restore
 
       - name: Test
-        run: >
-          dotnet test ./src/tools/Pulse.Cli.Tests/Pulse.Cli.Tests.csproj
-            --configuration Release
-            --no-restore
+        run: |
+          dotnet test ./src/tools/Pulse.Cli.Tests/Pulse.Cli.Tests.csproj \
+            --configuration Release \
+            --no-restore \
             --verbosity normal
 
       - name: Tag to version
