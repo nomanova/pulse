@@ -51,9 +51,12 @@ public sealed class ServerAddCommand : Command<ServerAddCommand.Settings>
         {
             Url = settings.Url
         });
+        
+        config.SetServer(name); // Immediately select the new server
         _configService.Save(config);
 
         _console.WriteLine($"Server '{name}' added");
+        _console.WriteLine($"Selected server '{name}'");
 
         return Exit.Success;
     }

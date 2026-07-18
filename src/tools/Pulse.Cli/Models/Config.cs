@@ -48,4 +48,17 @@ public sealed record Config
             AccessToken = accessToken
         };
     }
+    
+    public void SignOut()
+    {
+        if (!HasServer())
+        {
+            throw new CliException("No server selected");
+        }
+        
+        Servers[Context.ServerName!] = Servers[Context.ServerName!] with
+        {
+            AccessToken = null
+        };
+    }
 }

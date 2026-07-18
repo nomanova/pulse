@@ -11,7 +11,10 @@ public static class Setup
             configurator.SetDescription("User commands");
             
             configurator.AddCommand<UserSignInCommand>(UserSignInCommand.Name)
-                .WithDescription("Sign in");
+                .WithDescription("Sign in to current server");
+            
+            configurator.AddCommand<UserSignOutCommand>(UserSignOutCommand.Name)
+                .WithDescription("Sign out from current server");
         });
         
         return config;
