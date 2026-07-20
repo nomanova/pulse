@@ -11,15 +11,21 @@ public partial class Role
 {
     public static class BuiltIn
     {
-        private static readonly RoleId OrgOwnerRoleId = RoleId.New(
+        private static readonly RoleId SrvOwnerRoleId = RoleId.New(
             IdentityProvider.New(new Guid("00000000-0000-0000-0001-000000000001")));
-
-        private static readonly RoleId AppOwnerRoleId = RoleId.New(
+        
+        private static readonly RoleId OrgOwnerRoleId = RoleId.New(
             IdentityProvider.New(new Guid("00000000-0000-0000-0002-000000000001")));
 
-        private static readonly RoleId EnvOwnerRoleId = RoleId.New(
+        private static readonly RoleId AppOwnerRoleId = RoleId.New(
             IdentityProvider.New(new Guid("00000000-0000-0000-0003-000000000001")));
 
+        private static readonly RoleId EnvOwnerRoleId = RoleId.New(
+            IdentityProvider.New(new Guid("00000000-0000-0000-0004-000000000001")));
+
+        public static readonly Role SrvOwner = new(
+            SrvOwnerRoleId, true, Scope.Server, ObjectName.Create("srv-owner").Assert());
+        
         public static readonly Role OrgOwner = new(
             OrgOwnerRoleId, true, Scope.Organization, ObjectName.Create("org-owner").Assert());
 
@@ -31,6 +37,7 @@ public partial class Role
 
         public static readonly IReadOnlyCollection<Role> All =
         [
+            SrvOwner,
             OrgOwner,
             AppOwner,
             EnvOwner

@@ -173,7 +173,7 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                     scope = table.Column<string>(type: "text", nullable: false),
                     user_id = table.Column<string>(type: "text", nullable: false),
                     role_id = table.Column<string>(type: "text", nullable: false),
-                    organization_id = table.Column<string>(type: "text", nullable: false),
+                    organization_id = table.Column<string>(type: "text", nullable: true),
                     application_id = table.Column<string>(type: "text", nullable: true),
                     environment_id = table.Column<string>(type: "text", nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
@@ -199,8 +199,7 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         name: "fk_memberships_organizations_organization_id",
                         column: x => x.organization_id,
                         principalTable: "organizations",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                     table.ForeignKey(
                         name: "fk_memberships_roles_role_id",
                         column: x => x.role_id,
@@ -521,25 +520,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                 name: "ix_workflows_organization_id",
                 table: "workflows",
                 column: "organization_id");
-            
-            // Manually added
-            migrationBuilder.CreateIndex(
-                name: "ix_applications_organization_id_name",
-                table: "applications",
-                columns: new[] { "organization_id", "name" },
-                unique: true);
-            
-            migrationBuilder.CreateIndex(
-                name: "ix_environments_organization_id_application_id_name",
-                table: "environments",
-                columns: new[] { "organization_id", "application_id", "name" },
-                unique: true);
-            
-            migrationBuilder.CreateIndex(
-                name: "ix_workflows_organization_id_application_id_environment_id_name",
-                table: "workflows",
-                columns: new[] { "organization_id", "application_id", "environment_id", "name" },
-                unique: true);
         }
 
         /// <inheritdoc />

@@ -37,8 +37,7 @@ public sealed class MembershipConfiguration : DomainEntityTypeConfiguration<Memb
 
         builder.HasOne<Organization>()
             .WithMany()
-            .HasForeignKey(membership => membership.OrganizationId)
-            .IsRequired();
+            .HasForeignKey(membership => membership.OrganizationId);
 
         builder.HasOne<Application>()
             .WithMany()

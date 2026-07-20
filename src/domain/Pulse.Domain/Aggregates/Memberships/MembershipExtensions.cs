@@ -8,10 +8,19 @@ namespace Pulse.Domain.Aggregates.Memberships;
 
 public static class MembershipExtensions
 {
-    public static bool IsOrgOwner(this IEnumerable<Membership> memberships, OrganizationId organizationId)
+    extension(IEnumerable<Membership> memberships)
     {
-        return memberships.Any(m => m.OrganizationId == organizationId &&
-                                    m.Scope == Scope.Organization &&
-                                    m.RoleId == Role.BuiltIn.OrgOwner.Id);
+        public bool IsSrvOwner()
+        {
+            return memberships.Any(membership => membership.Scope == Scope.Server &&
+                                                 membership.RoleId == Role.BuiltIn.SrvOwner.Id);
+        }
+
+        public bool IsOrgOwner(OrganizationId organizationId)
+        {
+            return memberships.Any(membership => membership.OrganizationId == organizationId &&
+                                                 membership.Scope == Scope.Organization &&
+                                                 membership.RoleId == Role.BuiltIn.OrgOwner.Id);
+        }
     }
 }

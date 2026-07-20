@@ -88,7 +88,7 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
         }
         
         BuiltInRoleSeeder.Seed(serviceProvider).Wait();
-        DefaultOrgSeeder.Seed(serviceProvider).Wait();
+        AdminSeeder.Seed(serviceProvider).Wait();
     }
 
     protected override void ConfigureConventions(ModelConfigurationBuilder configurationBuilder)

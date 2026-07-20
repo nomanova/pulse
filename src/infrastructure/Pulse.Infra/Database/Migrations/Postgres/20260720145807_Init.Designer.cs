@@ -12,7 +12,7 @@ using Pulse.Infra.Database.Contexts;
 namespace Pulse.Infra.Database.Migrations.Postgres
 {
     [DbContext(typeof(PostgresDatabaseContext))]
-    [Migration("20260712141948_Init")]
+    [Migration("20260720145807_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -148,7 +148,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         .HasColumnName("modified_at");
 
                     b.Property<string>("OrganizationId")
-                        .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("organization_id");
 
@@ -744,8 +743,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                     b.HasOne("Pulse.Domain.Aggregates.Organizations.Organization", null)
                         .WithMany()
                         .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
                         .HasConstraintName("fk_memberships_organizations_organization_id");
 
                     b.HasOne("Pulse.Domain.Aggregates.Roles.Role", null)

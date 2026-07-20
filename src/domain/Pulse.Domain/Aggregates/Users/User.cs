@@ -88,6 +88,6 @@ public class User : DomainEntity<UserId>
 
     public override string ToString()
     {
-        return $"[{Id.Value}] {Name}";
+        return $"[{Id.Value}] {Username}";
     }
 }

@@ -43,6 +43,7 @@ public static class AppHost
                 .AddProject<Projects.Pulse_Api>("api")
                 .WithReference(dbResource)
                 .WaitFor(dbResource)
+                .WithEnvironment("PULSE_ADMIN_PASSWORD", "Admin123456")
                 .WithEnvironment("Database__Provider", dbProvider)
                 .WithEnvironment("Database__ConnectionString", dbResource.Resource.ConnectionStringExpression);
         }
