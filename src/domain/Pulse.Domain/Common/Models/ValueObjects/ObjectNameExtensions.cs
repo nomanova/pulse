@@ -4,8 +4,16 @@ namespace Pulse.Domain.Common.Models.ValueObjects;
 
 public static class ObjectNameExtensions
 {
-    public static ObjectName AsName(this string? name)
+    extension(string? name)
     {
-        return ObjectName.Create(name).Assert();
+        public ObjectName AsName()
+        {
+            return ObjectName.Create(name).Assert();
+        }
+
+        public string AsNormalizedObjectName()
+        {
+            return name is null ? "" : name.Normalize().Replace("-", "");
+        }
     }
 }

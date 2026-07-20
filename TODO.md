@@ -3,3 +3,4 @@
 - Initial CLI tool
   - Add/list/select/remove application
   - Add/list/select/remove environment
+  - When removing a server and only one server is left, auto-select it

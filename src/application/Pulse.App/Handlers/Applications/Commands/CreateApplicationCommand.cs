@@ -56,9 +56,8 @@ public class CreateApplicationCommandHandler : ICommandHandler<CreateApplication
         var organization = _contextProvider.Organization;
         
         // Duplicate name detection
-        var existingApplication =
-            await _applicationRepository.SearchOne(
-                new ApplicationByNameSpecification(organization.Id, command.ApplicationName), cancellationToken);
+        var specification = new ApplicationByNameSpecification(organization.Id, command.ApplicationName); 
+        var existingApplication = await _applicationRepository.SearchOne(specification, cancellationToken);
 
         if (existingApplication != null)
         {

@@ -1,4 +1,6 @@
+###
 ### Create
+###
 POST {{root}}/api/ctrl/v1/applications/create
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
@@ -6,4 +8,44 @@ Authorization: Bearer {{auth_token}}
 {
   "organizationName": "{{organizationName}}",
   "applicationName": "{{applicationName}}"
+}
+
+###
+### Delete
+###
+POST {{root}}/api/ctrl/v1/applications/delete
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "organizationName": "{{organizationName}}",
+  "applicationName": "{{applicationName}}"
+}
+
+###
+### Fetch
+###
+POST {{root}}/api/ctrl/v1/applications/fetch
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "organizationName": "{{organizationName}}",
+  "applicationName": "{{applicationName}}"
+}
+
+###
+### Search
+###
+POST {{root}}/api/ctrl/v1/applications/search
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "query": null,
+  "lastId": null,
+  "pageSize": null,
+  "ascending": true,
+  "orderBy": null,
+  "organizationName": "{{organizationName}}"
 }

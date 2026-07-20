@@ -3,19 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using Pulse.Domain.Common.Models.Entities;
+using Pulse.Domain.Common.Models.ValueObjects;
 using Throw;
 
 namespace Pulse.App.Common.Database.Specifications;
 
-public sealed class OrderBySpecification<T, TK, TP> : IOrderBySpecification<T>
-    where T : Entity<TK> where TK : EntityId where TP : IComparable
+public sealed class OrderBySpecification<T, Tk, Tp> : IOrderBySpecification<T>
+    where T : Entity<Tk> where Tk : EntityId where Tp : IComparable
 {
     private readonly string _property;
     private readonly bool _ascending;
 
     private readonly ParameterExpression _paramExpr;
     private readonly MemberExpression _propExpr;
-    private readonly Expression<Func<T, TP>> _orderBy;
+    private readonly Expression<Func<T, Tp>> _orderBy;
 
     public OrderBySpecification(
         string property,
@@ -25,9 +26,9 @@ public sealed class OrderBySpecification<T, TK, TP> : IOrderBySpecification<T>
         _ascending = ascending ?? true;
 
         _paramExpr = Expression.Parameter(typeof(T), "item");
-        _propExpr = Expression.Property(_paramExpr, property);
+        _propExpr = CreateComparablePropertyExpression(_paramExpr, property);
 
-        _orderBy = Expression.Lambda<Func<T, TP>>(_propExpr, _paramExpr);
+        _orderBy = Expression.Lambda<Func<T, Tp>>(_propExpr, _paramExpr);
     }
 
     /**
@@ -45,22 +46,25 @@ public sealed class OrderBySpecification<T, TK, TP> : IOrderBySpecification<T>
     {
         var propertyInfo = typeof(T).GetProperty(_property);
         propertyInfo.ThrowIfNull();
-        
-        var value = (TP?)propertyInfo.GetValue(entity, null);
 
-        Expression<Func<TP?>> propLambda = () => value;
+        var rawValue = propertyInfo.GetValue(entity, null);
+        var value = rawValue is ObjectName objectName
+            ? (Tp?)(object)objectName.Value
+            : (Tp?)rawValue;
+
+        Expression<Func<Tp?>> propLambda = () => value;
         return Comparable(propLambda);
     }
 
     public Expression<Func<T, bool>> Comparable(List<T> entities)
     {
-        Expression<Func<TP?>> propLambda = () => _ascending ? MaxValue(entities) : MinValue(entities);
+        Expression<Func<Tp?>> propLambda = () => _ascending ? MaxValue(entities) : MinValue(entities);
         return Comparable(propLambda);
     }
 
-    private Expression<Func<T, bool>> Comparable(Expression<Func<TP?>> propLambda)
+    private Expression<Func<T, bool>> Comparable(Expression<Func<Tp?>> propLambda)
     {
-        var callMethod = typeof(TP).GetMethod("CompareTo", [typeof(TP)]);
+        var callMethod = typeof(Tp).GetMethod("CompareTo", [typeof(Tp)]);
         callMethod.ThrowIfNull();
 
         var callExpr = Expression.Call(_propExpr, callMethod, propLambda.Body);
@@ -72,12 +76,35 @@ public sealed class OrderBySpecification<T, TK, TP> : IOrderBySpecification<T>
         return Expression.Lambda<Func<T, bool>>(searchExpr, _paramExpr);
     }
 
-    private TP? MaxValue(List<T> entities)
+    private static MemberExpression CreateComparablePropertyExpression(ParameterExpression paramExpr, string property)
+    {
+        var propExpr = Expression.Property(paramExpr, property);
+
+        if (propExpr.Type == typeof(Tp))
+        {
+            return propExpr;
+        }
+
+        if (propExpr.Type == typeof(ObjectName))
+        {
+            var valueExpr = Expression.Property(propExpr, nameof(ObjectName.Value));
+
+            if (valueExpr.Type == typeof(Tp))
+            {
+                return valueExpr;
+            }
+        }
+
+        throw new InvalidOperationException(
+            $"Property '{property}' on '{typeof(T).Name}' cannot be used for ordering as '{typeof(Tp).Name}'.");
+    }
+
+    private Tp? MaxValue(List<T> entities)
     {
         return entities.Max(_orderBy.Compile());
     }
 
-    private TP? MinValue(List<T> entities)
+    private Tp? MinValue(List<T> entities)
     {
         return entities.Min(_orderBy.Compile());
     }

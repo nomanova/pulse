@@ -49,7 +49,7 @@ public record ObjectName
             return DomainErrors.ObjectName.Required;
         }
 
-        var normalizedValue = Normalize(value);
+        var normalizedValue = value.AsNormalizedObjectName();
         var name = new ObjectName(value, normalizedValue);
 
         var validator = new NameValidator();
@@ -61,11 +61,6 @@ public record ObjectName
     public override string ToString()
     {
         return Value;
-    }
-
-    private static string Normalize(string? value)
-    {
-        return value is null ? "" : value.Normalize().Replace("-", "");
     }
 
     private sealed class NameValidator : AbstractValidator<ObjectName>
