@@ -37,7 +37,7 @@ public class SearchApplicationsQueryHandler :
     private readonly IContextProvider _contextProvider;
     private readonly IApplicationRepository _applicationRepository;
 
-    public SearchApplicationsQueryHandler(
+    public SearchApplicationsQueryHandler(  
         IContextProvider contextProvider,
         IApplicationRepository applicationRepository)
     {

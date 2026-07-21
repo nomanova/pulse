@@ -24,7 +24,7 @@ public sealed record Config
     {
         Context = new Context();
     }
-
+    
     public bool HasServer()
     {
         return Context.ServerName is not null &&
@@ -41,6 +41,16 @@ public sealed record Config
         Context = Context with
         {
             OrganizationName = name,
+            ApplicationName = null,
+            EnvironmentName = null
+        };
+    }
+    
+    public void ClearOrganization()
+    {
+        Context = Context with
+        {
+            OrganizationName = null,
             ApplicationName = null,
             EnvironmentName = null
         };

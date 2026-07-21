@@ -23,8 +23,8 @@ public sealed class SearchApplicationsSpecification : Specification<Application>
     
     public override Expression<Func<Application, bool>> ToExpression()
     {
-        Expression<Func<Application, bool>> expr = activity => activity.OrganizationId == _organizationId &&
-                                                            !activity.IsDeleted;
+        Expression<Func<Application, bool>> expr = application => application.OrganizationId == _organizationId &&
+                                                            !application.IsDeleted;
         
         return expr.WithNameFilter(_query);
     }

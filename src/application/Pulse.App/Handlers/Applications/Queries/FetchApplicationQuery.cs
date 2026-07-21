@@ -10,7 +10,7 @@ using Pulse.App.Handlers.Applications.Common.Specifications;
 
 namespace Pulse.App.Handlers.Applications.Queries;
 
-public sealed class FetchApplicationQuery : IOrganizationRequest, IQuery<ErrorOr<ApplicationDto>>
+public sealed record FetchApplicationQuery : IOrganizationRequest, IQuery<ErrorOr<ApplicationDto>>
 {
     public required string? OrganizationName { get; init; }
 

@@ -6,5 +6,42 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
+  "organizationName": "default"
+}
+
+###
+### Delete
+###
+POST {{root}}/api/ctrl/v1/organizations/delete
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "organizationName": "default"
+}
+
+###
+### Fetch
+###
+POST {{root}}/api/ctrl/v1/organizations/fetch
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
   "organizationName": "{{organizationName}}"
+}
+
+###
+### Search
+###
+POST {{root}}/api/ctrl/v1/organizations/search
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "query": null,
+  "lastId": null,
+  "pageSize": null,
+  "ascending": true,
+  "orderBy": null
 }

@@ -12,6 +12,10 @@ public static class Setup
             
             configurator.AddCommand<OrgAddCommand>(OrgAddCommand.CmdId)
                 .WithDescription("Add a new organization");
+            
+            configurator.AddCommand<OrgRemoveCommand>(OrgRemoveCommand.CmdId)
+                .WithDescription("Remove an organization");
+            
         }).WithAlias("organization");
 
         return config;
