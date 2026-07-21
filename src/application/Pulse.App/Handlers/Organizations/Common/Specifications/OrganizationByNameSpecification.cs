@@ -4,6 +4,6 @@ using Pulse.Domain.Aggregates.Organizations;
 namespace Pulse.App.Handlers.Organizations.Common.Specifications;
 
 public class OrganizationByNameSpecification(
-    string name,
+    string? name,
     bool includeDeleted = false)
     : ByObjectNameSpecification<Organization, OrganizationId>(name, includeDeleted);

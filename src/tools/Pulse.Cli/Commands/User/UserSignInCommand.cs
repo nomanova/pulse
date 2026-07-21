@@ -11,7 +11,7 @@ namespace Pulse.Cli.Commands.User;
 
 public sealed class UserSignInCommand : AsyncCommand<UserSignInCommand.Settings>
 {
-    public const string Name = "sign-in";
+    public const string CmdId = "sign-in";
 
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;
@@ -45,6 +45,8 @@ public sealed class UserSignInCommand : AsyncCommand<UserSignInCommand.Settings>
             return Exit.Error;
         }
 
+        _console.WriteLine($"Signing in to server '{config.Context.ServerName}'");
+        
         var username = settings.Username;
 
         if (username is null)
@@ -66,7 +68,7 @@ public sealed class UserSignInCommand : AsyncCommand<UserSignInCommand.Settings>
 
         if (!result.Success)
         {
-            _console.WriteProblem(result.Problem!);
+            _console.WriteProblem(result.Problem, result.StatusCode);
             return Exit.Error;
         }
 

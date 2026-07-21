@@ -3,7 +3,7 @@ using Pulse.Api.Ctrl.Contract.Applications;
 using Pulse.App.Dto.Applications;
 using Pulse.App.Dto.Common;
 
-namespace Pulse.Api.Ctrl.Client.Applications;
+namespace Pulse.Api.Ctrl.Client.Services.Interfaces;
 
 public interface IApplicationsService
 {

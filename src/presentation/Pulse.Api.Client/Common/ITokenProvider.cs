@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 
 namespace Pulse.Api.Client.Common;
 
-public interface IBearerTokenProvider
+public interface ITokenProvider
 {
     Task<string?> Get();
 }

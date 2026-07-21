@@ -10,7 +10,7 @@ namespace Pulse.Cli.Commands.Server;
 
 public sealed class ServerSelectCommand : Command<ServerSelectCommand.Settings>
 {
-    public const string Name = "select";
+    public const string CmdId = "select";
 
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;

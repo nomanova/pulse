@@ -8,11 +8,11 @@ using Throw;
 
 namespace Pulse.Api.Client.Handlers;
 
-internal class BearerTokenRequestHandler : DelegatingHandler
+internal class TokenRequestHandler : DelegatingHandler
 {
-    private readonly Func<IBearerTokenProvider> _tokenProviderFunc;
+    private readonly Func<ITokenProvider> _tokenProviderFunc;
 
-    public BearerTokenRequestHandler(Func<IBearerTokenProvider> tokenProviderFunc)
+    public TokenRequestHandler(Func<ITokenProvider> tokenProviderFunc)
     {
         _tokenProviderFunc = tokenProviderFunc;
     }

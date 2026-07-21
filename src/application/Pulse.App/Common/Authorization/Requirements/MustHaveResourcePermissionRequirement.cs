@@ -6,7 +6,6 @@ using Pulse.App.Common.Security.Interfaces;
 using Pulse.App.Handlers.Memberships.Common;
 using Pulse.App.Handlers.Memberships.Common.Specifications;
 using Pulse.Domain.Aggregates.Memberships;
-using Pulse.Domain.Common.Models.Enums;
 
 namespace Pulse.App.Common.Authorization.Requirements;
 
@@ -32,28 +31,18 @@ public sealed class MustHaveResourcePermissionRequirementHandler :
     public async Task<ErrorOr<Success>> Handle(MustHaveResourcePermissionRequirement request,
         CancellationToken cancellationToken)
     {
-        var scope = _contextProvider.Scope;
-
-        if (scope == Scope.Server)
-        {
-            // Not handling any server level requests at the moment
-            return AuthorizationErrors.InsufficientPermissions;
-        }
-
-        var organizationId = _contextProvider.Organization.Id;
         var user = await _userProvider.Get(cancellationToken);
 
-        var memberships = await _membershipRepository.Search(
-            new UserMembershipsByOrganizationSpecification(user.Id, organizationId), cancellationToken);
+        var specification = new UserMembershipsSpecification(user.Id);
+        var memberships = await _membershipRepository.Search(specification, cancellationToken);
 
-        // Bypass all other authorization logic when the user is the organization owner
-        if (memberships.IsOrgOwner(organizationId))
+        if (memberships.IsSrvOwner())
         {
             return Result.Success;
         }
 
-        // Add authorization logic for other roles & permissions here
-
+        // TODO - handle other roles and (resource) permissions here 
+        
         return AuthorizationErrors.InsufficientPermissions;
     }
 }

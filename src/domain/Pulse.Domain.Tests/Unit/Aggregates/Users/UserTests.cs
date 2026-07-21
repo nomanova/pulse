@@ -156,17 +156,13 @@ public class UserTests
     {
         // Arrange
         var user = User.Create("admin");
-        var firstName = _faker.Name.FirstName();
-        var lastName = _faker.Name.LastName();
-        user.SetName(firstName, lastName);
 
         // Act
         var result = user.ToString();
 
         // Assert
         Assert.Contains(user.Id.Value, result);
-        Assert.Contains(firstName, result);
-        Assert.Contains(lastName, result);
+        Assert.Contains(user.Username.Value, result);
     }
 
     [Fact]

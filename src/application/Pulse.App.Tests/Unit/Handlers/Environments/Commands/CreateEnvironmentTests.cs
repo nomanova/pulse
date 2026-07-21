@@ -9,20 +9,21 @@ using Xunit;
 
 namespace Pulse.App.Tests.Unit.Handlers.Environments.Commands;
 
-public class CreateEnvironmentTests : AppTests
+public sealed class CreateEnvironmentTests : AppTests
 {
     [Fact]
     public async Task Create_WithPermissionsAndValidData_ShouldSucceed()
     {
         // Arrange
-        var context = EnsureOwnedOrganization();
+        var admin = EnsureAdmin();
+        var organization = EnsureOrganization(admin.User);
 
-        var application = ApplicationBuilder.New(context.Organization).Build();
+        var application = ApplicationBuilder.New(organization).Build();
         DatabaseContext.AddApplications(application);
 
         var command = new CreateEnvironmentCommand
         {
-            OrganizationName = context.Organization.Name.Value,
+            OrganizationName = organization.Name.Value,
             ApplicationName = application.Name.Value,
             EnvironmentName = "test-env"
         };
@@ -32,18 +33,17 @@ public class CreateEnvironmentTests : AppTests
 
         // Assert
         Assert.False(result.IsError);
-
-        Assert.NotNull(result.Value);
         Assert.NotNull(result.Value.Id);
     }
 
     [Fact]
-    public async Task Create_WithDuplicateEnvironmentName_ShouldReturnNameInUseError()
+    public async Task Create_WithDuplicateName_ShouldReturnNameInUseError()
     {
         // Arrange
-        var context = EnsureOwnedOrganization();
+        var admin = EnsureAdmin();
+        var organization = EnsureOrganization(admin.User);
 
-        var application = ApplicationBuilder.New(context.Organization).Build();
+        var application = ApplicationBuilder.New(organization).Build();
         DatabaseContext.AddApplications(application);
 
         var environment = Environment.Create("test-env", application);
@@ -51,7 +51,7 @@ public class CreateEnvironmentTests : AppTests
 
         var command = new CreateEnvironmentCommand
         {
-            OrganizationName = context.Organization.Name.Value,
+            OrganizationName = organization.Name.Value,
             ApplicationName = application.Name.Value,
             EnvironmentName = environment.Name.Value
         };

@@ -6,7 +6,7 @@ using Pulse.Domain.Common.Models.Entities;
 namespace Pulse.App.Common.Database.Specifications;
 
 public abstract class ByObjectNameSpecification<TEntity, Tk>(
-    string name,
+    string? name,
     bool includeDeleted = false)
     : Specification<TEntity> where TEntity : DomainEntity<Tk>, INamedObject where Tk : EntityId
 {

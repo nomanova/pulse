@@ -7,13 +7,13 @@ using Xunit;
 
 namespace Pulse.App.Tests.Unit.Handlers.Users.Commands;
 
-public class SignInUserTests : AppTests
+public sealed class SignInUserTests : AppTests
 {
     [Fact]
     public async Task SignIn_WithValidCredentials_ShouldSucceed()
     {
         // Arrange
-        var context = EnsureUser();
+        var context = EnsureAdmin();
 
         var command = new SignInUserCommand
         {

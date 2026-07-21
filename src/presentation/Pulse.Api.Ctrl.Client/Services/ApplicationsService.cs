@@ -1,18 +1,20 @@
 using Pulse.Api.Client;
 using Pulse.Api.Client.Common;
 using Pulse.Api.Client.Services;
+using Pulse.Api.Ctrl.Client.Services.Interfaces;
 using Pulse.Api.Ctrl.Contract.Applications;
 using Pulse.App.Dto.Applications;
 using Pulse.App.Dto.Common;
 
-namespace Pulse.Api.Ctrl.Client.Applications;
+namespace Pulse.Api.Ctrl.Client.Services;
 
 public sealed class ApplicationsService : BaseService, IApplicationsService
 {
     private const string BasePath = "/api/ctrl/v1/applications";
 
-    public ApplicationsService(IEndpointProvider? endpointProvider, ApiHttpClient? httpClient)
-        : base(endpointProvider, httpClient, BasePath)
+    public ApplicationsService(
+        IEndpointProvider? endpointProvider, ITokenProvider? tokenProvider, ApiHttpClient? httpClient)
+        : base(endpointProvider, tokenProvider, httpClient)
     {
     }
 

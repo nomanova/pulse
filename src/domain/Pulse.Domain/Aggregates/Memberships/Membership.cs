@@ -99,4 +99,9 @@ public sealed class Membership : DomainEntity<MembershipId>, IOrganizationScoped
 
         return membership;
     }
+    
+    public override string ToString()
+    {
+        return $"[{Id.Value}] {UserId.Value} ({Scope})";
+    }
 }

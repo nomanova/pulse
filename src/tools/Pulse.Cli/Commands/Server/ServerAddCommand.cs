@@ -8,7 +8,7 @@ namespace Pulse.Cli.Commands.Server;
 
 public sealed class ServerAddCommand : Command<ServerAddCommand.Settings>
 {
-    public const string Name = "add";
+    public const string CmdId = "add";
     
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;

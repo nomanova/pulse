@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Pulse.Cli.Commands.Organization;
 using Pulse.Cli.Commands.Server;
 using Pulse.Cli.Commands.User;
 using Spectre.Console.Cli;
@@ -18,6 +19,7 @@ public static class Program
 
             config.AddServer();
             config.AddUser();
+            config.AddOrganization();
         });
 
         return await app.RunAsync(args);

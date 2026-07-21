@@ -49,9 +49,25 @@ public static class DatabaseContextMock
             mock.Setup(dbContext => dbContext.Organizations).Returns(ToSet(organizations).Object);
         }
 
+        public void AddOrganizations(params Organization[] organizations)
+        {
+            var allOrganizations = mock.Object.Organizations.ToList();
+            allOrganizations.AddRange(organizations);
+
+            mock.Setup(dbContext => dbContext.Organizations).Returns(ToSet(allOrganizations.ToArray()).Object);
+        }
+
         public void WithMemberships(params Membership[] memberships)
         {
             mock.Setup(dbContext => dbContext.Memberships).Returns(ToSet(memberships).Object);
+        }
+
+        public void AddMemberships(params Membership[] memberships)
+        {
+            var allMemberships = mock.Object.Memberships.ToList();
+            allMemberships.AddRange(memberships);
+
+            mock.Setup(dbContext => dbContext.Memberships).Returns(ToSet(allMemberships.ToArray()).Object);
         }
 
         public void WithApplications(params Application[] applications)

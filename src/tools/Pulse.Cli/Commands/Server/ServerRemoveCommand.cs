@@ -9,7 +9,7 @@ namespace Pulse.Cli.Commands.Server;
 
 public sealed class ServerRemoveCommand : Command<ServerRemoveCommand.Settings>
 {
-    public const string Name = "remove";
+    public const string CmdId = "remove";
 
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;

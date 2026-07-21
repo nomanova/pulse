@@ -4,8 +4,6 @@ using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Net.Http.Headers;
-using Pulse.Api.Client.Handlers;
 using Throw;
 using CacheControlHeaderValue = System.Net.Http.Headers.CacheControlHeaderValue;
 
@@ -13,6 +11,8 @@ namespace Pulse.Api.Client;
 
 public sealed class ApiHttpClient : IDisposable
 {
+    private static readonly TimeSpan DefaultRequestTimeout = TimeSpan.FromSeconds(5);
+    
     private readonly HttpClient _httpClient;
 
     private bool _disposedValue;
@@ -25,18 +25,13 @@ public sealed class ApiHttpClient : IDisposable
     public static ApiHttpClient Create(ApiClientOptions options)
     {
         options.ThrowIfNull();
-        options.ApiEndpointProvider.ThrowIfNull();
+        options.EndpointProvider.ThrowIfNull();
 
         HttpMessageHandler pipeline = new HttpClientHandler();
 
-        if (options.BearerTokenProvider != null)
-        {
-            pipeline = pipeline.DecorateWith(new BearerTokenRequestHandler(options.BearerTokenProvider));
-        }
-
         var httpClient = new HttpClient(pipeline)
         {
-            Timeout = options.RequestTimeout ?? TimeSpan.FromSeconds(5)
+            Timeout = options.RequestTimeout ?? DefaultRequestTimeout
         };
 
         httpClient.DefaultRequestHeaders.CacheControl =

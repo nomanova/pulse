@@ -9,7 +9,6 @@ using Pulse.App.Tests.Framework.Contexts;
 using Pulse.App.Tests.Framework.Mocks.Database;
 using Pulse.App.Tests.Framework.Mocks.Security;
 using Pulse.App.Tests.Framework.Mocks.Services;
-using Pulse.Domain.Aggregates.Applications;
 using Pulse.Domain.Aggregates.Memberships;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.Roles;
@@ -22,7 +21,7 @@ namespace Pulse.App.Tests.Framework;
 
 public abstract class AppTests
 {
-    private const string DefaultUserPassword = "User123456";
+    private const string DefaultAdminPassword = "Admin123456";
 
     protected readonly ISender Sender;
 
@@ -69,43 +68,28 @@ public abstract class AppTests
         _serviceCollection.AddScoped<IUserClaimProvider>(_ => _userClaimProvider.Object);
     }
 
-    protected UserContext EnsureUser()
+    protected UserContext EnsureAdmin()
     {
-        var userContext = AddDefaultUser();
-        _userClaimProvider = UserClaimProviderMock.For(userContext.User);
-        return userContext;
-    }
+        var user = UserBuilder.New().WithPassword(DefaultAdminPassword).Build();
+        DatabaseContext.AddUsers(user);
 
-    protected OrganizationContext EnsureOwnedOrganization()
-    {
-        var organization = AddDefaultOrganization();
-        var userContext = AddDefaultUser();
-        AddDefaultOwnership(userContext.User, organization);
-
-        _userClaimProvider = UserClaimProviderMock.For(userContext.User);
+        var membership = Membership.Create(user, Role.BuiltIn.SrvOwner);
+        DatabaseContext.AddMemberships(membership);
         
-        return new OrganizationContext(userContext.Password, userContext.User, organization);
-    }
-    
-    private UserContext AddDefaultUser()
-    {
-        var user = UserBuilder.New().WithPassword(DefaultUserPassword).Build();
-        DatabaseContext.WithUsers(user);
+        var context = new UserContext(DefaultAdminPassword, user);
+        _userClaimProvider = UserClaimProviderMock.For(context.User);
 
-        return new UserContext(DefaultUserPassword, user);
+        return context;
     }
 
-    private Organization AddDefaultOrganization()
+    protected Organization EnsureOrganization(User owner)
     {
         var organization = OrganizationBuilder.New().Build();
-        DatabaseContext.WithOrganizations(organization);
+        DatabaseContext.AddOrganizations(organization);
+        
+        var membership = Membership.Create(owner, Role.BuiltIn.OrgOwner, organization);
+        DatabaseContext.AddMemberships(membership);
 
         return organization;
-    }
-
-    private void AddDefaultOwnership(User user, Organization organization)
-    {
-        var membership = Membership.Create(user, Role.BuiltIn.OrgOwner, organization);
-        DatabaseContext.WithMemberships(membership);
     }
 }

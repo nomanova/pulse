@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
@@ -26,17 +27,17 @@ public abstract class BaseService
     };
 
     private readonly IEndpointProvider? _endpointProvider;
+    private readonly ITokenProvider? _tokenProvider;
     private readonly ApiHttpClient? _httpClient;
-    private readonly string _basePath;
 
     protected BaseService(
         IEndpointProvider? endpointProvider,
-        ApiHttpClient? httpClient,
-        string basePath)
+        ITokenProvider? tokenProvider,
+        ApiHttpClient? httpClient)
     {
         _endpointProvider = endpointProvider;
+        _tokenProvider = tokenProvider;
         _httpClient = httpClient;
-        _basePath = basePath;
     }
 
     protected async Task<ApiResult> SendAsync(
@@ -76,6 +77,8 @@ public abstract class BaseService
         TryAddPayload(request, payload);
         TryAddHeaders(request, headers);
 
+        await TryAddToken(request, _tokenProvider);
+        
         HttpResponseMessage response;
 
         try
@@ -109,6 +112,8 @@ public abstract class BaseService
         TryAddPayload(request, payload);
         TryAddHeaders(request, headers);
 
+        await TryAddToken(request, _tokenProvider);
+        
         HttpResponseMessage response;
         try
         {
@@ -198,6 +203,17 @@ public abstract class BaseService
                 break;
             }
         }
+    }
+
+    private static async Task TryAddToken(HttpRequestMessage request, ITokenProvider? tokenProvider)
+    {
+        if (tokenProvider == null)
+        {
+            return;
+        }
+        
+        var token = await tokenProvider.Get();
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
     }
 
     private static void TryAddHeaders(HttpRequestMessage request, Dictionary<string, string>? headers)

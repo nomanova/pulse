@@ -1,4 +1,5 @@
 using System.Linq;
+using System.Net;
 using Pulse.Api.Shared.Contract;
 using Spectre.Console;
 
@@ -14,23 +15,32 @@ public static class ConsoleExtensions
             console.WriteLine();
         }
 
-        public void WriteProblem(Problem problem)
+        public void WriteProblem(Problem? problem, HttpStatusCode status)
         {
-            if (problem is { Code: "General.Validation", ValidationErrors: not null })
+            switch (problem)
             {
-                var error = problem.ValidationErrors.FirstOrDefault();
-
-                if (error != null)
-                {
-                    console.Markup($"[red]{error.Code} - {error.Description}[/]");
+                case null:
+                    console.Markup($"[red]{(int)status} - {status}[/]");
                     console.WriteLine();
+                
+                    return;
+                case { Code: "General.Validation", ValidationErrors: not null }:
+                {
+                    var error = problem.ValidationErrors.FirstOrDefault();
+
+                    if (error != null)
+                    {
+                        console.Markup($"[red]{error.Code} - {error.Description}[/]");
+                        console.WriteLine();
+                    }
+
+                    return;
                 }
-
-                return;
+                default:
+                    console.Markup($"[red]{problem.Code} - {problem.Description}[/]");
+                    console.WriteLine();
+                    break;
             }
-
-            console.Markup($"[red]{problem.Code} - {problem.Description}[/]");
-            console.WriteLine();
         }
     }
 }

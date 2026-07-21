@@ -57,6 +57,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ctrl", "ctrl", "{F5C5DF9A-A
 		http\ctrl\application.http = http\ctrl\application.http
 		http\ctrl\user.http = http\ctrl\user.http
 		http\ctrl\environment.http = http\ctrl\environment.http
+		http\ctrl\organization.http = http\ctrl\organization.http
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Tests.Shared", "src\domain\Pulse.Tests.Shared\Pulse.Tests.Shared.csproj", "{A21CCDDD-88B2-49BA-8637-FADB3D646D7D}"

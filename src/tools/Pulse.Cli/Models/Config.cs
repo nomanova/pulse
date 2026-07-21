@@ -36,6 +36,16 @@ public sealed record Config
         return Context.ServerName is null ? null : Servers[Context.ServerName];
     }
     
+    public void SetOrganization(string name)
+    {
+        Context = Context with
+        {
+            OrganizationName = name,
+            ApplicationName = null,
+            EnvironmentName = null
+        };
+    }
+    
     public void SignIn(string accessToken)
     {
         if (!HasServer())

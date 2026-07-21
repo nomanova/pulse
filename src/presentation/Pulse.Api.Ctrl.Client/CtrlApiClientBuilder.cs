@@ -8,8 +8,8 @@ public sealed class CtrlApiClientBuilder : ApiClientBuilder<CtrlApiClient>
     {
         var clientOptions = new ApiClientOptions
         {
-            ApiEndpointProvider = ApiEndpointProvider,
-            BearerTokenProvider = BearerTokenProvider,
+            EndpointProvider = EndpointProvider,
+            TokenProvider = TokenProvider,
             RequestTimeout = RequestTimeout
         };
         

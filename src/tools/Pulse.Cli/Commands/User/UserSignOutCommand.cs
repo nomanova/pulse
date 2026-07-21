@@ -7,7 +7,7 @@ namespace Pulse.Cli.Commands.User;
 
 public sealed class UserSignOutCommand : Command<UserSignOutCommand.Settings>
 {
-    public const string Name = "sign-out";
+    public const string CmdId = "sign-out";
 
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;

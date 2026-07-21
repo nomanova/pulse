@@ -7,7 +7,7 @@ namespace Pulse.Cli.Commands.Server;
 
 public sealed class ServerListCommand : Command<ServerListCommand.Settings>
 {
-    public const string Name = "list";
+    public const string CmdId = "list";
 
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;

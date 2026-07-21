@@ -6,16 +6,16 @@ public static class Setup
 {
     public static IConfigurator AddUser(this IConfigurator config)
     {
-        config.AddBranch("user", configurator =>
+        config.AddBranch("usr", configurator =>
         {
-            configurator.SetDescription("User commands");
+            configurator.SetDescription("User commands (usr | user)");
             
-            configurator.AddCommand<UserSignInCommand>(UserSignInCommand.Name)
+            configurator.AddCommand<UserSignInCommand>(UserSignInCommand.CmdId)
                 .WithDescription("Sign in to current server");
             
-            configurator.AddCommand<UserSignOutCommand>(UserSignOutCommand.Name)
+            configurator.AddCommand<UserSignOutCommand>(UserSignOutCommand.CmdId)
                 .WithDescription("Sign out from current server");
-        });
+        }).WithAlias("user");
         
         return config;
     }
