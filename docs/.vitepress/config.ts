@@ -2,8 +2,9 @@ import { defineConfig } from 'vitepress'
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
+  base: '/',
   title: "NOMANOVA Pulse",
-  description: "The open-source entreprise communication gateway",
+  description: "The open-source entreprise notification gateway",
   themeConfig: {
     // https://vitepress.dev/reference/default-theme-config
     nav: [
