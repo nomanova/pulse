@@ -30,10 +30,10 @@ public sealed class ContextPrintCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Contains("server", result.Output);
-        Assert.Contains("organization", result.Output);
-        Assert.Contains("application", result.Output);
-        Assert.Contains("environment", result.Output);
+        Assert.Contains("srv", result.Output);
+        Assert.Contains("org", result.Output);
+        Assert.Contains("app", result.Output);
+        Assert.Contains("env", result.Output);
         Assert.Contains("<none>", result.Output);
     }
 
@@ -61,7 +61,7 @@ public sealed class ContextPrintCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Contains("server", result.Output);
+        Assert.Contains("srv", result.Output);
         Assert.Contains("default", result.Output);
     }
 
@@ -90,7 +90,7 @@ public sealed class ContextPrintCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Contains("organization", result.Output);
+        Assert.Contains("org", result.Output);
         Assert.Contains("production", result.Output);
     }
 }
