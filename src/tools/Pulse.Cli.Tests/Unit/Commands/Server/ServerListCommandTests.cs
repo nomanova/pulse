@@ -139,31 +139,7 @@ public sealed class ServerListCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Contains(">", result.Output);
+        Assert.Contains("*", result.Output);
         Assert.Contains("production", result.Output);
-    }
-
-    [Fact]
-    public void Run_WithServers_ShouldPrintTableHeaders()
-    {
-        // Arrange
-        ConfigService.UseConfig(new Config
-        {
-            Servers =
-            {
-                ["default"] = new Pulse.Cli.Models.Server
-                {
-                    Url = "http://localhost:5000"
-                }
-            }
-        });
-
-        // Act
-        var result = App.Run();
-
-        // Assert
-        Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Contains("Name", result.Output);
-        Assert.Contains("Url", result.Output);
     }
 }

@@ -12,6 +12,7 @@ namespace Pulse.Cli.Commands.Organization;
 public sealed class OrgRemoveCommand : AsyncCommand<OrgRemoveCommand.Settings>
 {
     public const string CmdId = "remove";
+    public const string CmdAliasId = "delete";
 
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;

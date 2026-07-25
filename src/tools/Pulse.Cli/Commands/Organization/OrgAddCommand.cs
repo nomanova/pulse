@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Pulse.Api.Ctrl.Client;
 using Pulse.Api.Ctrl.Contract.Organizations;
+using Pulse.Cli.Models;
 using Pulse.Cli.Services;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -12,6 +13,7 @@ namespace Pulse.Cli.Commands.Organization;
 public sealed class OrgAddCommand : AsyncCommand<OrgAddCommand.Settings>
 {
     public const string CmdId = "add";
+    public const string CmdAliasId = "create";
 
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;
@@ -38,12 +40,7 @@ public sealed class OrgAddCommand : AsyncCommand<OrgAddCommand.Settings>
         CancellationToken cancellationToken)
     {
         var config = _configService.Load();
-
-        if (!config.HasServer())
-        {
-            _console.WriteError("No server selected");
-            return Exit.Error;
-        }
+        config.AssertServer();
 
         var name = settings.Name;
 

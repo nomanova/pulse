@@ -64,7 +64,6 @@ public sealed class ServerSelectCommand : Command<ServerSelectCommand.Settings>
 
         var selectedServer = _console.Prompt(new SelectionPrompt<string>()
             .Title("Select server")
-            .PageSize(Constants.MaxServerCount)
             .AddChoices(serverNames)
         );
 

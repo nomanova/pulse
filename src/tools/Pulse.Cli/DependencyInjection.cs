@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Pulse.Api.Client.Common;
 using Pulse.Api.Ctrl.Client;
 using Pulse.Cli.Services;
+using Spectre.Console;
 using Spectre.Console.Cli;
 
 namespace Pulse.Cli;
@@ -26,10 +27,11 @@ public static class DependencyInjection
         public void RegisterLazy(Type service, Func<object> factory) => services.AddSingleton(service, _ => factory());
     }
 
-    public static ITypeRegistrar GetRegistrar()
+    public static ITypeRegistrar GetRegistrar(IAnsiConsole console)
     {
         var services = new ServiceCollection();
 
+        services.AddSingleton(console);
         services.AddSingleton<IFileService, FileService>();
         services.AddSingleton<IConfigService, ConfigService>();
         services.AddSingleton<IEndpointProvider, EndpointProvider>();

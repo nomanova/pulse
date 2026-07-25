@@ -15,6 +15,11 @@ public static class ConsoleExtensions
             console.WriteLine();
         }
 
+        public void WriteTable(Table table)
+        {
+            console.Write(table);
+        }
+
         public void WriteProblem(Problem? problem, HttpStatusCode status)
         {
             switch (problem)

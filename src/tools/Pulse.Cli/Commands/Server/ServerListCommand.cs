@@ -32,17 +32,20 @@ public sealed class ServerListCommand : Command<ServerListCommand.Settings>
 
         var table = new Table();
 
+        table.HideHeaders();
+        table.Border(TableBorder.None);
+        
         table.AddColumn("");
-        table.AddColumn("Name");
-        table.AddColumn("Url");
+        table.AddColumn("name");
+        table.AddColumn("url");
 
         foreach (var server in config.Servers)
         {
             var isSelected = config.Context.ServerName == server.Key;
-            table.AddRow(isSelected ? ">" : "", server.Key, server.Value.Url);
+            table.AddRow(isSelected ? "[grey]*[/]" : "", server.Key, server.Value.Url);
         }
 
-        _console.Write(table);
+        _console.WriteTable(table);
 
         return Exit.Success;
     }
