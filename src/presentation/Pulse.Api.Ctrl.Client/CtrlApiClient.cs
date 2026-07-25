@@ -11,6 +11,8 @@ public class CtrlApiClient : ApiClient, ICtrlApiClient
     public IOrganizationsService Organizations { get; private set; } = null!;
     
     public IApplicationsService Applications { get; private set; } = null!;
+
+    public IEnvironmentsService Environments { get; private set; } = null!;
     
     public CtrlApiClient(ApiClientOptions options) : base(options)
     {
@@ -22,5 +24,6 @@ public class CtrlApiClient : ApiClient, ICtrlApiClient
         Users = new UsersService(options.EndpointProvider, options.TokenProvider, HttpClient);
         Organizations = new OrganizationsService(options.EndpointProvider, options.TokenProvider, HttpClient);
         Applications = new ApplicationsService(options.EndpointProvider, options.TokenProvider, HttpClient);
+        Environments = new EnvironmentsService(options.EndpointProvider, options.TokenProvider, HttpClient);
     }
 }

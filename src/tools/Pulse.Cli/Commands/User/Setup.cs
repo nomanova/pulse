@@ -8,7 +8,7 @@ public static class Setup
     {
         config.AddBranch("usr", configurator =>
         {
-            configurator.SetDescription("User commands (usr | user)");
+            configurator.SetDescription("User commands");
             
             configurator.AddCommand<UserSignInCommand>(UserSignInCommand.CmdId)
                 .WithDescription("Sign in to current server");

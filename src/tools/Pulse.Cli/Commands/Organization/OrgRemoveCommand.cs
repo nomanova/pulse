@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Pulse.Api.Ctrl.Client;
 using Pulse.Api.Ctrl.Contract.Organizations;
+using Pulse.Cli.Models;
 using Pulse.Cli.Services;
 using Spectre.Console;
 using Spectre.Console.Cli;
@@ -39,12 +40,7 @@ public sealed class OrgRemoveCommand : AsyncCommand<OrgRemoveCommand.Settings>
         CancellationToken cancellationToken)
     {
         var config = _configService.Load();
-
-        if (!config.HasServer())
-        {
-            _console.WriteError("No server selected");
-            return Exit.Error;
-        }
+        config.AssertServer();
 
         var name = settings.Name;
 

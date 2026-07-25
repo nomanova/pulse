@@ -2,6 +2,7 @@
 
 - Initial CLI tool
   - Improved error message when token expired
+  - Confirmation on delete
   - Sanitize server url
   - Add/list/select/remove application
   - Add/list/select/remove environment

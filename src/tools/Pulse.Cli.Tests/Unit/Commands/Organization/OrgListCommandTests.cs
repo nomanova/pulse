@@ -278,7 +278,7 @@ public sealed class OrgListCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Contains("Use `pulse org list -c org_1` to fetch more results", result.Output);
+        Assert.Contains("Use option `-c org_1` to fetch more results", result.Output);
     }
 
     [Fact]

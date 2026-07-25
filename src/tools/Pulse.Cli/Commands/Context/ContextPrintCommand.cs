@@ -33,10 +33,10 @@ public sealed class ContextPrintCommand : Command<ContextPrintCommand.Settings>
         table.AddColumn("Key");
         table.AddColumn("Value");
 
-        table.AddRow("[grey]server[/]", config.Context.ServerName ?? NoValue);
-        table.AddRow("[grey]organization[/]", config.Context.OrganizationName ?? NoValue);
-        table.AddRow("[grey]application[/]", config.Context.ApplicationName ?? NoValue);
-        table.AddRow("[grey]environment[/]", config.Context.EnvironmentName ?? NoValue);
+        table.AddRow("[grey]srv[/]", config.Context.ServerName ?? NoValue);
+        table.AddRow("[grey]org[/]", config.Context.OrganizationName ?? NoValue);
+        table.AddRow("[grey]app[/]", config.Context.ApplicationName ?? NoValue);
+        table.AddRow("[grey]env[/]", config.Context.EnvironmentName ?? NoValue);
 
         _console.WriteTable(table);
 

@@ -31,45 +31,39 @@ public sealed class OrgSelectCommand : PagedOrgCommand
         var config = _configService.Load();
         config.AssertServer();
 
-        var (lastId, organizations) = await Fetch(settings, cancellationToken);
+        var (lastId, entities) = await Fetch(settings, cancellationToken);
 
-        if (organizations is null)
+        if (entities is null)
         {
             return Exit.Error;
         }
 
-        if (organizations.Count == 0)
+        switch (entities.Count)
         {
-            _console.WriteLine("No organizations found");
-            return Exit.Success;
-        }
-
-        if (organizations.Count == 1)
-        {
-            SelectOrganization(config, organizations[0].Name);
-            return Exit.Success;
+            case 0:
+                _console.WriteLine("No organizations found");
+                return Exit.Success;
+            case 1:
+                SelectEntity(config, entities[0].Name);
+                return Exit.Success;
         }
 
         // Selection menu
-        var orgNames = organizations.Select(o => o.Name).ToArray();
+        var names = entities.Select(o => o.Name).ToArray();
 
-        if (lastId is not null)
-        {
-            _console.WriteLine();
-            _console.WriteLine($"Use `pulse org select -c {lastId}` to fetch more results");
-        }
-
-        var selectedOrg = await _console.PromptAsync(new SelectionPrompt<string>()
+        _console.WriteContinuation(lastId);
+        
+        var selectedEntity = await _console.PromptAsync(new SelectionPrompt<string>()
                 .Title("Select organization")
-                .AddChoices(orgNames),
+                .AddChoices(names),
             cancellationToken: cancellationToken);
 
-        SelectOrganization(config, selectedOrg);
+        SelectEntity(config, selectedEntity);
 
         return Exit.Success;
     }
 
-    private void SelectOrganization(Config config, string name)
+    private void SelectEntity(Config config, string name)
     {
         config.SetOrganization(name);
         _configService.Save(config);

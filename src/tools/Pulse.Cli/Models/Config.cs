@@ -31,6 +31,16 @@ public sealed record Config
                Servers.ContainsKey(Context.ServerName);
     }
 
+    public bool HasOrganization()
+    {
+        return HasServer() && Context.OrganizationName is not null;
+    }
+
+    public bool HasApplication()
+    {
+        return HasOrganization() && Context.ApplicationName is not null;
+    }
+    
     public Server? CurrentServer()
     {
         return Context.ServerName is null ? null : Servers[Context.ServerName];
@@ -45,6 +55,23 @@ public sealed record Config
             EnvironmentName = null
         };
     }
+
+    public void SetApplication(string name)
+    {
+        Context = Context with
+        {
+            ApplicationName = name,
+            EnvironmentName = null
+        };
+    }
+
+    public void SetEnvironment(string name)
+    {
+        Context = Context with
+        {
+            EnvironmentName = name
+        };
+    }
     
     public void ClearOrganization()
     {
@@ -52,6 +79,23 @@ public sealed record Config
         {
             OrganizationName = null,
             ApplicationName = null,
+            EnvironmentName = null
+        };
+    }
+    
+    public void ClearApplication()
+    {
+        Context = Context with
+        {
+            ApplicationName = null,
+            EnvironmentName = null
+        };
+    }
+    
+    public void ClearEnvironment()
+    {
+        Context = Context with
+        {
             EnvironmentName = null
         };
     }

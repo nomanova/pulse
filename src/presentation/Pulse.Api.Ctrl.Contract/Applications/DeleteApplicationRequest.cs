@@ -1,8 +1,8 @@
 namespace Pulse.Api.Ctrl.Contract.Applications;
 
-public class DeleteApplicationRequest
+public sealed record DeleteApplicationRequest
 {
-    public string? OrganizationName { get; set; }
+    public string? OrganizationName { get; init; }
     
-    public string? ApplicationName { get; set; }
+    public string? ApplicationName { get; init; }
 }

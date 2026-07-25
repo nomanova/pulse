@@ -68,11 +68,6 @@ public sealed class OrgListCommand : PagedOrgCommand
         }
 
         _console.WriteTable(table);
-
-        if (lastId is not null)
-        {
-            _console.WriteLine();
-            _console.WriteLine($"Use `pulse org list -c {lastId}` to fetch more results");
-        }
+        _console.WriteContinuation(lastId);
     }
 }

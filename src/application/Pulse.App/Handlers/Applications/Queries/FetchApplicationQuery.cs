@@ -19,7 +19,7 @@ public sealed record FetchApplicationQuery : IOrganizationRequest, IQuery<ErrorO
 
 public sealed class FetchApplicationQueryAuthorizer : PermissionAuthorizer<FetchApplicationQuery>;
 
-public class FetchApplicationQueryHandler : IQueryHandler<FetchApplicationQuery, ErrorOr<ApplicationDto>>
+public sealed class FetchApplicationQueryHandler : IQueryHandler<FetchApplicationQuery, ErrorOr<ApplicationDto>>
 {
     private readonly IContextProvider _contextProvider;
     private readonly IApplicationRepository _applicationRepository;

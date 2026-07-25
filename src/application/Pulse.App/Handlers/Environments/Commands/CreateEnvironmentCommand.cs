@@ -60,10 +60,8 @@ public class CreateEnvironmentCommandHandler : ICommandHandler<CreateEnvironment
         var application = _contextProvider.Application;
 
         // Duplicate name detection
-        var existingEnvironment =
-            await _environmentRepository.SearchOne(
-                new EnvironmentByNameSpecification(organization.Id, application.Id, command.EnvironmentName),
-                cancellationToken);
+        var specification = new EnvironmentByNameSpecification(organization.Id, application.Id, command.EnvironmentName);
+        var existingEnvironment = await _environmentRepository.SearchOne(specification, cancellationToken);
 
         if (existingEnvironment != null)
         {

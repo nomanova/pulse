@@ -1,5 +1,7 @@
 ﻿using System.Threading.Tasks;
+using Pulse.Cli.Commands.Application;
 using Pulse.Cli.Commands.Context;
+using Pulse.Cli.Commands.Environment;
 using Pulse.Cli.Commands.Organization;
 using Pulse.Cli.Commands.Server;
 using Pulse.Cli.Commands.User;
@@ -24,6 +26,8 @@ public static class Program
             config.AddServer();
             config.AddUser();
             config.AddOrganization();
+            config.AddApplication();
+            config.AddEnvironment();
         });
 
         try

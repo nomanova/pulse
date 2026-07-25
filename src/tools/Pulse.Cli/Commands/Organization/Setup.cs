@@ -8,7 +8,7 @@ public static class Setup
     {
         config.AddBranch("org", configurator =>
         {
-            configurator.SetDescription("Organization commands (org | organization)");
+            configurator.SetDescription("Organization commands");
             
             configurator.AddCommand<OrgAddCommand>(OrgAddCommand.CmdId)
                 .WithDescription("Add a new organization")

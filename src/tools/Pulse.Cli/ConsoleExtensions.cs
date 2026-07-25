@@ -20,6 +20,17 @@ public static class ConsoleExtensions
             console.Write(table);
         }
 
+        public void WriteContinuation(string? lastId)
+        {
+            if (lastId is null)
+            {
+                return;
+            }
+            
+            console.WriteLine();
+            console.WriteLine($"Use option `-c {lastId}` to fetch more results");
+        }
+
         public void WriteProblem(Problem? problem, HttpStatusCode status)
         {
             switch (problem)

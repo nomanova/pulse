@@ -8,7 +8,7 @@ public static class Setup
     {
         config.AddBranch("srv", configurator =>
         {
-            configurator.SetDescription("Server commands (srv | server)");
+            configurator.SetDescription("Server commands");
 
             configurator.AddCommand<ServerAddCommand>(ServerAddCommand.CmdId)
                 .WithDescription("Add a new server");

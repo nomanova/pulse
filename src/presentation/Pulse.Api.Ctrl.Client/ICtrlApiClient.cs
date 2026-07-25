@@ -9,4 +9,6 @@ public interface ICtrlApiClient
     IOrganizationsService Organizations { get; }
     
     IApplicationsService Applications { get; }
+    
+    IEnvironmentsService Environments { get; }
 }

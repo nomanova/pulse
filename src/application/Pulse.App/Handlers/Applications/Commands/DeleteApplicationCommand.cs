@@ -19,7 +19,7 @@ public sealed class DeleteApplicationCommand : IOrganizationRequest, ICommand<Er
 
 public sealed class DeleteApplicationCommandAuthorizer : PermissionAuthorizer<DeleteApplicationCommand>;
 
-public class DeleteApplicationCommandHandler : ICommandHandler<DeleteApplicationCommand, ErrorOr<Success>>
+public sealed class DeleteApplicationCommandHandler : ICommandHandler<DeleteApplicationCommand, ErrorOr<Success>>
 {
     private readonly IContextProvider _contextProvider;
     private readonly IApplicationRepository _applicationRepository;
