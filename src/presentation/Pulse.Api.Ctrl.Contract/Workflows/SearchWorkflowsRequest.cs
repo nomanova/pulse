@@ -1,6 +1,8 @@
-namespace Pulse.Api.Ctrl.Contract.Environments;
+using Pulse.Api.Shared.Contract;
 
-public sealed record CreateEnvironmentRequest
+namespace Pulse.Api.Ctrl.Contract.Workflows;
+
+public sealed record SearchWorkflowsRequest : PagedSearchRequest
 {
     public string? OrganizationName { get; init; }
     

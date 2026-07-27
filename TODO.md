@@ -1,9 +1,27 @@
 # TODO
 
-- Initial CLI tool
-  - Improved error message when token expired
-  - Confirmation on delete
-  - Sanitize server url
-  - Add/list/select/remove application
-  - Add/list/select/remove environment
-  - When removing a server/organization/application/environment and only one is left, auto-select it
+## Workflows
+
+- Unit tests for domain logic
+- Option to fetch the current draft and published versions
+- Endpoint to publish a workflow
+- Data plane endpoint to trigger a workflow
+
+- Add a step to a (draft) workflow
+- Delete a step from a (draft) workflow
+- Change the order of a step in a (draft) workflow
+
+- Submit all steps of a workflow using JSON or YAML
+
+- Allow branching / parallel execution of workflow steps
+
+## CLI Tool
+
+- Improved error message when token expired
+- Confirmation on delete
+- Sanitize server url
+- When removing a server/organization/application/environment and only one is left, auto-select it
+
+## Others
+
+- Renaming of org, app, env, workflow entities

@@ -14,7 +14,7 @@ using Pulse.App.Handlers.Environments.Queries;
 namespace Pulse.Api.Ctrl.Controllers;
 
 [Route("api/ctrl/v1/environments")]
-public class EnvironmentController : CtrlApiController
+public sealed class EnvironmentController : CtrlApiController
 {
     private readonly ISender _sender;
 

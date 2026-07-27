@@ -1,44 +1,47 @@
 ### Create
-POST {{root}}/api/ctrl/v1/environments/create
+POST {{root}}/api/ctrl/v1/workflows/create
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
   "organizationName": "{{organizationName}}",
   "applicationName": "{{applicationName}}",
-  "environmentName": "{{environmentName}}"
+  "environmentName": "{{environmentName}}",
+  "workflowName": "send-email"
 }
 
 ###
 ### Delete
 ###
-POST {{root}}/api/ctrl/v1/environments/delete
+POST {{root}}/api/ctrl/v1/workflows/delete
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
   "organizationName": "{{organizationName}}",
   "applicationName": "{{applicationName}}",
-  "environmentName": "{{environmentName}}"
+  "environmentName": "{{environmentName}}",
+  "workflowName": "send-email"
 }
 
 ###
 ### Fetch
 ###
-POST {{root}}/api/ctrl/v1/environments/fetch
+POST {{root}}/api/ctrl/v1/workflows/fetch
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
   "organizationName": "{{organizationName}}",
   "applicationName": "{{applicationName}}",
-  "environmentName": "{{environmentName}}"
+  "environmentName": "{{environmentName}}",
+  "workflowName": "send-email"
 }
 
 ###
 ### Search
 ###
-POST {{root}}/api/ctrl/v1/environments/search
+POST {{root}}/api/ctrl/v1/workflows/search
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
@@ -49,5 +52,6 @@ Authorization: Bearer {{auth_token}}
   "ascending": true,
   "orderBy": null,
   "organizationName": "{{organizationName}}",
-  "applicationName": "{{applicationName}}"
+  "applicationName": "{{applicationName}}",
+  "environmentName": "{{environmentName}}"
 }

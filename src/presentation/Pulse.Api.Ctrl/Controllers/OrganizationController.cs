@@ -15,7 +15,7 @@ using Pulse.App.Handlers.Organizations.Queries;
 namespace Pulse.Api.Ctrl.Controllers;
 
 [Route("api/ctrl/v1/organizations")]
-public class OrganizationController : CtrlApiController
+public sealed class OrganizationController : CtrlApiController
 {
     private readonly ISender _sender;
 

@@ -2,37 +2,39 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Pulse.Api.Ctrl.Contract.Workflows;
 using Pulse.Api.Ctrl.Controllers.Base;
-using Pulse.Api.Ctrl.Contract.Applications;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Common.Requests;
-using Pulse.App.Dto.Applications;
 using Pulse.App.Dto.Common;
-using Pulse.App.Handlers.Applications.Commands;
-using Pulse.App.Handlers.Applications.Queries;
+using Pulse.App.Dto.Workflows;
+using Pulse.App.Handlers.Workflows.Commands;
+using Pulse.App.Handlers.Workflows.Queries;
 
 namespace Pulse.Api.Ctrl.Controllers;
 
-[Route("api/ctrl/v1/applications")]
-public sealed class ApplicationController : CtrlApiController
+[Route("api/ctrl/v1/workflows")]
+public sealed class WorkflowController : CtrlApiController
 {
     private readonly ISender _sender;
 
-    public ApplicationController(ISender sender)
+    public WorkflowController(ISender sender)
     {
         _sender = sender;
     }
 
     [HttpPost("create")]
-    [ProducesResponseType(typeof(IdentityDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Create(
-        [FromBody] CreateApplicationRequest request,
+        [FromBody] CreateWorkflowRequest request,
         CancellationToken cancellationToken = default)
     {
-        var command = new CreateApplicationCommand
+        var command = new CreateWorkflowCommand
         {
             OrganizationName = request.OrganizationName,
-            ApplicationName = request.ApplicationName
+            ApplicationName = request.ApplicationName,
+            EnvironmentName = request.EnvironmentName,
+            WorkflowName = request.WorkflowName
         };
 
         var result = await _sender.Send(command, cancellationToken);
@@ -41,36 +43,40 @@ public sealed class ApplicationController : CtrlApiController
     }
 
     [HttpPost("fetch")]
-    [ProducesResponseType(typeof(ApplicationDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(WorkflowDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> Fetch(
-        [FromBody] FetchApplicationRequest request,
+        [FromBody] FetchWorkflowRequest request,
         CancellationToken cancellationToken = default)
     {
-        var query = new FetchApplicationQuery
+        var query = new FetchWorkflowQuery
         {
             OrganizationName = request.OrganizationName,
-            ApplicationName = request.ApplicationName
+            ApplicationName = request.ApplicationName,
+            EnvironmentName = request.EnvironmentName,
+            WorkflowName = request.WorkflowName
         };
-        
+
         var result = await _sender.Send(query, cancellationToken);
-        
+
         return result.Match(Ok, Problem);
     }
-
+    
     [HttpPost("search")]
-    [ProducesResponseType(typeof(PagedSearchResultDto<ApplicationDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PagedSearchResultDto<WorkflowDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Search(
-        [FromBody] SearchApplicationsRequest request,
+        [FromBody] SearchWorkflowsRequest request,
         CancellationToken cancellationToken = default)
     {
-        var query = new SearchApplicationsQuery
+        var query = new SearchWorkflowsQuery
         {
             Query = request.Query,
             LastId = request.LastId,
             PageSize = request.PageSize ?? ISearchQuery.DefaultPageSize,
             Ascending = request.Ascending,
             OrderBy = request.OrderBy,
-            OrganizationName = request.OrganizationName
+            OrganizationName = request.OrganizationName,
+            ApplicationName = request.ApplicationName,
+            EnvironmentName = request.EnvironmentName
         };
 
         var result = await _sender.Send(query, cancellationToken);
@@ -81,13 +87,15 @@ public sealed class ApplicationController : CtrlApiController
     [HttpPost("delete")]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Delete(
-        [FromBody] DeleteApplicationRequest request,
+        [FromBody] DeleteWorkflowRequest request,
         CancellationToken cancellationToken = default)
     {
-        var command = new DeleteApplicationCommand
+        var command = new DeleteWorkflowCommand
         {
             OrganizationName = request.OrganizationName,
-            ApplicationName = request.ApplicationName
+            ApplicationName = request.ApplicationName,
+            EnvironmentName = request.EnvironmentName,
+            WorkflowName = request.WorkflowName
         };
 
         var result = await _sender.Send(command, cancellationToken);

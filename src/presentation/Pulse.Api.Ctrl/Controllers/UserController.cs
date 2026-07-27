@@ -12,7 +12,7 @@ using Pulse.App.Handlers.Users.Commands;
 namespace Pulse.Api.Ctrl.Controllers;
 
 [Route("api/ctrl/v1/users")]
-public class UserController : CtrlApiController
+public sealed class UserController : CtrlApiController
 {
     private readonly ISender _sender;
     
