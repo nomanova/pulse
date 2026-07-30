@@ -9,6 +9,7 @@ using Pulse.App.Common.Requests;
 using Pulse.App.Dto.Common;
 using Pulse.App.Dto.Workflows;
 using Pulse.App.Handlers.Workflows.Commands;
+using Pulse.App.Handlers.Workflows.Commands.Steps;
 using Pulse.App.Handlers.Workflows.Queries;
 
 namespace Pulse.Api.Ctrl.Controllers;
@@ -60,7 +61,7 @@ public sealed class WorkflowController : CtrlApiController
 
         return result.Match(Ok, Problem);
     }
-    
+
     [HttpPost("search")]
     [ProducesResponseType(typeof(PagedSearchResultDto<WorkflowDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Search(
@@ -101,5 +102,24 @@ public sealed class WorkflowController : CtrlApiController
         var result = await _sender.Send(command, cancellationToken);
 
         return result.Match(_ => Ok(), Problem);
+    }
+
+    [HttpPost("add-step")]
+    [ProducesResponseType(typeof(WorkflowVersionStepDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> AddStep(
+        [FromBody] AddWorkflowStepRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var command = new AddWorkflowStepCommand
+        {
+            OrganizationName = request.OrganizationName,
+            ApplicationName = request.ApplicationName,
+            EnvironmentName = request.EnvironmentName,
+            WorkflowName = request.WorkflowName
+        };
+
+        var result = await _sender.Send(command, cancellationToken);
+
+        return result.Match(Ok, Problem);
     }
 }

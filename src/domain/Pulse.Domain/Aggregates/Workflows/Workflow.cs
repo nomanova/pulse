@@ -91,9 +91,7 @@ public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INa
         DomainErrors.Workflow.DraftAlreadyExists.Assert(() =>
             !_versions.Any(version => version.IsDraft));
 
-        var versionNumber = _versions.Count == 0
-            ? 1
-            : _versions.Max(version => version.Version) + 1;
+        var versionNumber = _versions.NextVersionNumber();
 
         var draft = PublishedVersion is null
             ? WorkflowVersion.CreateDraft(this, versionNumber)

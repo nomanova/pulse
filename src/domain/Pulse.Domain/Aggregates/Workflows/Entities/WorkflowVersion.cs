@@ -71,10 +71,7 @@ public sealed class WorkflowVersion : Entity<WorkflowVersionId>
     {
         EnsureDraft();
 
-        var order = _steps.Count == 0
-            ? 1
-            : _steps.Max(step => step.Order) + 1;
-
+        var order = _steps.NextOrder();
         var step = WorkflowVersionStep.Create(this, order);
 
         _steps.Add(step);

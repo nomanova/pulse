@@ -55,3 +55,17 @@ Authorization: Bearer {{auth_token}}
   "applicationName": "{{applicationName}}",
   "environmentName": "{{environmentName}}"
 }
+
+###
+### Add Step
+###
+POST {{root}}/api/ctrl/v1/workflows/add-step
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "organizationName": "{{organizationName}}",
+  "applicationName": "{{applicationName}}",
+  "environmentName": "{{environmentName}}",
+  "workflowName": "send-email"
+}
