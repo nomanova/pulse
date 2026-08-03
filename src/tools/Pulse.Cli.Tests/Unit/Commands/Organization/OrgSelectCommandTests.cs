@@ -204,7 +204,7 @@ public sealed class OrgSelectCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Equal("default", ConfigService.SavedConfig.Context.OrganizationName);
+        Assert.Equal("default", ConfigService.SavedConfig.Context.Organization?.Name);
     }
 
     [Fact]
@@ -276,7 +276,7 @@ public sealed class OrgSelectCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Equal("default", ConfigService.SavedConfig.Context.OrganizationName);
+        Assert.Equal("default", ConfigService.SavedConfig.Context.Organization?.Name);
     }
 
     [Fact]
@@ -409,7 +409,7 @@ public sealed class OrgSelectCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Error, result.ExitCode);
-        Assert.Null(ConfigService.Config.Context.OrganizationName);
+        Assert.Null(ConfigService.Config.Context.Organization);
     }
 
     private static Config ServerConfig()

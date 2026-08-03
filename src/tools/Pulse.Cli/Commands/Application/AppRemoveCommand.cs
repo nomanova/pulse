@@ -1,8 +1,9 @@
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Pulse.Api.Ctrl.Client;
-using Pulse.Api.Ctrl.Contract.Applications;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.Cli.Models;
 using Pulse.Cli.Services;
 using Spectre.Console;
@@ -13,7 +14,6 @@ namespace Pulse.Cli.Commands.Application;
 public sealed class AppRemoveCommand : AsyncCommand<AppRemoveCommand.Settings>
 {
     public const string CmdId = "remove";
-    public const string CmdAliasId = "delete";
 
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;
@@ -44,13 +44,36 @@ public sealed class AppRemoveCommand : AsyncCommand<AppRemoveCommand.Settings>
 
         var name = settings.Name;
 
-        var request = new DeleteApplicationRequest
+        // Search
+        var searchRequest = new SearchApplicationsRequest
         {
-            OrganizationName = config.Context.OrganizationName,
-            ApplicationName = name
+            OrganizationId = config.Context.Organization!.Id,
+            Query = name
+        };
+        
+        var searchResult = await _ctrlApiClient.Applications.Search(searchRequest, cancellationToken);
+
+        if (!searchResult.Success || searchResult.Data == null)
+        {
+            _console.WriteProblem(searchResult.Problem, searchResult.StatusCode);
+            return Exit.Error;
+        }
+        
+        var application = searchResult.Data.Entities.FirstOrDefault();
+
+        if (application == null)
+        {
+            _console.WriteError($"Application '{name}' not found");
+            return Exit.Error;
+        }
+        
+        // Remove
+        var request = new RemoveApplicationRequest
+        {
+            ApplicationId = application.Id
         };
 
-        var result = await _ctrlApiClient.Applications.Delete(request, cancellationToken);
+        var result = await _ctrlApiClient.Applications.Remove(request, cancellationToken);
 
         if (!result.Success)
         {
@@ -58,7 +81,7 @@ public sealed class AppRemoveCommand : AsyncCommand<AppRemoveCommand.Settings>
             return Exit.Error;
         }
 
-        if (config.Context.ApplicationName == name)
+        if (config.Context.Application?.Name == name)
         {
             config.ClearApplication();
         }

@@ -2,7 +2,7 @@ using System.Net;
 using System.Threading;
 using Moq;
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Applications;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Common;
 using Pulse.Cli.Commands.Application;
 using Pulse.Cli.Models;
@@ -47,11 +47,11 @@ public sealed class AppAddCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
+        config.SetOrganization("org_1", "myorg");
         ConfigService.UseConfig(config);
 
         CtrlApiClient.ApplicationsMock
-            .Setup(x => x.Create(It.IsAny<CreateApplicationRequest>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Add(It.IsAny<AddApplicationRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "1" }, HttpStatusCode.OK));
 
         // Act
@@ -59,8 +59,8 @@ public sealed class AppAddCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        CtrlApiClient.ApplicationsMock.Verify(x => x.Create(
-            It.Is<CreateApplicationRequest>(r => r.ApplicationName == "myapp" && r.OrganizationName == "myorg"),
+        CtrlApiClient.ApplicationsMock.Verify(x => x.Add(
+            It.Is<AddApplicationRequest>(r => r.ApplicationName == "myapp" && r.OrganizationId == "org_1"),
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -69,11 +69,11 @@ public sealed class AppAddCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
+        config.SetOrganization("org_1", "myorg");
         ConfigService.UseConfig(config);
 
         CtrlApiClient.ApplicationsMock
-            .Setup(x => x.Create(It.IsAny<CreateApplicationRequest>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Add(It.IsAny<AddApplicationRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "1" }, HttpStatusCode.OK));
 
         // Act
@@ -81,7 +81,7 @@ public sealed class AppAddCommandTests : CliTests
 
         // Assert
         var savedConfig = ConfigService.Load();
-        Assert.Equal("myapp", savedConfig.Context.ApplicationName);
+        Assert.Equal("myapp", savedConfig.Context.Application?.Name);
     }
 
     [Fact]
@@ -89,11 +89,11 @@ public sealed class AppAddCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
+        config.SetOrganization("org_1", "myorg");
         ConfigService.UseConfig(config);
 
         CtrlApiClient.ApplicationsMock
-            .Setup(x => x.Create(It.IsAny<CreateApplicationRequest>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Add(It.IsAny<AddApplicationRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForFailure(HttpStatusCode.BadRequest));
 
         // Act

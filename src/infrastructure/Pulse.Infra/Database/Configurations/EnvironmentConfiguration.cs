@@ -19,11 +19,6 @@ public sealed class EnvironmentConfiguration : DomainEntityTypeConfiguration<Env
 
         builder.HasKey(environment => environment.Id);
         
-        builder.HasOne<Organization>()
-            .WithMany()
-            .HasForeignKey(environment => environment.OrganizationId)
-            .IsRequired();
-        
         builder.HasOne<Application>()
             .WithMany()
             .HasForeignKey(environment => environment.ApplicationId)

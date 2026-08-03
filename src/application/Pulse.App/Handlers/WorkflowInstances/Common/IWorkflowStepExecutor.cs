@@ -11,6 +11,5 @@ public interface IWorkflowStepExecutor
     Task Execute(
         WorkflowInstanceId workflowInstanceId,
         WorkflowInstanceStepId workflowInstanceStepId,
-        WorkflowVersionStepId workflowVersionStepId,
         CancellationToken cancellationToken = default);
 }

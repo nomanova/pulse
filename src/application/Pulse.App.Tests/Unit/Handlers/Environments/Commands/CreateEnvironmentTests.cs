@@ -21,10 +21,9 @@ public sealed class CreateEnvironmentTests : AppTests
         var application = ApplicationBuilder.New(organization).Build();
         DatabaseContext.AddApplications(application);
 
-        var command = new CreateEnvironmentCommand
+        var command = new AddEnvironmentCommand
         {
-            OrganizationName = organization.Name.Value,
-            ApplicationName = application.Name.Value,
+            ApplicationId = application.Id,
             EnvironmentName = "test-env"
         };
 
@@ -49,10 +48,9 @@ public sealed class CreateEnvironmentTests : AppTests
         var environment = Environment.Create("test-env", application);
         DatabaseContext.WithEnvironments(environment);
 
-        var command = new CreateEnvironmentCommand
+        var command = new AddEnvironmentCommand
         {
-            OrganizationName = organization.Name.Value,
-            ApplicationName = application.Name.Value,
+            ApplicationId = application.Id,
             EnvironmentName = environment.Name.Value
         };
 

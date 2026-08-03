@@ -2,7 +2,6 @@ using System.Reflection;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using Pulse.App.Common.Authorization;
-using Pulse.App.Common.Context;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Common.Security;
 using Pulse.App.Common.Security.Interfaces;
@@ -41,9 +40,6 @@ public static class Setup
             services.AddPipelineBehavior(typeof(ValidationBehavior<,>));
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             
-            // Context
-            services.AddPipelineBehavior(typeof(ContextProviderBehavior<,>));
-            
             // Authorizers
             services.AddPipelineBehavior(typeof(AuthorizationBehavior<,>));
             services.AddAuthorizersFromAssembly(Assembly.GetExecutingAssembly());
@@ -63,12 +59,14 @@ public static class Setup
             
             services.AddScoped<IWorkflowRepository, WorkflowRepository>();
             services.AddScoped<IWorkflowInstanceRepository, WorkflowInstanceRepository>();
+            
+            // (Read) repositories (entities)
+            services.AddScoped<IWorkflowVersionRepository, WorkflowVersionRepository>();
         }
 
         private void AddServices()
         {
             services.AddScoped<IUserProvider, UserProvider>();
-            services.AddScoped<IContextProvider, ContextProvider>();
             
             services.AddScoped<IWorkflowStepExecutor, WorkflowStepExecutor>();
         }

@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ErrorOr;
 using Pulse.App.Common.Authorization.Policies;
-using Pulse.App.Common.Context;
 using Pulse.App.Common.Database.Specifications;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Common.Errors;
@@ -15,14 +14,15 @@ using Pulse.App.Dto.Common;
 using Pulse.App.Handlers.Applications.Common;
 using Pulse.App.Handlers.Applications.Common.Specifications;
 using Pulse.Domain.Aggregates.Applications;
+using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Common.Models.Entities;
 using ApplicationId = Pulse.Domain.Aggregates.Applications.ApplicationId;
 
 namespace Pulse.App.Handlers.Applications.Queries;
 
-public sealed record SearchApplicationsQuery : SearchQuery<ApplicationDto>, IOrganizationRequest
+public sealed record SearchApplicationsQuery : SearchQuery<ApplicationDto>
 {
-    public required string? OrganizationName { get; init; }
+    public required OrganizationId OrganizationId { get; init; }
 }
 
 public sealed class SearchApplicationsQueryValidator : SearchQueryValidator<SearchApplicationsQuery, ApplicationDto>;
@@ -34,22 +34,17 @@ public class SearchApplicationsQueryHandler :
 {
     private static readonly List<string> OrderByProperties = [nameof(Application.Name)];
 
-    private readonly IContextProvider _contextProvider;
     private readonly IApplicationRepository _applicationRepository;
 
     public SearchApplicationsQueryHandler(  
-        IContextProvider contextProvider,
         IApplicationRepository applicationRepository)
     {
-        _contextProvider = contextProvider;
         _applicationRepository = applicationRepository;
     }
 
     public async Task<ErrorOr<PagedSearchResultDto<ApplicationDto>>> Handle(
         SearchApplicationsQuery query, CancellationToken cancellationToken)
     {
-        var organization = _contextProvider.Organization;
-
         var lastId = query.LastId?.AsIdentity<ApplicationId>();
 
         if (query.OrderBy != null && !OrderByProperties.Contains(query.OrderBy))
@@ -67,11 +62,11 @@ public class SearchApplicationsQueryHandler :
         };
 
         var searchBySpecification =
-            new SearchApplicationsSpecification(organization.Id, query.Query);
+            new SearchApplicationsSpecification(query.OrganizationId, query.Query);
 
         var searchLastSpecification = lastId == null
             ? null
-            : new ApplicationByIdSpecification(organization.Id, lastId);
+            : new ApplicationByIdSpecification(lastId);
 
         var searchResult = await _applicationRepository.SearchCursor(
             searchBySpecification,

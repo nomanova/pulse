@@ -2,8 +2,10 @@ using System.Net;
 using System.Threading;
 using Moq;
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Organizations;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.Api.Shared.Contract;
+using Pulse.App.Dto.Common;
+using Pulse.App.Dto.Organizations;
 using Pulse.Cli.Commands.Organization;
 using Pulse.Cli.Models;
 using Pulse.Cli.Tests.Framework;
@@ -40,38 +42,12 @@ public sealed class OrgRemoveCommandTests : CliTests
         Assert.Contains("No server selected", result.Output);
 
         CtrlApiClient.OrganizationsMock.Verify(
-            organizations => organizations.Delete(
-                It.IsAny<DeleteOrganizationRequest>(),
+            organizations => organizations.Remove(
+                It.IsAny<RemoveOrganizationRequest>(),
                 It.IsAny<CancellationToken>()),
             Times.Never);
     }
-
-    [Fact]
-    public void Run_Name_ShouldDeleteOrganization()
-    {
-        // Arrange
-        ConfigService.UseConfig(ServerConfig());
-
-        CtrlApiClient.OrganizationsMock
-            .Setup(organizations => organizations.Delete(
-                It.IsAny<DeleteOrganizationRequest>(),
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ApiResult.ForSuccess(HttpStatusCode.OK));
-
-        // Act
-        var result = App.Run("default");
-
-        // Assert
-        Assert.Equal(Exit.Success, result.ExitCode);
-
-        CtrlApiClient.OrganizationsMock.Verify(
-            organizations => organizations.Delete(
-                It.Is<DeleteOrganizationRequest>(request =>
-                    request.OrganizationName == "default"),
-                It.IsAny<CancellationToken>()),
-            Times.Once);
-    }
-
+    
     [Fact]
     public void Run_Name_ShouldSaveConfig()
     {
@@ -79,8 +55,16 @@ public sealed class OrgRemoveCommandTests : CliTests
         ConfigService.UseConfig(ServerConfig());
 
         CtrlApiClient.OrganizationsMock
-            .Setup(organizations => organizations.Delete(
-                It.IsAny<DeleteOrganizationRequest>(),
+            .Setup(organizations => organizations.Search(
+                It.IsAny<PagedSearchRequest>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ApiDataResult<PagedSearchResultDto<OrganizationDto>>.ForSuccess(
+                OrganizationSearchResult(),
+                HttpStatusCode.OK));
+        
+        CtrlApiClient.OrganizationsMock
+            .Setup(organizations => organizations.Remove(
+                It.IsAny<RemoveOrganizationRequest>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiResult.ForSuccess(HttpStatusCode.OK));
 
@@ -99,8 +83,16 @@ public sealed class OrgRemoveCommandTests : CliTests
         ConfigService.UseConfig(ServerConfig());
 
         CtrlApiClient.OrganizationsMock
-            .Setup(organizations => organizations.Delete(
-                It.IsAny<DeleteOrganizationRequest>(),
+            .Setup(organizations => organizations.Search(
+                It.IsAny<PagedSearchRequest>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ApiDataResult<PagedSearchResultDto<OrganizationDto>>.ForSuccess(
+                OrganizationSearchResult(),
+                HttpStatusCode.OK));
+        
+        CtrlApiClient.OrganizationsMock
+            .Setup(organizations => organizations.Remove(
+                It.IsAny<RemoveOrganizationRequest>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiResult.ForSuccess(HttpStatusCode.OK));
 
@@ -117,13 +109,21 @@ public sealed class OrgRemoveCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("default");
+        config.SetOrganization("org_1","default");
 
         ConfigService.UseConfig(config);
 
         CtrlApiClient.OrganizationsMock
-            .Setup(organizations => organizations.Delete(
-                It.IsAny<DeleteOrganizationRequest>(),
+            .Setup(organizations => organizations.Search(
+                It.IsAny<PagedSearchRequest>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ApiDataResult<PagedSearchResultDto<OrganizationDto>>.ForSuccess(
+                OrganizationSearchResult(),
+                HttpStatusCode.OK));
+        
+        CtrlApiClient.OrganizationsMock
+            .Setup(organizations => organizations.Remove(
+                It.IsAny<RemoveOrganizationRequest>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiResult.ForSuccess(HttpStatusCode.OK));
 
@@ -132,7 +132,7 @@ public sealed class OrgRemoveCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Null(ConfigService.SavedConfig.Context.OrganizationName);
+        Assert.Null(ConfigService.SavedConfig.Context.Organization);
     }
 
     [Fact]
@@ -140,13 +140,21 @@ public sealed class OrgRemoveCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("production");
+        config.SetOrganization("org_1","production");
 
         ConfigService.UseConfig(config);
 
         CtrlApiClient.OrganizationsMock
-            .Setup(organizations => organizations.Delete(
-                It.IsAny<DeleteOrganizationRequest>(),
+            .Setup(organizations => organizations.Search(
+                It.IsAny<PagedSearchRequest>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ApiDataResult<PagedSearchResultDto<OrganizationDto>>.ForSuccess(
+                OrganizationSearchResult(),
+                HttpStatusCode.OK));
+        
+        CtrlApiClient.OrganizationsMock
+            .Setup(organizations => organizations.Remove(
+                It.IsAny<RemoveOrganizationRequest>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiResult.ForSuccess(HttpStatusCode.OK));
 
@@ -155,7 +163,7 @@ public sealed class OrgRemoveCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Equal("production", ConfigService.SavedConfig.Context.OrganizationName);
+        Assert.Equal("production", ConfigService.SavedConfig.Context.Organization?.Name);
     }
 
     [Fact]
@@ -165,8 +173,16 @@ public sealed class OrgRemoveCommandTests : CliTests
         ConfigService.UseConfig(ServerConfig());
 
         CtrlApiClient.OrganizationsMock
-            .Setup(organizations => organizations.Delete(
-                It.IsAny<DeleteOrganizationRequest>(),
+            .Setup(organizations => organizations.Search(
+                It.IsAny<PagedSearchRequest>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ApiDataResult<PagedSearchResultDto<OrganizationDto>>.ForSuccess(
+                OrganizationSearchResult(),
+                HttpStatusCode.OK));
+        
+        CtrlApiClient.OrganizationsMock
+            .Setup(organizations => organizations.Remove(
+                It.IsAny<RemoveOrganizationRequest>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiResult.ForFailure(
                 HttpStatusCode.NotFound,
@@ -189,13 +205,13 @@ public sealed class OrgRemoveCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("default");
+        config.SetOrganization("org_1", "default");
 
         ConfigService.UseConfig(config);
 
         CtrlApiClient.OrganizationsMock
-            .Setup(organizations => organizations.Delete(
-                It.IsAny<DeleteOrganizationRequest>(),
+            .Setup(organizations => organizations.Remove(
+                It.IsAny<RemoveOrganizationRequest>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiResult.ForFailure(
                 HttpStatusCode.NotFound,
@@ -210,7 +226,7 @@ public sealed class OrgRemoveCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Error, result.ExitCode);
-        Assert.Equal("default", ConfigService.Config.Context.OrganizationName);
+        Assert.Equal("default", ConfigService.Config.Context.Organization?.Name);
     }
 
     private static Config ServerConfig()
@@ -229,5 +245,23 @@ public sealed class OrgRemoveCommandTests : CliTests
         config.SetServer("default");
 
         return config;
+    }
+    
+    private static PagedSearchResultDto<OrganizationDto> OrganizationSearchResult(
+        string id = "org_1",
+        string name = "default")
+    {
+        return new PagedSearchResultDto<OrganizationDto>
+        {
+            Entities =
+            [
+                new OrganizationDto
+                {
+                    Id = id,
+                    Name = name
+                }
+            ],
+            HasNext = false
+        };
     }
 }

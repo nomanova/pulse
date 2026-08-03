@@ -8,7 +8,6 @@ using Environment = Pulse.Domain.Aggregates.Environments.Environment;
 namespace Pulse.App.Handlers.Environments.Common.Specifications;
 
 public sealed class EnvironmentByNameSpecification(
-    OrganizationId organizationId,
     ApplicationId applicationId,
     string? environmentName,
     bool includeDeleted = false) : Specification<Environment>
@@ -16,7 +15,6 @@ public sealed class EnvironmentByNameSpecification(
     public override Expression<Func<Environment, bool>> ToExpression()
     {
         Expression<Func<Environment, bool>> expression = environment =>
-            environment.OrganizationId == organizationId &&
             environment.ApplicationId == applicationId &&
             environment.Name.Value == environmentName;
 

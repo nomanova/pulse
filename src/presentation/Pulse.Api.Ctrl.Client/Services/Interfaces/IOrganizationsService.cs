@@ -1,5 +1,5 @@
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Organizations;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.Api.Shared.Contract;
 using Pulse.App.Dto.Common;
 using Pulse.App.Dto.Organizations;
@@ -8,10 +8,10 @@ namespace Pulse.Api.Ctrl.Client.Services.Interfaces;
 
 public interface IOrganizationsService
 {
-    Task<ApiDataResult<IdentityDto>> Create(CreateOrganizationRequest request,
+    Task<ApiDataResult<IdentityDto>> Add(AddOrganizationRequest request,
         CancellationToken cancellationToken = default);
     
-    Task<ApiResult> Delete(DeleteOrganizationRequest request,
+    Task<ApiResult> Remove(RemoveOrganizationRequest request,
         CancellationToken cancellationToken = default);
     
     Task<ApiDataResult<OrganizationDto>> Fetch(FetchOrganizationRequest request,

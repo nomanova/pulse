@@ -92,8 +92,7 @@ public sealed class Membership : DomainEntity<MembershipId>, IOrganizationScoped
 
         var id = IdentityProvider.New<MembershipId>();
         var membership = new Membership(
-            id, Scope.Environment, user.Id, role.Id, environment.OrganizationId, environment.ApplicationId,
-            environment.Id);
+            id, Scope.Environment, user.Id, role.Id, null, null, environment.Id);
 
         membership.SetCreated();
 

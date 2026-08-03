@@ -11,24 +11,20 @@ namespace Pulse.App.Handlers.Environments.Common.Specifications;
 
 public sealed class SearchEnvironmentsSpecification : Specification<Environment>
 {
-    private readonly OrganizationId _organizationId;
     private readonly ApplicationId _applicationId;
     private readonly string? _query;
 
     public SearchEnvironmentsSpecification(
-        OrganizationId organizationId,
         ApplicationId applicationId,
         string? query)
     {
-        _organizationId = organizationId;
         _applicationId = applicationId;
         _query = query.AsNormalizedQueryable();
     }
 
     public override Expression<Func<Environment, bool>> ToExpression()
     {
-        Expression<Func<Environment, bool>> expr = environment => environment.OrganizationId == _organizationId &&
-                                                                  environment.ApplicationId == _applicationId &&
+        Expression<Func<Environment, bool>> expr = environment => environment.ApplicationId == _applicationId &&
                                                                   !environment.IsDeleted;
 
         return expr.WithNameFilter(_query);

@@ -2,7 +2,7 @@ using Pulse.Api.Client;
 using Pulse.Api.Client.Common;
 using Pulse.Api.Client.Services;
 using Pulse.Api.Ctrl.Client.Services.Interfaces;
-using Pulse.Api.Ctrl.Contract.Organizations;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.Api.Shared.Contract;
 using Pulse.App.Dto.Common;
 using Pulse.App.Dto.Organizations;
@@ -19,15 +19,15 @@ public sealed class OrganizationsService : BaseService, IOrganizationsService
     {
     }
 
-    public async Task<ApiDataResult<IdentityDto>> Create(CreateOrganizationRequest request, CancellationToken cancellationToken = default)
+    public async Task<ApiDataResult<IdentityDto>> Add(AddOrganizationRequest request, CancellationToken cancellationToken = default)
     {
-        const string url = $"{BasePath}/create";
+        const string url = $"{BasePath}/add";
         return await SendForDataAsync<IdentityDto>(HttpMethod.Post, url, request, cancellationToken);
     }
 
-    public async Task<ApiResult> Delete(DeleteOrganizationRequest request, CancellationToken cancellationToken = default)
+    public async Task<ApiResult> Remove(RemoveOrganizationRequest request, CancellationToken cancellationToken = default)
     {
-        const string url = $"{BasePath}/delete";
+        const string url = $"{BasePath}/remove";
         return await SendAsync(HttpMethod.Post, url, request, cancellationToken);
     }
 

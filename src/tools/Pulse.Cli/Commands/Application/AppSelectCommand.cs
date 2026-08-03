@@ -44,7 +44,7 @@ public sealed class AppSelectCommand : PagedAppCommand
                 _console.WriteLine("No applications found");
                 return Exit.Success;
             case 1:
-                SelectEntity(config, entities[0].Name);
+                SelectEntity(config, entities[0].Id, entities[0].Name);
                 return Exit.Success;
         }
 
@@ -53,19 +53,21 @@ public sealed class AppSelectCommand : PagedAppCommand
 
         _console.WriteContinuation(lastId);
 
-        var selectedEntity = await _console.PromptAsync(new SelectionPrompt<string>()
+        var selectedEntityName = await _console.PromptAsync(new SelectionPrompt<string>()
                 .Title("Select application")
                 .AddChoices(names),
             cancellationToken: cancellationToken);
 
-        SelectEntity(config, selectedEntity);
+        var entity = entities.Single(o => o.Name == selectedEntityName);
+        
+        SelectEntity(config, entity.Id, entity.Name);
 
         return Exit.Success;
     }
 
-    private void SelectEntity(Config config, string name)
+    private void SelectEntity(Config config, string id, string name)
     {
-        config.SetApplication(name);
+        config.SetApplication(id, name);
         _configService.Save(config);
 
         _console.WriteLine($"Selected application '{name}'");

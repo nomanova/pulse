@@ -81,7 +81,7 @@ public sealed class ContextPrintCommandTests : CliTests
         };
 
         config.SetServer("default");
-        config.SetOrganization("production");
+        config.SetOrganization("org_1", "production");
 
         ConfigService.UseConfig(config);
 

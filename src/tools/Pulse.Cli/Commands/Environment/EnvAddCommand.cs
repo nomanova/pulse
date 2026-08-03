@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Pulse.Api.Ctrl.Client;
-using Pulse.Api.Ctrl.Contract.Environments;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.Cli.Models;
 using Pulse.Cli.Services;
 using Spectre.Console;
@@ -13,7 +13,6 @@ namespace Pulse.Cli.Commands.Environment;
 public sealed class EnvAddCommand : AsyncCommand<EnvAddCommand.Settings>
 {
     public const string CmdId = "add";
-    public const string CmdAliasId = "create";
 
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;
@@ -44,22 +43,23 @@ public sealed class EnvAddCommand : AsyncCommand<EnvAddCommand.Settings>
 
         var name = settings.Name;
 
-        var request = new CreateEnvironmentRequest
+        var request = new AddEnvironmentRequest
         {
-            OrganizationName = config.Context.OrganizationName,
-            ApplicationName = config.Context.ApplicationName,
+            ApplicationId = config.Context.Application!.Id,
             EnvironmentName = name
         };
 
-        var result = await _ctrlApiClient.Environments.Create(request, cancellationToken);
+        var result = await _ctrlApiClient.Environments.Add(request, cancellationToken);
 
-        if (!result.Success)
+        if (!result.Success || result.Data == null)
         {
             _console.WriteProblem(result.Problem, result.StatusCode);
             return Exit.Error;
         }
 
-        config.SetEnvironment(name); // Immediately select the new environment
+        var id = result.Data.Id;
+
+        config.SetEnvironment(id, name); // Immediately select the new environment
         _configService.Save(config);
 
         _console.WriteLine($"Environment '{name}' added");

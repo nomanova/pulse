@@ -5,7 +5,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using ErrorOr;
 using Pulse.App.Common.Authorization.Policies;
-using Pulse.App.Common.Context;
 using Pulse.App.Common.Database.Specifications;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Common.Errors;
@@ -14,18 +13,15 @@ using Pulse.App.Dto.Common;
 using Pulse.App.Dto.Workflows;
 using Pulse.App.Handlers.Workflows.Common;
 using Pulse.App.Handlers.Workflows.Common.Specifications;
+using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Aggregates.Workflows;
 using Pulse.Domain.Common.Models.Entities;
 
 namespace Pulse.App.Handlers.Workflows.Queries;
 
-public sealed record SearchWorkflowsQuery : SearchQuery<WorkflowDto>, IEnvironmentRequest
+public sealed record SearchWorkflowsQuery : SearchQuery<WorkflowDto>
 {
-    public string? OrganizationName { get; init; }
-
-    public string? ApplicationName { get; init; }
-
-    public string? EnvironmentName { get; init; }
+    public required EnvironmentId EnvironmentId { get; init; }
 }
 
 public sealed class SearchWorkflowsQueryValidator : SearchQueryValidator<SearchWorkflowsQuery, WorkflowDto>;
@@ -37,24 +33,16 @@ public class SearchWorkflowsQueryHandler :
 {
     private static readonly List<string> OrderByProperties = [nameof(Workflow.Name)];
 
-    private readonly IContextProvider _contextProvider;
     private readonly IWorkflowRepository _workflowRepository;
 
-    public SearchWorkflowsQueryHandler(
-        IContextProvider contextProvider,
-        IWorkflowRepository workflowRepository)
+    public SearchWorkflowsQueryHandler(IWorkflowRepository workflowRepository)
     {
-        _contextProvider = contextProvider;
         _workflowRepository = workflowRepository;
     }
 
     public async Task<ErrorOr<PagedSearchResultDto<WorkflowDto>>> Handle(SearchWorkflowsQuery query,
         CancellationToken cancellationToken)
     {
-        var organization = _contextProvider.Organization;
-        var application = _contextProvider.Application;
-        var environment = _contextProvider.Environment;
-
         var lastId = query.LastId?.AsIdentity<WorkflowId>();
 
         if (query.OrderBy != null && !OrderByProperties.Contains(query.OrderBy))
@@ -72,11 +60,11 @@ public class SearchWorkflowsQueryHandler :
         };
 
         var searchBySpecification =
-            new SearchWorkflowsSpecification(organization.Id, application.Id, environment.Id, query.Query);
+            new SearchWorkflowsSpecification(query.EnvironmentId, query.Query);
 
         var searchLastSpecification = lastId == null
             ? null
-            : new WorkflowByIdSpecification(organization.Id, application.Id, environment.Id, lastId);
+            : new WorkflowByIdSpecification(lastId);
 
         var searchResult = await _workflowRepository.SearchCursor(
             searchBySpecification,

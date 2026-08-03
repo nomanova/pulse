@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Pulse.Api.Client.Common;
 using Pulse.Api.Ctrl.Client;
-using Pulse.Api.Ctrl.Contract.Environments;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Common;
 using Pulse.App.Dto.Environments;
 using Pulse.Cli.Models;
@@ -38,8 +38,7 @@ public abstract class PagedEnvCommand : PagedCommand<SearchEnvironmentsRequest, 
         
         return new SearchEnvironmentsRequest
         {
-            OrganizationName = config.Context.OrganizationName,
-            ApplicationName = config.Context.ApplicationName
+            ApplicationId = config.Context.Application!.Id
         };
     }
 }

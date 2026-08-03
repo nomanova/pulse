@@ -1,5 +1,5 @@
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Users;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Users;
 
 namespace Pulse.Api.Ctrl.Client.Services.Interfaces;

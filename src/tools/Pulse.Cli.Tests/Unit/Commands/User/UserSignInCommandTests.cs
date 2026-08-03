@@ -2,7 +2,7 @@ using System.Net;
 using System.Threading;
 using Moq;
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Users;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.Api.Shared.Contract;
 using Pulse.App.Dto.Users;
 using Pulse.Cli.Commands.User;

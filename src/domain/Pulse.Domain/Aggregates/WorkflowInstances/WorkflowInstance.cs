@@ -1,8 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Pulse.Domain.Aggregates.Environments;
-using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.WorkflowInstances.Entities;
 using Pulse.Domain.Aggregates.WorkflowInstances.Enums;
 using Pulse.Domain.Aggregates.WorkflowInstances.Events;
@@ -10,22 +8,13 @@ using Pulse.Domain.Aggregates.Workflows;
 using Pulse.Domain.Aggregates.Workflows.Entities;
 using Pulse.Domain.Common.Models.Entities;
 using Pulse.Domain.Common.Services;
-using ApplicationId = Pulse.Domain.Aggregates.Applications.ApplicationId;
 
 namespace Pulse.Domain.Aggregates.WorkflowInstances;
 
 public sealed record WorkflowInstanceId : EntityId<WorkflowInstanceId, WorkflowInstance>;
 
-public sealed class WorkflowInstance : DomainEntity<WorkflowInstanceId>, IEnvironmentScoped
+public sealed class WorkflowInstance : DomainEntity<WorkflowInstanceId>
 {
-    public OrganizationId OrganizationId { get; private set; } = null!;
-
-    public ApplicationId ApplicationId { get; private set; } = null!;
-
-    public EnvironmentId EnvironmentId { get; private set; } = null!;
-
-    public WorkflowId WorkflowId { get; private set; } = null!;
-
     public WorkflowVersionId WorkflowVersionId { get; private set; } = null!;
 
     public WorkflowInstanceStatus Status { get; private set; }
@@ -48,17 +37,9 @@ public sealed class WorkflowInstance : DomainEntity<WorkflowInstanceId>, IEnviro
 
     private WorkflowInstance(
         WorkflowInstanceId id,
-        OrganizationId organizationId,
-        ApplicationId applicationId,
-        EnvironmentId environmentId,
-        WorkflowId workflowId,
         WorkflowVersionId workflowVersionId,
         WorkflowInstanceStatus status) : base(id)
     {
-        OrganizationId = organizationId;
-        ApplicationId = applicationId;
-        EnvironmentId = environmentId;
-        WorkflowId = workflowId;
         WorkflowVersionId = workflowVersionId;
         Status = status;
     }
@@ -69,10 +50,6 @@ public sealed class WorkflowInstance : DomainEntity<WorkflowInstanceId>, IEnviro
     {
         var instance = new WorkflowInstance(
             IdentityProvider.New<WorkflowInstanceId>(),
-            workflow.OrganizationId,
-            workflow.ApplicationId,
-            workflow.EnvironmentId,
-            workflow.Id,
             workflowVersion.Id,
             WorkflowInstanceStatus.Running);
 
@@ -187,9 +164,6 @@ public sealed class WorkflowInstance : DomainEntity<WorkflowInstanceId>, IEnviro
         AddEvent(new WorkflowInstanceStepStartedEvent(
             Id,
             nextStep.Id,
-            WorkflowId,
-            WorkflowVersionId,
-            nextStep.WorkflowVersionStepId,
             nextStep.Order));
     }
 

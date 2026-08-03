@@ -217,7 +217,7 @@ public sealed class OrgListCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("default");
+        config.SetOrganization("org_1","default");
 
         ConfigService.UseConfig(config);
 

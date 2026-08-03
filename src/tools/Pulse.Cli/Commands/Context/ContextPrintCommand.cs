@@ -34,9 +34,9 @@ public sealed class ContextPrintCommand : Command<ContextPrintCommand.Settings>
         table.AddColumn("Value");
 
         table.AddRow("[grey]srv[/]", config.Context.ServerName ?? NoValue);
-        table.AddRow("[grey]org[/]", config.Context.OrganizationName ?? NoValue);
-        table.AddRow("[grey]app[/]", config.Context.ApplicationName ?? NoValue);
-        table.AddRow("[grey]env[/]", config.Context.EnvironmentName ?? NoValue);
+        table.AddRow("[grey]org[/]", config.Context.Organization?.Name ?? NoValue);
+        table.AddRow("[grey]app[/]", config.Context.Application?.Name ?? NoValue);
+        table.AddRow("[grey]env[/]", config.Context.Environment?.Name ?? NoValue);
 
         _console.WriteTable(table);
 

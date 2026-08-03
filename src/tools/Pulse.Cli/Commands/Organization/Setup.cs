@@ -11,16 +11,13 @@ public static class Setup
             configurator.SetDescription("Organization commands");
             
             configurator.AddCommand<OrgAddCommand>(OrgAddCommand.CmdId)
-                .WithDescription("Add a new organization")
-                .WithAlias(OrgAddCommand.CmdAliasId);
+                .WithDescription("Add a new organization");
             
             configurator.AddCommand<OrgRemoveCommand>(OrgRemoveCommand.CmdId)
-                .WithDescription("Remove an organization")
-                .WithAlias(OrgRemoveCommand.CmdAliasId);
+                .WithDescription("Remove an organization");
             
             configurator.AddCommand<OrgListCommand>(OrgListCommand.CmdId)
-                .WithDescription("List known organizations")
-                .WithAlias(OrgListCommand.CmdAliasId);
+                .WithDescription("List known organizations");
             
             configurator.AddCommand<OrgSelectCommand>(OrgSelectCommand.CmdId)
                 .WithDescription("Select organization");

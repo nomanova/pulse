@@ -13,7 +13,6 @@ namespace Pulse.Cli.Commands.Application;
 public sealed class AppListCommand : PagedAppCommand
 {
     public const string CmdId = "list";
-    public const string CmdAliasId = "search";
 
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;
@@ -63,7 +62,7 @@ public sealed class AppListCommand : PagedAppCommand
 
         foreach (var entity in entities)
         {
-            var isSelected = config.Context.ApplicationName == entity.Name;
+            var isSelected = config.Context.Application?.Name == entity.Name;
             table.AddRow(isSelected ? "[grey]*[/]" : "", entity.Name);
         }
 

@@ -2,7 +2,7 @@ using Pulse.Api.Client;
 using Pulse.Api.Client.Common;
 using Pulse.Api.Client.Services;
 using Pulse.Api.Ctrl.Client.Services.Interfaces;
-using Pulse.Api.Ctrl.Contract.Applications;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Applications;
 using Pulse.App.Dto.Common;
 
@@ -18,16 +18,16 @@ public sealed class ApplicationsService : BaseService, IApplicationsService
     {
     }
 
-    public async Task<ApiDataResult<IdentityDto>> Create(CreateApplicationRequest request,
+    public async Task<ApiDataResult<IdentityDto>> Add(AddApplicationRequest request,
         CancellationToken cancellationToken = default)
     {
-        const string url = $"{BasePath}/create";
+        const string url = $"{BasePath}/add";
         return await SendForDataAsync<IdentityDto>(HttpMethod.Post, url, request, cancellationToken);
     }
 
-    public async Task<ApiResult> Delete(DeleteApplicationRequest request, CancellationToken cancellationToken = default)
+    public async Task<ApiResult> Remove(RemoveApplicationRequest request, CancellationToken cancellationToken = default)
     {
-        const string url = $"{BasePath}/delete";
+        const string url = $"{BasePath}/remove";
         return await SendAsync(HttpMethod.Post, url, request, cancellationToken);
     }
 

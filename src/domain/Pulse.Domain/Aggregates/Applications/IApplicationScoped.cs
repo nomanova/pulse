@@ -1,8 +1,6 @@
-using Pulse.Domain.Aggregates.Organizations;
-
 namespace Pulse.Domain.Aggregates.Applications;
 
-public interface IApplicationScoped : IOrganizationScoped
+public interface IApplicationScoped
 {
     ApplicationId ApplicationId { get; }
 }

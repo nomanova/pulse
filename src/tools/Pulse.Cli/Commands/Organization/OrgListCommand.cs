@@ -13,7 +13,6 @@ namespace Pulse.Cli.Commands.Organization;
 public sealed class OrgListCommand : PagedOrgCommand
 {
     public const string CmdId = "list";
-    public const string CmdAliasId = "search";
 
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;
@@ -63,7 +62,7 @@ public sealed class OrgListCommand : PagedOrgCommand
 
         foreach (var organization in organizations)
         {
-            var isSelected = config.Context.OrganizationName == organization.Name;
+            var isSelected = config.Context.Organization?.Name == organization.Name;
             table.AddRow(isSelected ? "[grey]*[/]" : "", organization.Name);
         }
 

@@ -33,12 +33,12 @@ public sealed record Config
 
     public bool HasOrganization()
     {
-        return HasServer() && Context.OrganizationName is not null;
+        return HasServer() && Context.Organization is not null;
     }
 
     public bool HasApplication()
     {
-        return HasOrganization() && Context.ApplicationName is not null;
+        return HasOrganization() && Context.Application is not null;
     }
     
     public Server? CurrentServer()
@@ -46,30 +46,30 @@ public sealed record Config
         return Context.ServerName is null ? null : Servers[Context.ServerName];
     }
     
-    public void SetOrganization(string name)
+    public void SetOrganization(string id, string name)
     {
         Context = Context with
         {
-            OrganizationName = name,
-            ApplicationName = null,
-            EnvironmentName = null
+            Organization = new NamedIdentity(id, name),
+            Application = null,
+            Environment = null
         };
     }
 
-    public void SetApplication(string name)
+    public void SetApplication(string id, string name)
     {
         Context = Context with
         {
-            ApplicationName = name,
-            EnvironmentName = null
+            Application = new NamedIdentity(id, name),
+            Environment = null
         };
     }
 
-    public void SetEnvironment(string name)
+    public void SetEnvironment(string id, string name)
     {
         Context = Context with
         {
-            EnvironmentName = name
+            Environment = new NamedIdentity(id, name)
         };
     }
     
@@ -77,9 +77,9 @@ public sealed record Config
     {
         Context = Context with
         {
-            OrganizationName = null,
-            ApplicationName = null,
-            EnvironmentName = null
+            Organization = null,
+            Application = null,
+            Environment = null
         };
     }
     
@@ -87,8 +87,8 @@ public sealed record Config
     {
         Context = Context with
         {
-            ApplicationName = null,
-            EnvironmentName = null
+            Application = null,
+            Environment = null
         };
     }
     
@@ -96,7 +96,7 @@ public sealed record Config
     {
         Context = Context with
         {
-            EnvironmentName = null
+            Environment = null
         };
     }
     

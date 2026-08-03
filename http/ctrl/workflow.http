@@ -1,27 +1,24 @@
-### Create
-POST {{root}}/api/ctrl/v1/workflows/create
+###
+### Add
+###
+POST {{root}}/api/ctrl/v1/workflows/add
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationName": "{{organizationName}}",
-  "applicationName": "{{applicationName}}",
-  "environmentName": "{{environmentName}}",
-  "workflowName": "send-email"
+  "environmentId": "{{envId}}",
+  "workflowName": "{{wrkName}}"
 }
 
 ###
-### Delete
+### Remove
 ###
-POST {{root}}/api/ctrl/v1/workflows/delete
+POST {{root}}/api/ctrl/v1/workflows/remove
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationName": "{{organizationName}}",
-  "applicationName": "{{applicationName}}",
-  "environmentName": "{{environmentName}}",
-  "workflowName": "send-email"
+  "workflowId": "{{wrkId}}"
 }
 
 ###
@@ -32,10 +29,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationName": "{{organizationName}}",
-  "applicationName": "{{applicationName}}",
-  "environmentName": "{{environmentName}}",
-  "workflowName": "send-email"
+  "workflowId": "{{wrkId}}"
 }
 
 ###
@@ -51,21 +45,30 @@ Authorization: Bearer {{auth_token}}
   "pageSize": null,
   "ascending": true,
   "orderBy": null,
-  "organizationName": "{{organizationName}}",
-  "applicationName": "{{applicationName}}",
-  "environmentName": "{{environmentName}}"
+  "environmentId": "{{envId}}"
 }
 
 ###
-### Add Step
+### Add Version Step
 ###
-POST {{root}}/api/ctrl/v1/workflows/add-step
+POST {{root}}/api/ctrl/v1/workflows/versions/add-step
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationName": "{{organizationName}}",
-  "applicationName": "{{applicationName}}",
-  "environmentName": "{{environmentName}}",
-  "workflowName": "send-email"
+  "workflowId": "{{wrkId}}",
+  "workflowVersionId": "v4vcm4tppn5e07ynh1iuwcin"
+}
+
+###
+### Remove Version Step
+###
+POST {{root}}/api/ctrl/v1/workflows/versions/remove-step
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "workflowId": "{{wrkId}}",
+  "workflowVersionId": "v4vcm4tppn5e07ynh1iuwcin",
+  "workflowVersionStepId": "5lkd32lce3189kek45nk9qhoj"
 }

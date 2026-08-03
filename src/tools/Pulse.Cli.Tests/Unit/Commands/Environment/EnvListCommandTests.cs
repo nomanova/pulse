@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading;
 using Moq;
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Environments;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Environments;
 using Pulse.App.Dto.Common;
 using Pulse.Cli.Commands.Environment;
@@ -25,7 +25,7 @@ public sealed class EnvListCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
+        config.SetOrganization("org_1", "myorg");
         ConfigService.UseConfig(config);
 
         // Act
@@ -41,8 +41,8 @@ public sealed class EnvListCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
-        config.SetApplication("myapp");
+        config.SetOrganization("org_1", "myorg");
+        config.SetApplication("app_1", "myapp");
         ConfigService.UseConfig(config);
 
         var searchResult = new PagedSearchResultDto<EnvironmentDto>
@@ -68,8 +68,8 @@ public sealed class EnvListCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
-        config.SetApplication("myapp");
+        config.SetOrganization("org_1", "myorg");
+        config.SetApplication("app_1", "myapp");
         ConfigService.UseConfig(config);
 
         var searchResult = new PagedSearchResultDto<EnvironmentDto>
@@ -100,9 +100,9 @@ public sealed class EnvListCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
-        config.SetApplication("myapp");
-        config.SetEnvironment("prod");
+        config.SetOrganization("org_1", "myorg");
+        config.SetApplication("app_1", "myapp");
+        config.SetEnvironment("env_1","prod");
         ConfigService.UseConfig(config);
 
         var searchResult = new PagedSearchResultDto<EnvironmentDto>
@@ -132,8 +132,8 @@ public sealed class EnvListCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
-        config.SetApplication("myapp");
+        config.SetOrganization("org_1", "myorg");
+        config.SetApplication("app_1", "myapp");
         ConfigService.UseConfig(config);
 
         CtrlApiClient.EnvironmentsMock

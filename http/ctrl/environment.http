@@ -1,25 +1,24 @@
-### Create
-POST {{root}}/api/ctrl/v1/environments/create
+###
+### Add
+###
+POST {{root}}/api/ctrl/v1/environments/add
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationName": "{{organizationName}}",
-  "applicationName": "{{applicationName}}",
+  "applicationId": "{{applicationId}}",
   "environmentName": "{{environmentName}}"
 }
 
 ###
-### Delete
+### Remove
 ###
-POST {{root}}/api/ctrl/v1/environments/delete
+POST {{root}}/api/ctrl/v1/environments/remove
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationName": "{{organizationName}}",
-  "applicationName": "{{applicationName}}",
-  "environmentName": "{{environmentName}}"
+  "environmentId": "{{envId}}"
 }
 
 ###
@@ -30,9 +29,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationName": "{{organizationName}}",
-  "applicationName": "{{applicationName}}",
-  "environmentName": "{{environmentName}}"
+  "environmentId": "{{envId}}"
 }
 
 ###
@@ -48,6 +45,5 @@ Authorization: Bearer {{auth_token}}
   "pageSize": null,
   "ascending": true,
   "orderBy": null,
-  "organizationName": "{{organizationName}}",
-  "applicationName": "{{applicationName}}"
+  "applicationId": "{{appId}}"
 }

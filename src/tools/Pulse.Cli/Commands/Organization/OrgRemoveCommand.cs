@@ -1,8 +1,10 @@
 using System.ComponentModel;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Pulse.Api.Ctrl.Client;
-using Pulse.Api.Ctrl.Contract.Organizations;
+using Pulse.Api.Ctrl.Contract;
+using Pulse.Api.Shared.Contract;
 using Pulse.Cli.Models;
 using Pulse.Cli.Services;
 using Spectre.Console;
@@ -13,7 +15,6 @@ namespace Pulse.Cli.Commands.Organization;
 public sealed class OrgRemoveCommand : AsyncCommand<OrgRemoveCommand.Settings>
 {
     public const string CmdId = "remove";
-    public const string CmdAliasId = "delete";
 
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;
@@ -44,12 +45,35 @@ public sealed class OrgRemoveCommand : AsyncCommand<OrgRemoveCommand.Settings>
 
         var name = settings.Name;
 
-        var request = new DeleteOrganizationRequest
+        // Search
+        var searchRequest = new PagedSearchRequest
         {
-            OrganizationName = name
+            Query = name
+        };
+        
+        var searchResult = await _ctrlApiClient.Organizations.Search(searchRequest, cancellationToken);
+        
+        if (!searchResult.Success || searchResult.Data == null)
+        {
+            _console.WriteProblem(searchResult.Problem, searchResult.StatusCode);
+            return Exit.Error;
+        }
+        
+        var organization = searchResult.Data.Entities.FirstOrDefault();
+
+        if (organization == null)
+        {
+            _console.WriteError($"Organization '{name}' not found");
+            return Exit.Error;
+        }
+        
+        // Remove
+        var request = new RemoveOrganizationRequest
+        {
+            OrganizationId = organization.Id
         };
 
-        var result = await _ctrlApiClient.Organizations.Delete(request, cancellationToken);
+        var result = await _ctrlApiClient.Organizations.Remove(request, cancellationToken);
 
         if (!result.Success)
         {
@@ -57,7 +81,7 @@ public sealed class OrgRemoveCommand : AsyncCommand<OrgRemoveCommand.Settings>
             return Exit.Error;
         }
 
-        if (config.Context.OrganizationName == name)
+        if (config.Context.Organization?.Name == name)
         {
             config.ClearOrganization();
         }

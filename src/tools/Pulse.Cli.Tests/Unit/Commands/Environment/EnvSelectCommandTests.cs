@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading;
 using Moq;
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Environments;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Environments;
 using Pulse.App.Dto.Common;
 using Pulse.Cli.Commands.Environment;
@@ -26,7 +26,7 @@ public sealed class EnvSelectCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
+        config.SetOrganization("org_1", "myorg");
         ConfigService.UseConfig(config);
 
         // Act
@@ -42,8 +42,8 @@ public sealed class EnvSelectCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
-        config.SetApplication("myapp");
+        config.SetOrganization("org_1", "myorg");
+        config.SetApplication("app_1", "myapp");
         ConfigService.UseConfig(config);
 
         var searchResult = new PagedSearchResultDto<EnvironmentDto>
@@ -69,8 +69,8 @@ public sealed class EnvSelectCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
-        config.SetApplication("myapp");
+        config.SetOrganization("org_1", "myorg");
+        config.SetApplication("app_1", "myapp");
         ConfigService.UseConfig(config);
 
         var searchResult = new PagedSearchResultDto<EnvironmentDto>
@@ -94,7 +94,7 @@ public sealed class EnvSelectCommandTests : CliTests
         Assert.Contains("Selected environment 'prod'", result.Output);
         
         var savedConfig = ConfigService.Load();
-        Assert.Equal("prod", savedConfig.Context.EnvironmentName);
+        Assert.Equal("prod", savedConfig.Context.Environment?.Name);
     }
 
     [Fact]
@@ -102,8 +102,8 @@ public sealed class EnvSelectCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
-        config.SetApplication("myapp");
+        config.SetOrganization("org_1", "myorg");
+        config.SetApplication("app_1", "myapp");
         ConfigService.UseConfig(config);
 
         var searchResult = new PagedSearchResultDto<EnvironmentDto>
@@ -131,7 +131,7 @@ public sealed class EnvSelectCommandTests : CliTests
         Assert.Contains("Selected environment 'prod'", result.Output);
 
         var savedConfig = ConfigService.Load();
-        Assert.Equal("prod", savedConfig.Context.EnvironmentName);
+        Assert.Equal("prod", savedConfig.Context.Environment?.Name);
     }
 
     private Config ServerConfig()

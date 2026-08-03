@@ -1,7 +1,6 @@
 using System.Threading;
 using System.Threading.Tasks;
 using ErrorOr;
-using Pulse.App.Common.Context;
 using Pulse.App.Common.Security.Interfaces;
 using Pulse.App.Handlers.Memberships.Common;
 using Pulse.App.Handlers.Memberships.Common.Specifications;
@@ -15,16 +14,13 @@ public sealed class MustHaveResourcePermissionRequirementHandler :
     IAuthorizationHandler<MustHaveResourcePermissionRequirement>
 {
     private readonly IUserProvider _userProvider;
-    private readonly IContextProvider _contextProvider;
     private readonly IMembershipRepository _membershipRepository;
 
     public MustHaveResourcePermissionRequirementHandler(
         IUserProvider userProvider,
-        IContextProvider contextProvider,
         IMembershipRepository membershipRepository)
     {
         _userProvider = userProvider;
-        _contextProvider = contextProvider;
         _membershipRepository = membershipRepository;
     }
 

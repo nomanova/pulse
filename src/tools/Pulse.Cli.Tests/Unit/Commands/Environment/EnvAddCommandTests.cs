@@ -2,7 +2,7 @@ using System.Net;
 using System.Threading;
 using Moq;
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Environments;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Common;
 using Pulse.Cli.Commands.Environment;
 using Pulse.Cli.Models;
@@ -33,7 +33,7 @@ public sealed class EnvAddCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
+        config.SetOrganization("org_1", "myorg");
         ConfigService.UseConfig(config);
 
         // Act
@@ -49,12 +49,12 @@ public sealed class EnvAddCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
-        config.SetApplication("myapp");
+        config.SetOrganization("org_1", "myorg");
+        config.SetApplication("app_1", "myapp");
         ConfigService.UseConfig(config);
 
         CtrlApiClient.EnvironmentsMock
-            .Setup(x => x.Create(It.IsAny<CreateEnvironmentRequest>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Add(It.IsAny<AddEnvironmentRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "1" }, HttpStatusCode.OK));
 
         // Act
@@ -62,8 +62,8 @@ public sealed class EnvAddCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        CtrlApiClient.EnvironmentsMock.Verify(x => x.Create(
-            It.Is<CreateEnvironmentRequest>(r => r.EnvironmentName == "production" && r.OrganizationName == "myorg" && r.ApplicationName == "myapp"),
+        CtrlApiClient.EnvironmentsMock.Verify(x => x.Add(
+            It.Is<AddEnvironmentRequest>(r => r.EnvironmentName == "production" && r.ApplicationId == "app_1"),
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -72,12 +72,12 @@ public sealed class EnvAddCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
-        config.SetApplication("myapp");
+        config.SetOrganization("org_1", "myorg");
+        config.SetApplication("app_1", "myapp");
         ConfigService.UseConfig(config);
 
         CtrlApiClient.EnvironmentsMock
-            .Setup(x => x.Create(It.IsAny<CreateEnvironmentRequest>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Add(It.IsAny<AddEnvironmentRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "1" }, HttpStatusCode.OK));
 
         // Act
@@ -85,7 +85,7 @@ public sealed class EnvAddCommandTests : CliTests
 
         // Assert
         var savedConfig = ConfigService.Load();
-        Assert.Equal("production", savedConfig.Context.EnvironmentName);
+        Assert.Equal("production", savedConfig.Context.Environment?.Name);
     }
 
     [Fact]
@@ -93,12 +93,12 @@ public sealed class EnvAddCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
-        config.SetApplication("myapp");
+        config.SetOrganization("org_1", "myorg");
+        config.SetApplication("app_1", "myapp");
         ConfigService.UseConfig(config);
 
         CtrlApiClient.EnvironmentsMock
-            .Setup(x => x.Create(It.IsAny<CreateEnvironmentRequest>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Add(It.IsAny<AddEnvironmentRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForFailure(HttpStatusCode.BadRequest));
 
         // Act

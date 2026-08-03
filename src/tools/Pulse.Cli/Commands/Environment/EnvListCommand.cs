@@ -13,7 +13,6 @@ namespace Pulse.Cli.Commands.Environment;
 public sealed class EnvListCommand : PagedEnvCommand
 {
     public const string CmdId = "list";
-    public const string CmdAliasId = "search";
 
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;
@@ -63,7 +62,7 @@ public sealed class EnvListCommand : PagedEnvCommand
 
         foreach (var entity in entities)
         {
-            var isSelected = config.Context.EnvironmentName == entity.Name;
+            var isSelected = config.Context.Environment?.Name == entity.Name;
             table.AddRow(isSelected ? "[grey]*[/]" : "", entity.Name);
         }
 

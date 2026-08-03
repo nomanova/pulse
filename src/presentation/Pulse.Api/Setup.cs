@@ -22,7 +22,7 @@ internal static class Setup
             {
                 document.Info.Version = "1.0";
                 document.Info.Title = "Pulse API";
-                document.Info.Description = "Open-source .NET notification server.";
+                document.Info.Description = "Open-source .NET enterprise notification gateway.";
                 document.Info.Contact = new OpenApiContact
                 {
                     Name = "NOMANOVA",

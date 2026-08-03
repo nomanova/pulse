@@ -11,8 +11,6 @@ public sealed record EnvironmentId : EntityId<EnvironmentId, Environment>;
 
 public class Environment : DomainEntity<EnvironmentId>, IApplicationScoped, INamedObject
 {
-    public OrganizationId OrganizationId { get; } = null!;
-
     public ApplicationId ApplicationId { get; } = null!;
 
     public ObjectName Name { get; private set; } = null!;
@@ -23,11 +21,9 @@ public class Environment : DomainEntity<EnvironmentId>, IApplicationScoped, INam
 
     private Environment(
         EnvironmentId id,
-        OrganizationId organizationId,
         ApplicationId applicationId,
         ObjectName name) : base(id)
     {
-        OrganizationId = organizationId;
         ApplicationId = applicationId;
         Name = name;
     }
@@ -39,7 +35,6 @@ public class Environment : DomainEntity<EnvironmentId>, IApplicationScoped, INam
 
         var environment = new Environment(
             id,
-            application.OrganizationId,
             application.Id,
             objectName);
 

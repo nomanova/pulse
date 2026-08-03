@@ -16,7 +16,7 @@ public sealed class CreateOrganizationTests : AppTests
         // Arrange
         var admin = EnsureAdmin();
 
-        var command = new CreateOrganizationCommand
+        var command = new AddOrganizationCommand
         {
             OrganizationName = "pulse"
         };
@@ -40,7 +40,7 @@ public sealed class CreateOrganizationTests : AppTests
         var admin = EnsureAdmin();
         var organization = EnsureOrganization(admin.User);
 
-        var command = new CreateOrganizationCommand
+        var command = new AddOrganizationCommand
         {
             OrganizationName = organization.Name.Value
         };

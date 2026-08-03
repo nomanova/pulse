@@ -1,5 +1,5 @@
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Environments;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Common;
 using Pulse.App.Dto.Environments;
 
@@ -7,10 +7,10 @@ namespace Pulse.Api.Ctrl.Client.Services.Interfaces;
 
 public interface IEnvironmentsService
 {
-    Task<ApiDataResult<IdentityDto>> Create(CreateEnvironmentRequest request,
+    Task<ApiDataResult<IdentityDto>> Add(AddEnvironmentRequest request,
         CancellationToken cancellationToken = default);
 
-    Task<ApiResult> Delete(DeleteEnvironmentRequest request,
+    Task<ApiResult> Remove(RemoveEnvironmentRequest request,
         CancellationToken cancellationToken = default);
 
     Task<ApiDataResult<EnvironmentDto>> Fetch(FetchEnvironmentRequest request,

@@ -1,5 +1,5 @@
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Applications;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Applications;
 using Pulse.App.Dto.Common;
 
@@ -7,10 +7,10 @@ namespace Pulse.Api.Ctrl.Client.Services.Interfaces;
 
 public interface IApplicationsService
 {
-    Task<ApiDataResult<IdentityDto>> Create(CreateApplicationRequest request,
+    Task<ApiDataResult<IdentityDto>> Add(AddApplicationRequest request,
         CancellationToken cancellationToken = default);
 
-    Task<ApiResult> Delete(DeleteApplicationRequest request,
+    Task<ApiResult> Remove(RemoveApplicationRequest request,
         CancellationToken cancellationToken = default);
 
     Task<ApiDataResult<ApplicationDto>> Fetch(FetchApplicationRequest request,

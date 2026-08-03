@@ -21,27 +21,7 @@ public sealed class WorkflowInstanceConfiguration : DomainEntityTypeConfiguratio
         base.Configure(builder);
 
         builder.HasKey(instance => instance.Id);
-
-        builder.HasOne<Organization>()
-            .WithMany()
-            .HasForeignKey(workflow => workflow.OrganizationId)
-            .IsRequired();
-
-        builder.HasOne<Application>()
-            .WithMany()
-            .HasForeignKey(workflow => workflow.ApplicationId)
-            .IsRequired();
-
-        builder.HasOne<Environment>()
-            .WithMany()
-            .HasForeignKey(workflow => workflow.EnvironmentId)
-            .IsRequired();
-
-        builder.HasOne<Workflow>()
-            .WithMany()
-            .HasForeignKey(instance => instance.WorkflowId)
-            .IsRequired();
-
+        
         builder.HasOne<WorkflowVersion>()
             .WithMany()
             .HasForeignKey(instance => instance.WorkflowVersionId)

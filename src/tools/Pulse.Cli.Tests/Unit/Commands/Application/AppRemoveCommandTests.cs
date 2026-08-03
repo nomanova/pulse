@@ -1,8 +1,11 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using Moq;
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Applications;
+using Pulse.Api.Ctrl.Contract;
+using Pulse.App.Dto.Applications;
+using Pulse.App.Dto.Common;
 using Pulse.Cli.Commands.Application;
 using Pulse.Cli.Models;
 using Pulse.Cli.Tests.Framework;
@@ -46,11 +49,21 @@ public sealed class AppRemoveCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
+        config.SetOrganization("org_1", "myorg");
         ConfigService.UseConfig(config);
 
+        var searchResult = new PagedSearchResultDto<ApplicationDto>
+        {
+            Entities = new List<ApplicationDto> { new() { Id = "app_1", Name = "myapp" } },
+            HasNext = false
+        };
+
         CtrlApiClient.ApplicationsMock
-            .Setup(x => x.Delete(It.IsAny<DeleteApplicationRequest>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Search(It.IsAny<SearchApplicationsRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ApiDataResult<PagedSearchResultDto<ApplicationDto>>.ForSuccess(searchResult, HttpStatusCode.OK));
+
+        CtrlApiClient.ApplicationsMock
+            .Setup(x => x.Remove(It.IsAny<RemoveApplicationRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiResult.ForSuccess(HttpStatusCode.OK));
 
         // Act
@@ -58,8 +71,8 @@ public sealed class AppRemoveCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        CtrlApiClient.ApplicationsMock.Verify(x => x.Delete(
-            It.Is<DeleteApplicationRequest>(r => r.ApplicationName == "myapp" && r.OrganizationName == "myorg"),
+        CtrlApiClient.ApplicationsMock.Verify(x => x.Remove(
+            It.Is<RemoveApplicationRequest>(r => r.ApplicationId == "app_1"),
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -68,12 +81,22 @@ public sealed class AppRemoveCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
-        config.SetApplication("myapp");
+        config.SetOrganization("org_1", "myorg");
+        config.SetApplication("app_1", "myapp");
         ConfigService.UseConfig(config);
 
+        var searchResult = new PagedSearchResultDto<ApplicationDto>
+        {
+            Entities = new List<ApplicationDto> { new() { Id = "app_1", Name = "myapp" } },
+            HasNext = false
+        };
+
         CtrlApiClient.ApplicationsMock
-            .Setup(x => x.Delete(It.IsAny<DeleteApplicationRequest>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Search(It.IsAny<SearchApplicationsRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ApiDataResult<PagedSearchResultDto<ApplicationDto>>.ForSuccess(searchResult, HttpStatusCode.OK));
+
+        CtrlApiClient.ApplicationsMock
+            .Setup(x => x.Remove(It.IsAny<RemoveApplicationRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiResult.ForSuccess(HttpStatusCode.OK));
 
         // Act
@@ -81,7 +104,7 @@ public sealed class AppRemoveCommandTests : CliTests
 
         // Assert
         var savedConfig = ConfigService.Load();
-        Assert.Null(savedConfig.Context.ApplicationName);
+        Assert.Null(savedConfig.Context.Application?.Name);
     }
 
     [Fact]
@@ -89,11 +112,11 @@ public sealed class AppRemoveCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
+        config.SetOrganization("org_1", "myorg");
         ConfigService.UseConfig(config);
 
         CtrlApiClient.ApplicationsMock
-            .Setup(x => x.Delete(It.IsAny<DeleteApplicationRequest>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Remove(It.IsAny<RemoveApplicationRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiResult.ForFailure(HttpStatusCode.BadRequest));
 
         // Act

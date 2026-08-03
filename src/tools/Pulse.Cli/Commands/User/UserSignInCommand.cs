@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Pulse.Api.Ctrl.Client;
-using Pulse.Api.Ctrl.Contract.Users;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.Cli.Services;
 using Spectre.Console;
 using Spectre.Console.Cli;

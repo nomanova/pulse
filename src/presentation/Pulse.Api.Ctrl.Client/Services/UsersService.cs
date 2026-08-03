@@ -2,7 +2,7 @@ using Pulse.Api.Client;
 using Pulse.Api.Client.Common;
 using Pulse.Api.Client.Services;
 using Pulse.Api.Ctrl.Client.Services.Interfaces;
-using Pulse.Api.Ctrl.Contract.Users;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Users;
 
 namespace Pulse.Api.Ctrl.Client.Services;

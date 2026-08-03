@@ -3,7 +3,7 @@ using System.Net;
 using System.Threading;
 using Moq;
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Applications;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Applications;
 using Pulse.App.Dto.Common;
 using Pulse.Cli.Commands.Application;
@@ -39,7 +39,7 @@ public sealed class AppListCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
+        config.SetOrganization("org_1", "myorg");
         ConfigService.UseConfig(config);
 
         var searchResult = new PagedSearchResultDto<ApplicationDto>
@@ -65,7 +65,7 @@ public sealed class AppListCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
+        config.SetOrganization("org_1", "myorg");
         ConfigService.UseConfig(config);
 
         var searchResult = new PagedSearchResultDto<ApplicationDto>
@@ -96,8 +96,8 @@ public sealed class AppListCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
-        config.SetApplication("app1");
+        config.SetOrganization("org_1", "myorg");
+        config.SetApplication("app_1","app1");
         ConfigService.UseConfig(config);
 
         var searchResult = new PagedSearchResultDto<ApplicationDto>
@@ -127,7 +127,7 @@ public sealed class AppListCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
+        config.SetOrganization("org_1", "myorg");
         ConfigService.UseConfig(config);
 
         CtrlApiClient.ApplicationsMock

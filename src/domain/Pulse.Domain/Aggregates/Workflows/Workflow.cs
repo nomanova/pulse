@@ -1,14 +1,12 @@
 using System.Collections.Generic;
 using System.Linq;
 using Pulse.Domain.Aggregates.Environments;
-using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.WorkflowInstances;
 using Pulse.Domain.Aggregates.Workflows.Entities;
 using Pulse.Domain.Common.Errors;
 using Pulse.Domain.Common.Models.Entities;
 using Pulse.Domain.Common.Models.ValueObjects;
 using Pulse.Domain.Common.Services;
-using ApplicationId = Pulse.Domain.Aggregates.Applications.ApplicationId;
 using Environment = Pulse.Domain.Aggregates.Environments.Environment;
 
 namespace Pulse.Domain.Aggregates.Workflows;
@@ -17,16 +15,14 @@ public sealed record WorkflowId : EntityId<WorkflowId, Workflow>;
 
 public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INamedObject
 {
-    public OrganizationId OrganizationId { get; private set; } = null!;
-
-    public ApplicationId ApplicationId { get; private set; } = null!;
-
     public EnvironmentId EnvironmentId { get; private set; } = null!;
 
     public ObjectName Name { get; private set; } = null!;
 
     public WorkflowVersionId? PublishedVersionId { get; private set; }
-    
+
+    public WorkflowVersionId? DraftVersionId { get; private set; }
+
     private readonly List<WorkflowVersion> _versions = [];
 
     public IReadOnlyCollection<WorkflowVersion> Versions => _versions
@@ -37,20 +33,20 @@ public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INa
     public WorkflowVersion? PublishedVersion => PublishedVersionId is null
         ? null
         : _versions.Single(version => version.Id == PublishedVersionId);
-    
+
+    public WorkflowVersion? DraftVersion => DraftVersionId is null
+        ? null
+        : _versions.Single(version => version.Id == DraftVersionId);
+
     private Workflow()
     {
     }
 
     private Workflow(
         WorkflowId id,
-        OrganizationId organizationId,
-        ApplicationId applicationId,
         EnvironmentId environmentId,
         ObjectName name) : base(id)
     {
-        OrganizationId = organizationId;
-        ApplicationId = applicationId;
         EnvironmentId = environmentId;
         Name = name;
     }
@@ -62,8 +58,6 @@ public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INa
 
         var workflow = new Workflow(
             id,
-            environment.OrganizationId,
-            environment.ApplicationId,
             environment.Id,
             objectName);
 
@@ -88,8 +82,7 @@ public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INa
 
     public WorkflowVersion CreateDraftVersion()
     {
-        DomainErrors.Workflow.DraftAlreadyExists.Assert(() =>
-            !_versions.Any(version => version.IsDraft));
+        DomainErrors.Workflow.DraftAlreadyExists.Assert(() => DraftVersionId is null);
 
         var versionNumber = _versions.NextVersionNumber();
 
@@ -98,31 +91,25 @@ public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INa
             : WorkflowVersion.CreateDraftFrom(this, versionNumber, PublishedVersion);
 
         _versions.Add(draft);
+        DraftVersionId = draft.Id;
 
         SetModified();
 
         return draft;
     }
 
-    public WorkflowVersion GetDraftVersion()
-    {
-        var draft = _versions.SingleOrDefault(version => version.IsDraft);
-
-        DomainErrors.Workflow.NoDraftVersion.Assert(() => draft != null);
-
-        return draft!;
-    }
-
     public WorkflowVersion PublishDraftVersion()
     {
-        var draft = GetDraftVersion();
+        var draft = DraftVersion;
 
-        DomainErrors.Workflow.NoSteps.Assert(() => draft.Steps.Any());
+        DomainErrors.Workflow.NoDraftVersion.Assert(() => draft != null);
+        DomainErrors.Workflow.NoSteps.Assert(() => draft!.Steps.Any());
 
         PublishedVersion?.Archive();
-        draft.Publish();
+        draft!.Publish();
 
         PublishedVersionId = draft.Id;
+        DraftVersionId = null;
 
         SetModified();
 

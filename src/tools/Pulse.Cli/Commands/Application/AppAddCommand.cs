@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Pulse.Api.Ctrl.Client;
-using Pulse.Api.Ctrl.Contract.Applications;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.Cli.Models;
 using Pulse.Cli.Services;
 using Spectre.Console;
@@ -13,7 +13,6 @@ namespace Pulse.Cli.Commands.Application;
 public sealed class AppAddCommand : AsyncCommand<AppAddCommand.Settings>
 {
     public const string CmdId = "add";
-    public const string CmdAliasId = "create";
 
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;
@@ -44,21 +43,23 @@ public sealed class AppAddCommand : AsyncCommand<AppAddCommand.Settings>
 
         var name = settings.Name;
 
-        var request = new CreateApplicationRequest
+        var request = new AddApplicationRequest
         {
-            OrganizationName = config.Context.OrganizationName,
+            OrganizationId = config.Context.Organization!.Id,
             ApplicationName = name
         };
 
-        var result = await _ctrlApiClient.Applications.Create(request, cancellationToken);
+        var result = await _ctrlApiClient.Applications.Add(request, cancellationToken);
 
-        if (!result.Success)
+        if (!result.Success || result.Data == null)
         {
             _console.WriteProblem(result.Problem, result.StatusCode);
             return Exit.Error;
         }
 
-        config.SetApplication(name); // Immediately select the new application
+        var id = result.Data.Id;
+        
+        config.SetApplication(id, name); // Immediately select the new application
         _configService.Save(config);
 
         _console.WriteLine($"Application '{name}' added");

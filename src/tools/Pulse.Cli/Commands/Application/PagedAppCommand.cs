@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Pulse.Api.Client.Common;
 using Pulse.Api.Ctrl.Client;
-using Pulse.Api.Ctrl.Contract.Applications;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Applications;
 using Pulse.App.Dto.Common;
 using Pulse.Cli.Models;
@@ -38,7 +38,7 @@ public abstract class PagedAppCommand : PagedCommand<SearchApplicationsRequest, 
         
         return new SearchApplicationsRequest
         {
-            OrganizationName = config.Context.OrganizationName
+            OrganizationId = config.Context.Organization!.Id
         };
     }
 }

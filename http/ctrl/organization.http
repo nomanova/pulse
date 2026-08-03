@@ -1,7 +1,7 @@
 ###
-### Create
+### Add
 ###
-POST {{root}}/api/ctrl/v1/organizations/create
+POST {{root}}/api/ctrl/v1/organizations/add
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
@@ -10,14 +10,14 @@ Authorization: Bearer {{auth_token}}
 }
 
 ###
-### Delete
+### Remove
 ###
-POST {{root}}/api/ctrl/v1/organizations/delete
+POST {{root}}/api/ctrl/v1/organizations/remove
 Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationName": "{{organizationName}}"
+  "organizationId": "{{orgId}}"
 }
 
 ###
@@ -28,7 +28,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationName": "{{organizationName}}"
+  "organizationId": "{{orgId}}"
 }
 
 ###

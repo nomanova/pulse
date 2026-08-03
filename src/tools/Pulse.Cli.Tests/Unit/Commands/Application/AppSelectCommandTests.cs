@@ -4,7 +4,7 @@ using System.Net;
 using System.Threading;
 using Moq;
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Applications;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Applications;
 using Pulse.App.Dto.Common;
 using Pulse.Cli.Commands.Application;
@@ -40,7 +40,7 @@ public sealed class AppSelectCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
+        config.SetOrganization("org_1", "myorg");
         ConfigService.UseConfig(config);
 
         var searchResult = new PagedSearchResultDto<ApplicationDto>
@@ -66,7 +66,7 @@ public sealed class AppSelectCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
+        config.SetOrganization("org_1", "myorg");
         ConfigService.UseConfig(config);
 
         var searchResult = new PagedSearchResultDto<ApplicationDto>
@@ -90,7 +90,7 @@ public sealed class AppSelectCommandTests : CliTests
         Assert.Contains("Selected application 'app1'", result.Output);
         
         var savedConfig = ConfigService.Load();
-        Assert.Equal("app1", savedConfig.Context.ApplicationName);
+        Assert.Equal("app1", savedConfig.Context.Application?.Name);
     }
 
     [Fact]
@@ -98,7 +98,7 @@ public sealed class AppSelectCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
+        config.SetOrganization("org_1", "myorg");
         ConfigService.UseConfig(config);
 
         var searchResult = new PagedSearchResultDto<ApplicationDto>
@@ -126,7 +126,7 @@ public sealed class AppSelectCommandTests : CliTests
         Assert.Contains("Selected application 'app1'", result.Output);
 
         var savedConfig = ConfigService.Load();
-        Assert.Equal("app1", savedConfig.Context.ApplicationName);
+        Assert.Equal("app1", savedConfig.Context.Application?.Name);
     }
 
     private Config ServerConfig()

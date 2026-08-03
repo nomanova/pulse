@@ -91,11 +91,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("modified_at");
 
-                    b.Property<string>("OrganizationId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("organization_id");
-
                     b.Property<uint>("Version")
                         .IsConcurrencyToken()
                         .ValueGeneratedOnAddOrUpdate()
@@ -107,9 +102,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
 
                     b.HasIndex("ApplicationId")
                         .HasDatabaseName("ix_environments_application_id");
-
-                    b.HasIndex("OrganizationId")
-                        .HasDatabaseName("ix_environments_organization_id");
 
                     b.ToTable("environments", (string)null);
                 });
@@ -371,11 +363,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         .HasColumnType("text")
                         .HasColumnName("id");
 
-                    b.Property<string>("ApplicationId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("application_id");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -384,11 +371,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
-                    b.Property<string>("EnvironmentId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("environment_id");
-
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean")
                         .HasColumnName("is_deleted");
@@ -396,11 +378,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                     b.Property<DateTime?>("ModifiedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("modified_at");
-
-                    b.Property<string>("OrganizationId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("organization_id");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -413,11 +390,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         .HasColumnType("xid")
                         .HasColumnName("xmin");
 
-                    b.Property<string>("WorkflowId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("workflow_id");
-
                     b.Property<string>("WorkflowVersionId")
                         .IsRequired()
                         .HasColumnType("text")
@@ -425,18 +397,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
 
                     b.HasKey("Id")
                         .HasName("pk_workflow_instances");
-
-                    b.HasIndex("ApplicationId")
-                        .HasDatabaseName("ix_workflow_instances_application_id");
-
-                    b.HasIndex("EnvironmentId")
-                        .HasDatabaseName("ix_workflow_instances_environment_id");
-
-                    b.HasIndex("OrganizationId")
-                        .HasDatabaseName("ix_workflow_instances_organization_id");
-
-                    b.HasIndex("WorkflowId")
-                        .HasDatabaseName("ix_workflow_instances_workflow_id");
 
                     b.HasIndex("WorkflowVersionId")
                         .HasDatabaseName("ix_workflow_instances_workflow_version_id");
@@ -505,11 +465,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         .HasColumnType("text")
                         .HasColumnName("id");
 
-                    b.Property<string>("ApplicationId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("application_id");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("created_at");
@@ -517,6 +472,10 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
+
+                    b.Property<string>("DraftVersionId")
+                        .HasColumnType("text")
+                        .HasColumnName("draft_version_id");
 
                     b.Property<string>("EnvironmentId")
                         .IsRequired()
@@ -531,11 +490,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("modified_at");
 
-                    b.Property<string>("OrganizationId")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("organization_id");
-
                     b.Property<string>("PublishedVersionId")
                         .HasColumnType("text")
                         .HasColumnName("published_version_id");
@@ -549,14 +503,8 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                     b.HasKey("Id")
                         .HasName("pk_workflows");
 
-                    b.HasIndex("ApplicationId")
-                        .HasDatabaseName("ix_workflows_application_id");
-
                     b.HasIndex("EnvironmentId")
                         .HasDatabaseName("ix_workflows_environment_id");
-
-                    b.HasIndex("OrganizationId")
-                        .HasDatabaseName("ix_workflows_organization_id");
 
                     b.ToTable("workflows", (string)null);
                 });
@@ -688,13 +636,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_environments_applications_application_id");
-
-                    b.HasOne("Pulse.Domain.Aggregates.Organizations.Organization", null)
-                        .WithMany()
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_environments_organizations_organization_id");
 
                     b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectName", "Name", b1 =>
                         {
@@ -948,34 +889,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
 
             modelBuilder.Entity("Pulse.Domain.Aggregates.WorkflowInstances.WorkflowInstance", b =>
                 {
-                    b.HasOne("Pulse.Domain.Aggregates.Applications.Application", null)
-                        .WithMany()
-                        .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_workflow_instances_applications_application_id");
-
-                    b.HasOne("Pulse.Domain.Aggregates.Environments.Environment", null)
-                        .WithMany()
-                        .HasForeignKey("EnvironmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_workflow_instances_environments_environment_id");
-
-                    b.HasOne("Pulse.Domain.Aggregates.Organizations.Organization", null)
-                        .WithMany()
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_workflow_instances_organizations_organization_id");
-
-                    b.HasOne("Pulse.Domain.Aggregates.Workflows.Workflow", null)
-                        .WithMany()
-                        .HasForeignKey("WorkflowId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_workflow_instances_workflows_workflow_id");
-
                     b.HasOne("Pulse.Domain.Aggregates.Workflows.Entities.WorkflowVersion", null)
                         .WithMany()
                         .HasForeignKey("WorkflowVersionId")
@@ -1006,26 +919,12 @@ namespace Pulse.Infra.Database.Migrations.Postgres
 
             modelBuilder.Entity("Pulse.Domain.Aggregates.Workflows.Workflow", b =>
                 {
-                    b.HasOne("Pulse.Domain.Aggregates.Applications.Application", null)
-                        .WithMany()
-                        .HasForeignKey("ApplicationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_workflows_applications_application_id");
-
                     b.HasOne("Pulse.Domain.Aggregates.Environments.Environment", null)
                         .WithMany()
                         .HasForeignKey("EnvironmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_workflows_environments_environment_id");
-
-                    b.HasOne("Pulse.Domain.Aggregates.Organizations.Organization", null)
-                        .WithMany()
-                        .HasForeignKey("OrganizationId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired()
-                        .HasConstraintName("fk_workflows_organizations_organization_id");
 
                     b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectName", "Name", b1 =>
                         {

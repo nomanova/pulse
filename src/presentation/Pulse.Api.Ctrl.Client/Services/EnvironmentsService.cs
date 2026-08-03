@@ -2,7 +2,7 @@ using Pulse.Api.Client;
 using Pulse.Api.Client.Common;
 using Pulse.Api.Client.Services;
 using Pulse.Api.Ctrl.Client.Services.Interfaces;
-using Pulse.Api.Ctrl.Contract.Environments;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Common;
 using Pulse.App.Dto.Environments;
 
@@ -18,16 +18,16 @@ public sealed class EnvironmentsService : BaseService, IEnvironmentsService
     {
     }
 
-    public async Task<ApiDataResult<IdentityDto>> Create(CreateEnvironmentRequest request,
+    public async Task<ApiDataResult<IdentityDto>> Add(AddEnvironmentRequest request,
         CancellationToken cancellationToken = default)
     {
-        const string url = $"{BasePath}/create";
+        const string url = $"{BasePath}/add";
         return await SendForDataAsync<IdentityDto>(HttpMethod.Post, url, request, cancellationToken);
     }
 
-    public async Task<ApiResult> Delete(DeleteEnvironmentRequest request, CancellationToken cancellationToken = default)
+    public async Task<ApiResult> Remove(RemoveEnvironmentRequest request, CancellationToken cancellationToken = default)
     {
-        const string url = $"{BasePath}/delete";
+        const string url = $"{BasePath}/remove";
         return await SendAsync(HttpMethod.Post, url, request, cancellationToken);
     }
 

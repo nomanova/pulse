@@ -30,11 +30,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Domain", "Domain", "{FB35BC
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Domain", "src\domain\Pulse.Domain\Pulse.Domain.csproj", "{7EB2AAA3-B5D2-4439-A139-A5EB5CA7E4E9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "App", "App", "{FB4FE66A-E49C-4A1A-AC40-6F6172A7AD1F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Application", "Application", "{FB4FE66A-E49C-4A1A-AC40-6F6172A7AD1F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.App", "src\application\Pulse.App\Pulse.App.csproj", "{20D39AD3-6413-4E46-A6B2-D48A343853EA}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infra", "Infra", "{89A8C8E4-02E1-45AE-8B43-28E62013EADE}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{89A8C8E4-02E1-45AE-8B43-28E62013EADE}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Infra", "src\infrastructure\Pulse.Infra\Pulse.Infra.csproj", "{2158DB3C-6694-4569-B3ED-7676400515AD}"
 EndProject

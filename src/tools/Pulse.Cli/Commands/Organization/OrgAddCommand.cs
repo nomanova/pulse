@@ -2,7 +2,7 @@ using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 using Pulse.Api.Ctrl.Client;
-using Pulse.Api.Ctrl.Contract.Organizations;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.Cli.Models;
 using Pulse.Cli.Services;
 using Spectre.Console;
@@ -13,7 +13,6 @@ namespace Pulse.Cli.Commands.Organization;
 public sealed class OrgAddCommand : AsyncCommand<OrgAddCommand.Settings>
 {
     public const string CmdId = "add";
-    public const string CmdAliasId = "create";
 
     private readonly IAnsiConsole _console;
     private readonly IConfigService _configService;
@@ -44,20 +43,22 @@ public sealed class OrgAddCommand : AsyncCommand<OrgAddCommand.Settings>
 
         var name = settings.Name;
 
-        var request = new CreateOrganizationRequest
+        var request = new AddOrganizationRequest
         {
             OrganizationName = name
         };
 
-        var result = await _ctrlApiClient.Organizations.Create(request, cancellationToken);
+        var result = await _ctrlApiClient.Organizations.Add(request, cancellationToken);
 
-        if (!result.Success)
+        if (!result.Success || result.Data == null)
         {
             _console.WriteProblem(result.Problem, result.StatusCode);
             return Exit.Error;
         }
 
-        config.SetOrganization(name); // Immediately select the new organization
+        var id = result.Data.Id;
+        
+        config.SetOrganization(id, name); // Immediately select the new organization
         _configService.Save(config);
 
         _console.WriteLine($"Organization '{name}' added");

@@ -5,10 +5,18 @@ namespace Pulse.Domain.Aggregates.Workflows.Entities;
 
 public static class WorkflowVersionExtensions
 {
-    public static uint NextVersionNumber(this List<WorkflowVersion> versions)
+    extension(IReadOnlyCollection<WorkflowVersion> versions)
     {
-        return versions.Count == 0
-            ? 1
-            : versions.Max(version => version.Version) + 1;
+        public WorkflowVersion? Find(WorkflowVersionId versionId)
+        {
+            return versions.FirstOrDefault(version => version.Id == versionId);
+        }
+
+        public uint NextVersionNumber()
+        {
+            return versions.Count == 0
+                ? 1
+                : versions.Max(version => version.Version) + 1;
+        }
     }
 }

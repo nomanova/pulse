@@ -17,9 +17,9 @@ public sealed class CreateApplicationTests : AppTests
         var admin = EnsureAdmin();
         var organization = EnsureOrganization(admin.User);
         
-        var command = new CreateApplicationCommand
+        var command = new AddApplicationCommand
         {
-            OrganizationName = organization.Name.Value,
+            OrganizationId = organization.Id,
             ApplicationName = "test-app"
         };
         
@@ -44,9 +44,9 @@ public sealed class CreateApplicationTests : AppTests
 
         DatabaseContext.AddApplications(application);
 
-        var command = new CreateApplicationCommand
+        var command = new AddApplicationCommand
         {
-            OrganizationName = organization.Name.Value,
+            OrganizationId = organization.Id,
             ApplicationName = application.Name.Value
         };
 

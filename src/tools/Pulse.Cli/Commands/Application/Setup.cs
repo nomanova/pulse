@@ -11,16 +11,13 @@ public static class Setup
             configurator.SetDescription("Application commands");
 
             configurator.AddCommand<AppAddCommand>(AppAddCommand.CmdId)
-                .WithDescription("Add a new application")
-                .WithAlias(AppAddCommand.CmdAliasId);
+                .WithDescription("Add a new application");
 
             configurator.AddCommand<AppRemoveCommand>(AppRemoveCommand.CmdId)
-                .WithDescription("Remove an application")
-                .WithAlias(AppRemoveCommand.CmdAliasId);
+                .WithDescription("Remove an application");
 
             configurator.AddCommand<AppListCommand>(AppListCommand.CmdId)
-                .WithDescription("List known applications")
-                .WithAlias(AppListCommand.CmdAliasId);
+                .WithDescription("List known applications");
 
             configurator.AddCommand<AppSelectCommand>(AppSelectCommand.CmdId)
                 .WithDescription("Select application");

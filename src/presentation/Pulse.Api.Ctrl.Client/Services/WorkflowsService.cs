@@ -2,7 +2,7 @@ using Pulse.Api.Client;
 using Pulse.Api.Client.Common;
 using Pulse.Api.Client.Services;
 using Pulse.Api.Ctrl.Client.Services.Interfaces;
-using Pulse.Api.Ctrl.Contract.Workflows;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Common;
 using Pulse.App.Dto.Workflows;
 
@@ -18,16 +18,16 @@ public sealed class WorkflowsService : BaseService, IWorkflowsService
     {
     }
 
-    public async Task<ApiDataResult<IdentityDto>> Create(CreateWorkflowRequest request,
+    public async Task<ApiDataResult<IdentityDto>> Add(AddWorkflowRequest request,
         CancellationToken cancellationToken = default)
     {
-        const string url = $"{BasePath}/create";
+        const string url = $"{BasePath}/add";
         return await SendForDataAsync<IdentityDto>(HttpMethod.Post, url, request, cancellationToken);
     }
 
-    public async Task<ApiResult> Delete(DeleteWorkflowRequest request, CancellationToken cancellationToken = default)
+    public async Task<ApiResult> Remove(RemoveWorkflowRequest request, CancellationToken cancellationToken = default)
     {
-        const string url = $"{BasePath}/delete";
+        const string url = $"{BasePath}/remove";
         return await SendAsync(HttpMethod.Post, url, request, cancellationToken);
     }
 

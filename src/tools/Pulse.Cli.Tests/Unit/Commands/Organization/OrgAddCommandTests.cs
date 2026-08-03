@@ -2,7 +2,7 @@ using System.Net;
 using System.Threading;
 using Moq;
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Organizations;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.Api.Shared.Contract;
 using Pulse.App.Dto.Common;
 using Pulse.Cli.Commands.Organization;
@@ -18,7 +18,7 @@ public sealed class OrgAddCommandTests : CliTests
     {
         App.SetDefaultCommand<OrgAddCommand>();
     }
-    
+
     [Fact]
     public void Run_NoArguments_ShouldPrintInstructions()
     {
@@ -41,8 +41,8 @@ public sealed class OrgAddCommandTests : CliTests
         Assert.Contains("No server selected", result.Output);
 
         CtrlApiClient.OrganizationsMock.Verify(
-            organizations => organizations.Create(
-                It.IsAny<CreateOrganizationRequest>(),
+            organizations => organizations.Add(
+                It.IsAny<AddOrganizationRequest>(),
                 It.IsAny<CancellationToken>()),
             Times.Never);
     }
@@ -54,10 +54,10 @@ public sealed class OrgAddCommandTests : CliTests
         ConfigService.UseConfig(ServerConfig());
 
         CtrlApiClient.OrganizationsMock
-            .Setup(organizations => organizations.Create(
-                It.IsAny<CreateOrganizationRequest>(),
+            .Setup(organizations => organizations.Add(
+                It.IsAny<AddOrganizationRequest>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(null, HttpStatusCode.OK));
+            .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "org_1" }, HttpStatusCode.OK));
 
         // Act
         var result = App.Run("default");
@@ -66,8 +66,8 @@ public sealed class OrgAddCommandTests : CliTests
         Assert.Equal(Exit.Success, result.ExitCode);
 
         CtrlApiClient.OrganizationsMock.Verify(
-            organizations => organizations.Create(
-                It.Is<CreateOrganizationRequest>(request =>
+            organizations => organizations.Add(
+                It.Is<AddOrganizationRequest>(request =>
                     request.OrganizationName == "default"),
                 It.IsAny<CancellationToken>()),
             Times.Once);
@@ -80,17 +80,17 @@ public sealed class OrgAddCommandTests : CliTests
         ConfigService.UseConfig(ServerConfig());
 
         CtrlApiClient.OrganizationsMock
-            .Setup(organizations => organizations.Create(
-                It.IsAny<CreateOrganizationRequest>(),
+            .Setup(organizations => organizations.Add(
+                It.IsAny<AddOrganizationRequest>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(null, HttpStatusCode.OK));
+            .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "org_1" }, HttpStatusCode.OK));
 
         // Act
         var result = App.Run("default");
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Equal("default", ConfigService.SavedConfig.Context.OrganizationName);
+        Assert.Equal("default", ConfigService.SavedConfig.Context.Organization?.Name);
     }
 
     [Fact]
@@ -100,17 +100,17 @@ public sealed class OrgAddCommandTests : CliTests
         ConfigService.UseConfig(ServerConfig());
 
         CtrlApiClient.OrganizationsMock
-            .Setup(organizations => organizations.Create(
-                It.IsAny<CreateOrganizationRequest>(),
+            .Setup(organizations => organizations.Add(
+                It.IsAny<AddOrganizationRequest>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(null, HttpStatusCode.OK));
+            .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "org_1" }, HttpStatusCode.OK));
 
         // Act
         var result = App.Run("default");
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Equal("default", ConfigService.SavedConfig.Context.OrganizationName);
+        Assert.Equal("default", ConfigService.SavedConfig.Context.Organization?.Name);
     }
 
     [Fact]
@@ -120,10 +120,10 @@ public sealed class OrgAddCommandTests : CliTests
         ConfigService.UseConfig(ServerConfig());
 
         CtrlApiClient.OrganizationsMock
-            .Setup(organizations => organizations.Create(
-                It.IsAny<CreateOrganizationRequest>(),
+            .Setup(organizations => organizations.Add(
+                It.IsAny<AddOrganizationRequest>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(null, HttpStatusCode.OK));
+            .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "org_1" }, HttpStatusCode.OK));
 
         // Act
         var result = App.Run("default");
@@ -140,10 +140,10 @@ public sealed class OrgAddCommandTests : CliTests
         ConfigService.UseConfig(ServerConfig());
 
         CtrlApiClient.OrganizationsMock
-            .Setup(organizations => organizations.Create(
-                It.IsAny<CreateOrganizationRequest>(),
+            .Setup(organizations => organizations.Add(
+                It.IsAny<AddOrganizationRequest>(),
                 It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(null, HttpStatusCode.OK));
+            .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "org_1" }, HttpStatusCode.OK));
 
         // Act
         var result = App.Run("default");
@@ -160,8 +160,8 @@ public sealed class OrgAddCommandTests : CliTests
         ConfigService.UseConfig(ServerConfig());
 
         CtrlApiClient.OrganizationsMock
-            .Setup(organizations => organizations.Create(
-                It.IsAny<CreateOrganizationRequest>(),
+            .Setup(organizations => organizations.Add(
+                It.IsAny<AddOrganizationRequest>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForFailure(
                 HttpStatusCode.Conflict,
@@ -186,8 +186,8 @@ public sealed class OrgAddCommandTests : CliTests
         ConfigService.UseConfig(ServerConfig());
 
         CtrlApiClient.OrganizationsMock
-            .Setup(organizations => organizations.Create(
-                It.IsAny<CreateOrganizationRequest>(),
+            .Setup(organizations => organizations.Add(
+                It.IsAny<AddOrganizationRequest>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForFailure(
                 HttpStatusCode.Conflict,
@@ -202,7 +202,7 @@ public sealed class OrgAddCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Error, result.ExitCode);
-        Assert.Null(ConfigService.Config.Context.OrganizationName);
+        Assert.Null(ConfigService.Config.Context.Organization);
     }
 
     private static Config ServerConfig()

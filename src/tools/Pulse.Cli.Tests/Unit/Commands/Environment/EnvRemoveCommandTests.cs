@@ -1,8 +1,11 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Threading;
 using Moq;
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Environments;
+using Pulse.Api.Ctrl.Contract;
+using Pulse.App.Dto.Environments;
+using Pulse.App.Dto.Common;
 using Pulse.Cli.Commands.Environment;
 using Pulse.Cli.Models;
 using Pulse.Cli.Tests.Framework;
@@ -32,7 +35,7 @@ public sealed class EnvRemoveCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
+        config.SetOrganization("org_1", "myorg");
         ConfigService.UseConfig(config);
 
         // Act
@@ -48,12 +51,22 @@ public sealed class EnvRemoveCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
-        config.SetApplication("myapp");
+        config.SetOrganization("org_1", "myorg");
+        config.SetApplication("app_1", "myapp");
         ConfigService.UseConfig(config);
 
+        var searchResult = new PagedSearchResultDto<EnvironmentDto>
+        {
+            Entities = new List<EnvironmentDto> { new() { Id = "env_1", Name = "prod" } },
+            HasNext = false
+        };
+
         CtrlApiClient.EnvironmentsMock
-            .Setup(x => x.Delete(It.IsAny<DeleteEnvironmentRequest>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Search(It.IsAny<SearchEnvironmentsRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ApiDataResult<PagedSearchResultDto<EnvironmentDto>>.ForSuccess(searchResult, HttpStatusCode.OK));
+
+        CtrlApiClient.EnvironmentsMock
+            .Setup(x => x.Remove(It.IsAny<RemoveEnvironmentRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiResult.ForSuccess(HttpStatusCode.OK));
 
         // Act
@@ -61,8 +74,8 @@ public sealed class EnvRemoveCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        CtrlApiClient.EnvironmentsMock.Verify(x => x.Delete(
-            It.Is<DeleteEnvironmentRequest>(r => r.EnvironmentName == "prod" && r.OrganizationName == "myorg" && r.ApplicationName == "myapp"),
+        CtrlApiClient.EnvironmentsMock.Verify(x => x.Remove(
+            It.Is<RemoveEnvironmentRequest>(r => r.EnvironmentId == "env_1"),
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -71,13 +84,23 @@ public sealed class EnvRemoveCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
-        config.SetApplication("myapp");
-        config.SetEnvironment("prod");
+        config.SetOrganization("org_1", "myorg");
+        config.SetApplication("app_1", "myapp");
+        config.SetEnvironment("env_1","prod");
         ConfigService.UseConfig(config);
 
+        var searchResult = new PagedSearchResultDto<EnvironmentDto>
+        {
+            Entities = new List<EnvironmentDto> { new() { Id = "env_1", Name = "prod" } },
+            HasNext = false
+        };
+
         CtrlApiClient.EnvironmentsMock
-            .Setup(x => x.Delete(It.IsAny<DeleteEnvironmentRequest>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Search(It.IsAny<SearchEnvironmentsRequest>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ApiDataResult<PagedSearchResultDto<EnvironmentDto>>.ForSuccess(searchResult, HttpStatusCode.OK));
+
+        CtrlApiClient.EnvironmentsMock
+            .Setup(x => x.Remove(It.IsAny<RemoveEnvironmentRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiResult.ForSuccess(HttpStatusCode.OK));
 
         // Act
@@ -85,7 +108,7 @@ public sealed class EnvRemoveCommandTests : CliTests
 
         // Assert
         var savedConfig = ConfigService.Load();
-        Assert.Null(savedConfig.Context.EnvironmentName);
+        Assert.Null(savedConfig.Context.Environment?.Name);
     }
 
     [Fact]
@@ -93,12 +116,12 @@ public sealed class EnvRemoveCommandTests : CliTests
     {
         // Arrange
         var config = ServerConfig();
-        config.SetOrganization("myorg");
-        config.SetApplication("myapp");
+        config.SetOrganization("org_1", "myorg");
+        config.SetApplication("app_1", "myapp");
         ConfigService.UseConfig(config);
 
         CtrlApiClient.EnvironmentsMock
-            .Setup(x => x.Delete(It.IsAny<DeleteEnvironmentRequest>(), It.IsAny<CancellationToken>()))
+            .Setup(x => x.Remove(It.IsAny<RemoveEnvironmentRequest>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(ApiResult.ForFailure(HttpStatusCode.BadRequest));
 
         // Act

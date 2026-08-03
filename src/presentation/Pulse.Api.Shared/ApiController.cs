@@ -12,6 +12,11 @@ namespace Pulse.Api.Shared;
 [ApiController]
 public class ApiController : ControllerBase
 {
+    protected const string ActionAdd = "add";
+    protected const string ActionFetch = "fetch";
+    protected const string ActionSearch = "search";
+    protected const string ActionRemove = "remove";
+    
     protected static IActionResult Problem(List<Error> errors)
     {
         errors.ThrowIfNull().IfEmpty();

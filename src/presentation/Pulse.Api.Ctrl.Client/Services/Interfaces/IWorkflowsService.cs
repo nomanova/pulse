@@ -1,5 +1,5 @@
 using Pulse.Api.Client.Common;
-using Pulse.Api.Ctrl.Contract.Workflows;
+using Pulse.Api.Ctrl.Contract;
 using Pulse.App.Dto.Common;
 using Pulse.App.Dto.Workflows;
 
@@ -7,10 +7,10 @@ namespace Pulse.Api.Ctrl.Client.Services.Interfaces;
 
 public interface IWorkflowsService
 {
-    Task<ApiDataResult<IdentityDto>> Create(CreateWorkflowRequest request,
+    Task<ApiDataResult<IdentityDto>> Add(AddWorkflowRequest request,
         CancellationToken cancellationToken = default);
     
-    Task<ApiResult> Delete(DeleteWorkflowRequest request,
+    Task<ApiResult> Remove(RemoveWorkflowRequest request,
         CancellationToken cancellationToken = default);
     
     Task<ApiDataResult<WorkflowDto>> Fetch(FetchWorkflowRequest request,
