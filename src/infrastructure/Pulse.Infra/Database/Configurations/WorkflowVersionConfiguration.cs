@@ -30,7 +30,7 @@ public sealed class WorkflowVersionConfiguration : EntityTypeConfiguration<Workf
             .OnDelete(DeleteBehavior.Cascade);
 
         builder.Navigation(version => version.Steps).AutoInclude();
-
+        
         builder.HasIndex(version => new
         {
             version.WorkflowId,

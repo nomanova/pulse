@@ -56,7 +56,7 @@ public sealed class RemoveWorkflowVersionStepCommandHandler :
         }
 
         // Remove
-        workflowVersion.RemoveStep(command.StepId);
+        workflowVersion.RemoveStep(command.StepId); // This will trip when the version is no longer in draft.
 
         _workflowRepository.Update(workflow);
         await _unitOfWork.Commit(cancellationToken);

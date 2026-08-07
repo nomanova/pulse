@@ -6,7 +6,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationName": "{{organizationName}}"
+  "organizationName": "{{orgName}}"
 }
 
 ###

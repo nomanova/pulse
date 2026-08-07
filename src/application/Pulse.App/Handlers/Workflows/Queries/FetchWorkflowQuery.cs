@@ -28,7 +28,6 @@ public sealed class FetchWorkflowQueryHandler : IQueryHandler<FetchWorkflowQuery
 
     public async Task<ErrorOr<WorkflowDto>> Handle(FetchWorkflowQuery query, CancellationToken cancellationToken)
     {
-        // Fetch workflow
         var specification = new WorkflowByIdSpecification(query.WorkflowId);
         var workflow = await _workflowRepository.SearchOne(specification, cancellationToken);
 

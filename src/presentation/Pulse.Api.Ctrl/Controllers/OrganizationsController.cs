@@ -61,7 +61,7 @@ public sealed class OrganizationsController : CtrlApiController
     [HttpPost(ActionSearch)]
     [ProducesResponseType(typeof(PagedSearchResultDto<OrganizationDto>), StatusCodes.Status200OK)]
     public async Task<IActionResult> Search(
-        [FromBody] PagedSearchRequest request,
+        [FromBody] NamedPagedSearchRequest request,
         CancellationToken cancellationToken = default)
     {
         var query = new SearchOrganizationsQuery

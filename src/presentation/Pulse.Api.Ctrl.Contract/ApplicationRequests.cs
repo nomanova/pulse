@@ -19,7 +19,7 @@ public sealed record FetchApplicationRequest
     public string? ApplicationId { get; init; }
 }
 
-public sealed record SearchApplicationsRequest : PagedSearchRequest
+public sealed record SearchApplicationsRequest : NamedPagedSearchRequest
 {
     public string? OrganizationId { get; init; }
 }

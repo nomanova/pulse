@@ -19,7 +19,7 @@ using Pulse.Domain.Common.Models.Entities;
 
 namespace Pulse.App.Handlers.Workflows.Queries;
 
-public sealed record SearchWorkflowsQuery : SearchQuery<WorkflowDto>
+public sealed record SearchWorkflowsQuery : NamedSearchQuery<WorkflowDto>
 {
     public required EnvironmentId EnvironmentId { get; init; }
 }

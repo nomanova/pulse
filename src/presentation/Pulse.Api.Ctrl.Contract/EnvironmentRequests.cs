@@ -19,7 +19,7 @@ public sealed record FetchEnvironmentRequest
     public string? EnvironmentId { get; init; }
 }
 
-public sealed record SearchEnvironmentsRequest : PagedSearchRequest
+public sealed record SearchEnvironmentsRequest : NamedPagedSearchRequest
 {
     public string? ApplicationId { get; init; }
 }

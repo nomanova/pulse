@@ -11,7 +11,7 @@ using Spectre.Console.Cli;
 namespace Pulse.Cli.Commands;
 
 public abstract class PagedCommand<T, Ts> : AsyncCommand<PagedCommandSettings> where T :
-    PagedSearchRequest
+    NamedPagedSearchRequest
     where Ts : IdentityDto
 {
     private readonly IAnsiConsole _console;

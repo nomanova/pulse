@@ -20,7 +20,7 @@ using Environment = Pulse.Domain.Aggregates.Environments.Environment;
 
 namespace Pulse.App.Handlers.Environments.Queries;
 
-public sealed record SearchEnvironmentsQuery : SearchQuery<EnvironmentDto>
+public sealed record SearchEnvironmentsQuery : NamedSearchQuery<EnvironmentDto>
 {
     public required ApplicationId ApplicationId { get; init; }
 }

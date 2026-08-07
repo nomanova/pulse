@@ -1,4 +1,5 @@
 using Pulse.Api.Shared.Contract;
+using Pulse.App.Dto.Workflows;
 
 namespace Pulse.Api.Ctrl.Contract;
 
@@ -19,9 +20,21 @@ public sealed record FetchWorkflowRequest
     public string? WorkflowId { get; init; }
 }
 
-public sealed record SearchWorkflowsRequest : PagedSearchRequest
+public sealed record SearchWorkflowsRequest : NamedPagedSearchRequest
 {
     public string? EnvironmentId { get; init; }
+}
+
+public sealed record FetchWorkflowVersionRequest
+{
+    public string? WorkflowVersionId { get; init; }
+}
+
+public sealed record SearchWorkflowVersionsRequest : PagedSearchRequest
+{
+    public string? WorkflowId { get; init; }
+
+    public WorkflowVersionStatusDto? Status { get; init; }
 }
 
 public sealed record AddWorkflowVersionStepRequest

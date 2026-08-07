@@ -3,12 +3,10 @@
 ## Workflows
 
 - Unit tests for domain logic
-- Option to fetch the current draft and published versions
+- Option to fetch the current draft and published versions => generalize to worfklow version search endpoint
 - Endpoint to publish a workflow
 - Data plane endpoint to trigger a workflow
 
-- Add a step to a (draft) workflow
-- Delete a step from a (draft) workflow
 - Change the order of a step in a (draft) workflow
 
 - Submit all steps of a workflow using JSON or YAML

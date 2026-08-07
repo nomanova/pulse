@@ -6,8 +6,8 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "applicationId": "{{applicationId}}",
-  "environmentName": "{{environmentName}}"
+  "applicationId": "{{appId}}",
+  "environmentName": "{{envName}}"
 }
 
 ###

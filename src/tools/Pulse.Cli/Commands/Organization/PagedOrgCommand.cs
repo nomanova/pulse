@@ -9,7 +9,7 @@ using Spectre.Console;
 
 namespace Pulse.Cli.Commands.Organization;
 
-public abstract class PagedOrgCommand : PagedCommand<PagedSearchRequest, OrganizationDto>
+public abstract class PagedOrgCommand : PagedCommand<NamedPagedSearchRequest, OrganizationDto>
 {
     private readonly ICtrlApiClient _ctrlApiClient;
 
@@ -21,13 +21,13 @@ public abstract class PagedOrgCommand : PagedCommand<PagedSearchRequest, Organiz
     }
 
     protected override async Task<ApiDataResult<PagedSearchResultDto<OrganizationDto>>> Search(
-        PagedSearchRequest request, CancellationToken cancellationToken)
+        NamedPagedSearchRequest request, CancellationToken cancellationToken)
     {
         return await _ctrlApiClient.Organizations.Search(request, cancellationToken);
     }
 
-    protected override PagedSearchRequest GetRequest()
+    protected override NamedPagedSearchRequest GetRequest()
     {
-        return new PagedSearchRequest();
+        return new NamedPagedSearchRequest();
     }
 }

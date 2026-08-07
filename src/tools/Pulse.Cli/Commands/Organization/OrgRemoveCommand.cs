@@ -46,7 +46,7 @@ public sealed class OrgRemoveCommand : AsyncCommand<OrgRemoveCommand.Settings>
         var name = settings.Name;
 
         // Search
-        var searchRequest = new PagedSearchRequest
+        var searchRequest = new NamedPagedSearchRequest
         {
             Query = name
         };

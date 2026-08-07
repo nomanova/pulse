@@ -21,3 +21,12 @@ public abstract class ByIdSpecification<TEntity, Tk>(
         return expression;
     }
 }
+
+public abstract class ByEntityIdSpecification<TEntity, Tk>(Tk id) :
+    Specification<TEntity> where TEntity : Entity<Tk> where Tk : EntityId
+{
+    public override Expression<Func<TEntity, bool>> ToExpression()
+    {
+        return entity => entity.Id == id;
+    }
+}

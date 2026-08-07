@@ -58,7 +58,7 @@ public sealed class OrgListCommandTests : CliTests
 
         CtrlApiClient.OrganizationsMock.Verify(
             organizations => organizations.Search(
-                It.Is<PagedSearchRequest>(request =>
+                It.Is<NamedPagedSearchRequest>(request =>
                     request.Query == null &&
                     request.PageSize == Constants.DefaultPageLimit &&
                     request.LastId == null),
@@ -88,7 +88,7 @@ public sealed class OrgListCommandTests : CliTests
 
         CtrlApiClient.OrganizationsMock.Verify(
             organizations => organizations.Search(
-                It.Is<PagedSearchRequest>(request =>
+                It.Is<NamedPagedSearchRequest>(request =>
                     request.Query == "default" &&
                     request.PageSize == Constants.DefaultPageLimit &&
                     request.LastId == null),

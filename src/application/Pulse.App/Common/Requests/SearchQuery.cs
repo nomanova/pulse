@@ -14,14 +14,17 @@ public interface ISearchQuery
 
 public record SearchQuery<T> : IQuery<ErrorOr<PagedSearchResultDto<T>>>
 {
-    public string? Query { get; init; }
-
     public string? LastId { get; init; }
 
     public uint PageSize { get; init; }
 
     public bool? Ascending { get; init; }
+}
 
+public record NamedSearchQuery<T> : SearchQuery<T>
+{
+    public string? Query { get; init; }
+    
     public string? OrderBy { get; init; }
 }
 

@@ -24,6 +24,7 @@ public static class DtoMapper
         {
             Id = version.Id.Value,
             WorkflowId = version.WorkflowId.Value,
+            Status = (WorkflowVersionStatusDto)version.Status,
             Steps = version.Steps.Select(x => x.ToDto()).ToList()
         };
     }
@@ -33,7 +34,6 @@ public static class DtoMapper
         return new WorkflowVersionStepDto
         {
             Id = step.Id.Value,
-            WorkflowVersionId = step.WorkflowVersionId.Value,
             Order = step.Order
         };
     }

@@ -47,6 +47,9 @@ public sealed class AddWorkflowVersionStepCommandHandler :
             return Error.NotFound();
         }
 
+        // The workflow version is strictly speaking not required, as a step can
+        // only be added to the (single) version currently in draft.
+        // However, having the client explicitly provide the version will avoid race conditions.
         var workflowVersion = workflow.Versions.Find(command.VersionId);
 
         if (workflowVersion == null)
@@ -55,7 +58,7 @@ public sealed class AddWorkflowVersionStepCommandHandler :
         }
 
         // Add
-        var step = workflowVersion.AddStep();
+        var step = workflowVersion.AddStep(); // This will trip when the version is no longer in draft.
         
         _workflowRepository.Update(workflow);
         await _unitOfWork.Commit(cancellationToken);

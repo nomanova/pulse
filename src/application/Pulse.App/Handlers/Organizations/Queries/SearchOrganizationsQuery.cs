@@ -18,7 +18,7 @@ using Pulse.Domain.Common.Models.Entities;
 
 namespace Pulse.App.Handlers.Organizations.Queries;
 
-public sealed record SearchOrganizationsQuery : SearchQuery<OrganizationDto>;
+public sealed record SearchOrganizationsQuery : NamedSearchQuery<OrganizationDto>;
 
 public sealed class SearchOrganizationsQueryValidator : SearchQueryValidator<SearchOrganizationsQuery, OrganizationDto>;
 

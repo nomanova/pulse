@@ -5,9 +5,9 @@ namespace Pulse.App.Handlers.Workflows.Common;
 
 public interface IWorkflowVersionRepository : IReadOnlyRepository<WorkflowVersion>;
 
-public class WorkflowVersionRepository : ReadRepository<WorkflowVersion>, IWorkflowVersionRepository
+internal sealed class WorkflowVersionRepository : ReadRepository<WorkflowVersion>, IWorkflowVersionRepository
 {
-    protected WorkflowVersionRepository(IDatabaseContext context) : base(context.WorkflowVersions)
+    public WorkflowVersionRepository(IDatabaseContext context) : base(context.WorkflowVersions)
     {
     }
 }

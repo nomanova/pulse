@@ -49,6 +49,32 @@ Authorization: Bearer {{auth_token}}
 }
 
 ###
+### Fetch Version
+###
+POST {{root}}/api/ctrl/v1/workflows/versions/fetch
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "workflowVersionId": "v4vcm4tppn5e07ynh1iuwcin"
+}
+
+###
+### Search Versions
+###
+POST {{root}}/api/ctrl/v1/workflows/versions/search
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "lastId": null,
+  "pageSize": null,
+  "ascending": true,
+  "workflowId": "{{wrkId}}",
+  "status": null
+}
+
+###
 ### Add Version Step
 ###
 POST {{root}}/api/ctrl/v1/workflows/versions/add-step
@@ -70,5 +96,5 @@ Authorization: Bearer {{auth_token}}
 {
   "workflowId": "{{wrkId}}",
   "workflowVersionId": "v4vcm4tppn5e07ynh1iuwcin",
-  "workflowVersionStepId": "5lkd32lce3189kek45nk9qhoj"
+  "workflowVersionStepId": "1iol8861kviiq1rrmioqdwfg1"
 }

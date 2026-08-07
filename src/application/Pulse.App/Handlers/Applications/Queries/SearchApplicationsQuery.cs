@@ -20,7 +20,7 @@ using ApplicationId = Pulse.Domain.Aggregates.Applications.ApplicationId;
 
 namespace Pulse.App.Handlers.Applications.Queries;
 
-public sealed record SearchApplicationsQuery : SearchQuery<ApplicationDto>
+public sealed record SearchApplicationsQuery : NamedSearchQuery<ApplicationDto>
 {
     public required OrganizationId OrganizationId { get; init; }
 }
