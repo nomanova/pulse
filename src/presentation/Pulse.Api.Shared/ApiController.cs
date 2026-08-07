@@ -5,6 +5,7 @@ using ErrorOr;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Pulse.Api.Shared.Contract;
+using Pulse.App.Common.Authorization;
 using Throw;
 
 namespace Pulse.Api.Shared;
@@ -36,6 +37,7 @@ public class ApiController : ControllerBase
         {
             (int)ErrorType.NotFound => StatusCodes.Status404NotFound,
             (int)ErrorType.Conflict => StatusCodes.Status409Conflict,
+            CustomErrorType.Forbidden => StatusCodes.Status403Forbidden,
             _ => StatusCodes.Status500InternalServerError
         };
 

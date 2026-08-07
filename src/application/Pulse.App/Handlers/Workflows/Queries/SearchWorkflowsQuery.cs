@@ -26,7 +26,7 @@ public sealed record SearchWorkflowsQuery : NamedSearchQuery<WorkflowDto>
 
 public sealed class SearchWorkflowsQueryValidator : SearchQueryValidator<SearchWorkflowsQuery, WorkflowDto>;
 
-public sealed class SearchWorkflowsQueryAuthorizer : PermissionAuthorizer<SearchWorkflowsQuery>;
+public sealed class SearchWorkflowsQueryAuthorizer : ApiKeyAuthorizer<SearchWorkflowsQuery>;
 
 public class SearchWorkflowsQueryHandler :
     IQueryHandler<SearchWorkflowsQuery, ErrorOr<PagedSearchResultDto<WorkflowDto>>>

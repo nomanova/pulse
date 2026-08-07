@@ -662,6 +662,34 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                                 .HasConstraintName("fk_environments_environments_id");
                         });
 
+                    b.OwnsOne("Pulse.Domain.Aggregates.Environments.ValueObjects.ApiKey", "ApiKey", b1 =>
+                        {
+                            b1.Property<string>("EnvironmentId")
+                                .HasColumnType("text")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("Primary")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("pri_api_key");
+
+                            b1.Property<string>("Secondary")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("sec_api_key");
+
+                            b1.HasKey("EnvironmentId");
+
+                            b1.ToTable("environments");
+
+                            b1.WithOwner()
+                                .HasForeignKey("EnvironmentId")
+                                .HasConstraintName("fk_environments_environments_id");
+                        });
+
+                    b.Navigation("ApiKey")
+                        .IsRequired();
+
                     b.Navigation("Name")
                         .IsRequired();
                 });

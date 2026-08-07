@@ -25,6 +25,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\infrastructure\Pulse.Infra\Pulse.Infra.csproj" />
       <ProjectReference Include="..\Pulse.Api.Ctrl\Pulse.Api.Ctrl.csproj" />
+      <ProjectReference Include="..\Pulse.Api.Data\Pulse.Api.Data.csproj" />
     </ItemGroup>
     
 </Project>

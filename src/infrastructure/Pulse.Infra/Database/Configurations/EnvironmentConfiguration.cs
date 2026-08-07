@@ -37,6 +37,19 @@ public sealed class EnvironmentConfiguration : DomainEntityTypeConfiguration<Env
                 .HasColumnName("normalized_name");
         });
 
+        builder.OwnsOne(environment => environment.ApiKey, apiKeyBuilder =>
+        {
+            apiKeyBuilder
+                .Property(key => key.Primary)
+                .IsRequired()
+                .HasColumnName("pri_api_key");
+
+            apiKeyBuilder
+                .Property(key => key.Secondary)
+                .IsRequired()
+                .HasColumnName("sec_api_key");
+        });
+
         // As long as https://github.com/dotnet/efcore/issues/38276 is not implemented,
         // the code below does not work (nested property in owned entity cannot be accessed).
 

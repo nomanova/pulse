@@ -1,7 +1,7 @@
 using Pulse.Api.Shared.Contract;
 using Pulse.App.Dto.Workflows;
 
-namespace Pulse.Api.Ctrl.Contract;
+namespace Pulse.Api.Data.Contract;
 
 public sealed record AddWorkflowRequest
 {
@@ -23,6 +23,11 @@ public sealed record FetchWorkflowRequest
 public sealed record SearchWorkflowsRequest : NamedPagedSearchRequest
 {
     public string? EnvironmentId { get; init; }
+}
+
+public sealed record PublishWorkflowRequest
+{
+    public string? WorkflowId { get; init; }
 }
 
 public sealed record FetchWorkflowVersionRequest

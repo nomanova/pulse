@@ -19,6 +19,8 @@ public sealed class UserClaimProvider : IUserClaimProvider
 
     public string SecurityStamp => GetUserClaimValue(UserClaims.SecurityStamp)!;
     
+    public string ApiKey => GetUserClaimValue(UserClaims.ApiKey)!;
+
     private string? GetUserClaimValue(string claimType, bool mustExist = true)
     {
         var value = _httpContextAccessor.HttpContext?

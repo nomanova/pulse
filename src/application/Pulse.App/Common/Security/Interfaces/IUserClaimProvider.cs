@@ -5,4 +5,6 @@ public interface IUserClaimProvider
     string Id { get; }
 
     string SecurityStamp { get; }
+    
+    string ApiKey { get; }
 }

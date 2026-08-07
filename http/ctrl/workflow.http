@@ -1,9 +1,9 @@
 ###
 ### Add
 ###
-POST {{root}}/api/ctrl/v1/workflows/add
+POST {{root}}/api/data/v1/workflows/add
 Content-Type: application/json
-Authorization: Bearer {{auth_token}}
+X-Api-Key: {{apiKey}}
 
 {
   "environmentId": "{{envId}}",
@@ -13,9 +13,9 @@ Authorization: Bearer {{auth_token}}
 ###
 ### Remove
 ###
-POST {{root}}/api/ctrl/v1/workflows/remove
+POST {{root}}/api/data/v1/workflows/remove
 Content-Type: application/json
-Authorization: Bearer {{auth_token}}
+X-Api-Key: {{apiKey}}
 
 {
   "workflowId": "{{wrkId}}"
@@ -24,9 +24,9 @@ Authorization: Bearer {{auth_token}}
 ###
 ### Fetch
 ###
-POST {{root}}/api/ctrl/v1/workflows/fetch
+POST {{root}}/api/data/v1/workflows/fetch
 Content-Type: application/json
-Authorization: Bearer {{auth_token}}
+X-Api-Key: {{apiKey}}
 
 {
   "workflowId": "{{wrkId}}"
@@ -35,9 +35,9 @@ Authorization: Bearer {{auth_token}}
 ###
 ### Search
 ###
-POST {{root}}/api/ctrl/v1/workflows/search
+POST {{root}}/api/data/v1/workflows/search
 Content-Type: application/json
-Authorization: Bearer {{auth_token}}
+X-Api-Key: {{apiKey}}
 
 {
   "query": null,
@@ -49,11 +49,22 @@ Authorization: Bearer {{auth_token}}
 }
 
 ###
+### Publish
+###
+POST {{root}}/api/data/v1/workflows/publish
+Content-Type: application/json
+X-Api-Key: {{apiKey}}
+
+{
+  "workflowId": "{{wrkId}}"
+}
+
+###
 ### Fetch Version
 ###
-POST {{root}}/api/ctrl/v1/workflows/versions/fetch
+POST {{root}}/api/data/v1/workflows/versions/fetch
 Content-Type: application/json
-Authorization: Bearer {{auth_token}}
+X-Api-Key: {{apiKey}}
 
 {
   "workflowVersionId": "v4vcm4tppn5e07ynh1iuwcin"
@@ -62,9 +73,9 @@ Authorization: Bearer {{auth_token}}
 ###
 ### Search Versions
 ###
-POST {{root}}/api/ctrl/v1/workflows/versions/search
+POST {{root}}/api/data/v1/workflows/versions/search
 Content-Type: application/json
-Authorization: Bearer {{auth_token}}
+X-Api-Key: {{apiKey}}
 
 {
   "lastId": null,
@@ -77,9 +88,9 @@ Authorization: Bearer {{auth_token}}
 ###
 ### Add Version Step
 ###
-POST {{root}}/api/ctrl/v1/workflows/versions/add-step
+POST {{root}}/api/data/v1/workflows/versions/add-step
 Content-Type: application/json
-Authorization: Bearer {{auth_token}}
+X-Api-Key: {{apiKey}}
 
 {
   "workflowId": "{{wrkId}}",
@@ -89,9 +100,9 @@ Authorization: Bearer {{auth_token}}
 ###
 ### Remove Version Step
 ###
-POST {{root}}/api/ctrl/v1/workflows/versions/remove-step
+POST {{root}}/api/data/v1/workflows/versions/remove-step
 Content-Type: application/json
-Authorization: Bearer {{auth_token}}
+X-Api-Key: {{apiKey}}
 
 {
   "workflowId": "{{wrkId}}",

@@ -27,7 +27,7 @@ public sealed record SearchWorkflowVersionsQuery : SearchQuery<WorkflowVersionDt
 public sealed class
     SearchWorkflowVersionsQueryValidator : SearchQueryValidator<SearchWorkflowVersionsQuery, WorkflowVersionDto>;
 
-public sealed class SearchWorkflowVersionsQueryAuthorizer : PermissionAuthorizer<SearchWorkflowVersionsQuery>;
+public sealed class SearchWorkflowVersionsQueryAuthorizer : ApiKeyAuthorizer<SearchWorkflowVersionsQuery>;
 
 public class SearchWorkflowVersionsQueryHandler :
     IQueryHandler<SearchWorkflowVersionsQuery, ErrorOr<PagedSearchResultDto<WorkflowVersionDto>>>

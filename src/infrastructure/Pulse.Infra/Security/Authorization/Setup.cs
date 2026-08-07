@@ -8,8 +8,9 @@ public static class Setup
     public static IServiceCollection AddAppAuthorization(this IServiceCollection services)
     {
         services.AddAuthorization();
-
+        
         services.AddScoped<IUserClaimProvider, UserClaimProvider>();
+        services.AddScoped<IApiKeyAuthorizationReader, ApiKeyAuthorizationReader>();
 
         return services;
     }

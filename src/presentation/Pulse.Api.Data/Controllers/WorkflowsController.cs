@@ -2,24 +2,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Pulse.Api.Ctrl.Contract;
-using Pulse.Api.Ctrl.Controllers.Base;
+using Pulse.Api.Data.Contract;
+using Pulse.Api.Data.Controllers.Base;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Common.Requests;
 using Pulse.App.Dto.Common;
 using Pulse.App.Dto.Workflows;
 using Pulse.App.Handlers.Workflows.Commands;
 using Pulse.App.Handlers.Workflows.Queries;
-using Pulse.Domain.Aggregates.Applications;
 using Pulse.Domain.Aggregates.Environments;
-using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.Workflows;
 using Pulse.Domain.Common.Models.Entities;
 
-namespace Pulse.Api.Ctrl.Controllers;
+namespace Pulse.Api.Data.Controllers;
 
-[Route("api/ctrl/v1/workflows")]
-public partial class WorkflowsController : CtrlApiController
+[Route("api/data/v1/workflows")]
+public partial class WorkflowsController : DataApiController
 {
     private readonly ISender _sender;
 
@@ -27,7 +25,7 @@ public partial class WorkflowsController : CtrlApiController
     {
         _sender = sender;
     }
-
+    
     [HttpPost(ActionAdd)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IActionResult> Add(
@@ -96,5 +94,21 @@ public partial class WorkflowsController : CtrlApiController
         var result = await _sender.Send(command, cancellationToken);
 
         return result.Match(_ => Ok(), Problem);
+    }
+
+    [HttpPost("publish")]
+    [ProducesResponseType(typeof(PagedSearchResultDto<WorkflowVersionDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Publish(
+        [FromBody] PublishWorkflowRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var command = new PublishWorkflowCommand
+        {
+            WorkflowId = request.WorkflowId.AsIdentity<WorkflowId>()
+        };
+
+        var result = await _sender.Send(command, cancellationToken);
+
+        return result.Match(Ok, Problem);
     }
 }

@@ -11,6 +11,4 @@ public interface ICtrlApiClient
     IApplicationsService Applications { get; }
     
     IEnvironmentsService Environments { get; }
-    
-    IWorkflowsService Workflows { get; }
 }

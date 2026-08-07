@@ -2,7 +2,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Pulse.Api.Ctrl.Contract;
+using Pulse.Api.Data.Contract;
 using Pulse.App.Common.Requests;
 using Pulse.App.Dto.Common;
 using Pulse.App.Dto.Workflows;
@@ -13,7 +13,7 @@ using Pulse.Domain.Aggregates.Workflows.Entities;
 using Pulse.Domain.Aggregates.Workflows.Enums;
 using Pulse.Domain.Common.Models.Entities;
 
-namespace Pulse.Api.Ctrl.Controllers;
+namespace Pulse.Api.Data.Controllers;
 
 public partial class WorkflowsController
 {

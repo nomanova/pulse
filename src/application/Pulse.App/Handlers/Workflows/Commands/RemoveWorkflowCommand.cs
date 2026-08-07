@@ -4,6 +4,7 @@ using ErrorOr;
 using Pulse.App.Common.Authorization.Policies;
 using Pulse.App.Common.Database;
 using Pulse.App.Common.Dispatcher;
+using Pulse.App.Common.Requests;
 using Pulse.App.Handlers.Workflows.Common;
 using Pulse.App.Handlers.Workflows.Common.Specifications;
 using Pulse.Domain.Aggregates.Workflows;
@@ -15,7 +16,7 @@ public sealed record RemoveWorkflowCommand : ICommand<ErrorOr<Success>>
     public required WorkflowId WorkflowId { get; init; }
 }
 
-public sealed class RemoveWorkflowCommandAuthorizer : PermissionAuthorizer<RemoveWorkflowCommand>;
+public sealed class RemoveWorkflowCommandAuthorizer : ApiKeyAuthorizer<RemoveWorkflowCommand>;
 
 public sealed class RemoveWorkflowCommandHandler : ICommandHandler<RemoveWorkflowCommand, ErrorOr<Success>>
 {

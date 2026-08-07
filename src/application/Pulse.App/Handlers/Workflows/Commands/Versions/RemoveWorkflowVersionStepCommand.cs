@@ -20,7 +20,7 @@ public sealed record RemoveWorkflowVersionStepCommand : ICommand<ErrorOr<Success
     public required WorkflowVersionStepId StepId { get; init; }
 }
 
-public sealed class RemoveWorkflowVersionStepCommandAuthorizer : PermissionAuthorizer<RemoveWorkflowVersionStepCommand>;
+public sealed class RemoveWorkflowVersionStepCommandAuthorizer : ApiKeyAuthorizer<RemoveWorkflowVersionStepCommand>;
 
 public sealed class RemoveWorkflowVersionStepCommandHandler :
     ICommandHandler<RemoveWorkflowVersionStepCommand, ErrorOr<Success>>

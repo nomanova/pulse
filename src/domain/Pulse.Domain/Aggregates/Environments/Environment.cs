@@ -1,5 +1,5 @@
 using Pulse.Domain.Aggregates.Applications;
-using Pulse.Domain.Aggregates.Organizations;
+using Pulse.Domain.Aggregates.Environments.ValueObjects;
 using Pulse.Domain.Common.Errors;
 using Pulse.Domain.Common.Models.Entities;
 using Pulse.Domain.Common.Models.ValueObjects;
@@ -15,6 +15,8 @@ public class Environment : DomainEntity<EnvironmentId>, IApplicationScoped, INam
 
     public ObjectName Name { get; private set; } = null!;
 
+    public ApiKey ApiKey { get; } = null!;
+
     private Environment()
     {
     }
@@ -22,21 +24,25 @@ public class Environment : DomainEntity<EnvironmentId>, IApplicationScoped, INam
     private Environment(
         EnvironmentId id,
         ApplicationId applicationId,
-        ObjectName name) : base(id)
+        ObjectName name,
+        ApiKey apiKey) : base(id)
     {
         ApplicationId = applicationId;
         Name = name;
+        ApiKey = apiKey;
     }
 
     public static Environment Create(string? name, Application application)
     {
         var objectName = ObjectName.Create(name).Assert();
         var id = IdentityProvider.New<EnvironmentId>();
+        var apiKey = ApiKey.Create();
 
         var environment = new Environment(
             id,
             application.Id,
-            objectName);
+            objectName,
+            apiKey);
 
         environment.SetCreated();
 

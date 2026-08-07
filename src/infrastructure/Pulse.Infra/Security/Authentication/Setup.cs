@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Pulse.Infra.Security.Authentication.ApiKey;
 using Pulse.Infra.Security.Authentication.Jwt;
 
 namespace Pulse.Infra.Security.Authentication;
@@ -10,6 +11,7 @@ public static class Setup
         IConfiguration configuration)
     {
         services.AddJwtAuthentication(configuration);
+        services.AddApiKeyAuthentication();
         
         return services;
     }

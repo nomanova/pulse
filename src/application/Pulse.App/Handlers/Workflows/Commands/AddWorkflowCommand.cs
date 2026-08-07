@@ -23,7 +23,7 @@ public sealed record AddWorkflowCommand : ICommand<ErrorOr<IdentityDto>>
     public string? WorkflowName { get; init; }
 }
 
-public sealed class AddWorkflowCommandAuthorizer : PermissionAuthorizer<AddWorkflowCommand>;
+public sealed class AddWorkflowCommandAuthorizer : ApiKeyAuthorizer<AddWorkflowCommand>;
 
 public sealed class AddWorkflowCommandHandler : ICommandHandler<AddWorkflowCommand, ErrorOr<IdentityDto>>
 {

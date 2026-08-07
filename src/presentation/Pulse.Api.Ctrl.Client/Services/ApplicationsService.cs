@@ -1,3 +1,6 @@
+using System.Net.Http;
+using System.Threading;
+using System.Threading.Tasks;
 using Pulse.Api.Client;
 using Pulse.Api.Client.Common;
 using Pulse.Api.Client.Services;

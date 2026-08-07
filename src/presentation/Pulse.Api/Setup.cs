@@ -1,9 +1,14 @@
 using System;
+using System.Collections.Generic;
+using System.Reflection;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi;
 using Pulse.Api.Common;
+using Pulse.Api.Data;
 using Pulse.Infra.Database.Contexts;
 using Scalar.AspNetCore;
 
@@ -14,7 +19,10 @@ internal static class Setup
     public static IServiceCollection AddPresentation(this IServiceCollection services)
     {
         var ctrlAssembly = typeof(Ctrl.AssemblyReference).Assembly;
-        services.AddEndpoints(ctrlAssembly);
+        var dataAssembly = typeof(Data.AssemblyReference).Assembly;
+
+        List<Assembly> applicationParts = [ctrlAssembly, dataAssembly];
+        services.AddEndpoints(applicationParts.ToArray());
 
         services.AddOpenApi(options =>
         {
@@ -38,6 +46,17 @@ internal static class Setup
             });
         });
 
+        services.AddAuthorizationBuilder()
+            .SetFallbackPolicy(
+                new AuthorizationPolicyBuilder(JwtBearerDefaults.AuthenticationScheme)
+                    .RequireAuthenticatedUser()
+                    .Build())
+            .AddPolicy(ApiKeyAuthenticationDefaults.Policy, policy =>
+            {
+                policy.AuthenticationSchemes.Add(ApiKeyAuthenticationDefaults.AuthenticationScheme);
+                policy.RequireAuthenticatedUser();
+            });
+        
         return services;
     }
 
@@ -56,7 +75,7 @@ internal static class Setup
 
         app.UseEndpoints(endpoints =>
         {
-            endpoints.MapOpenApi();
+            endpoints.MapOpenApi().AllowAnonymous();
             endpoints.MapScalarApiReference(options =>
             {
                 options.DisableAgent();
@@ -64,9 +83,9 @@ internal static class Setup
                 options.HideClientButton();
                 options.HideDeveloperTools();
                 options.DisableTelemetry();
-            });
+            }).AllowAnonymous();
 
-            endpoints.MapControllers().RequireAuthorization();
+            endpoints.MapControllers();
         });
     }
 }

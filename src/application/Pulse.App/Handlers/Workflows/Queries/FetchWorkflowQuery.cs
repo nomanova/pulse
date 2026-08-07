@@ -15,7 +15,7 @@ public sealed record FetchWorkflowQuery : IQuery<ErrorOr<WorkflowDto>>
     public required WorkflowId WorkflowId { get; init; }
 }
 
-public sealed class FetchWorkflowQueryAuthorizer : PermissionAuthorizer<FetchWorkflowQuery>;
+public sealed class FetchWorkflowQueryAuthorizer : ApiKeyAuthorizer<FetchWorkflowQuery>;
 
 public sealed class FetchWorkflowQueryHandler : IQueryHandler<FetchWorkflowQuery, ErrorOr<WorkflowDto>>
 {

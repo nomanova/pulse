@@ -19,7 +19,7 @@ public sealed record AddWorkflowVersionStepCommand : ICommand<ErrorOr<WorkflowVe
     public required WorkflowVersionId VersionId { get; init; }
 }
 
-public sealed class AddWorkflowVersionStepCommandAuthorizer : PermissionAuthorizer<AddWorkflowVersionStepCommand>;
+public sealed class AddWorkflowVersionStepCommandAuthorizer : ApiKeyAuthorizer<AddWorkflowVersionStepCommand>;
 
 public sealed class AddWorkflowVersionStepCommandHandler : 
     ICommandHandler<AddWorkflowVersionStepCommand, ErrorOr<WorkflowVersionStepDto>>

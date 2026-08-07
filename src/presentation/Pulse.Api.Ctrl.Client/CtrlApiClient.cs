@@ -4,7 +4,7 @@ using Pulse.Api.Ctrl.Client.Services.Interfaces;
 
 namespace Pulse.Api.Ctrl.Client;
 
-public class CtrlApiClient : ApiClient, ICtrlApiClient
+public sealed class CtrlApiClient : ApiClient, ICtrlApiClient
 {
     public IUsersService Users { get; private set; } = null!;
     
@@ -13,8 +13,6 @@ public class CtrlApiClient : ApiClient, ICtrlApiClient
     public IApplicationsService Applications { get; private set; } = null!;
 
     public IEnvironmentsService Environments { get; private set; } = null!;
-    
-    public IWorkflowsService Workflows { get; private set; } = null!;
     
     public CtrlApiClient(ApiClientOptions options) : base(options)
     {
@@ -27,6 +25,5 @@ public class CtrlApiClient : ApiClient, ICtrlApiClient
         Organizations = new OrganizationsService(options.EndpointProvider, options.TokenProvider, HttpClient);
         Applications = new ApplicationsService(options.EndpointProvider, options.TokenProvider, HttpClient);
         Environments = new EnvironmentsService(options.EndpointProvider, options.TokenProvider, HttpClient);
-        Workflows = new WorkflowsService(options.EndpointProvider, options.TokenProvider, HttpClient);
     }
 }
