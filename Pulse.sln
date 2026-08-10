@@ -81,6 +81,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "data", "data", "{DFDD281A-0
 		http\ctrl\workflow.http = http\ctrl\workflow.http
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Plugins", "_Plugins", "{F8E1A27E-56B8-40D1-A6EF-AD845FEBC413}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Plugin", "src\plugins\Pulse.Plugin\Pulse.Plugin.csproj", "{EA2577F6-1DEA-4D96-94AA-4449D9CF513A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Plugin.Echo", "src\plugins\Pulse.Plugin.Echo\Pulse.Plugin.Echo.csproj", "{5594146D-0E2D-43B2-9378-658150D936AC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -109,6 +115,8 @@ Global
 		{718004F6-C5E4-42B7-96BB-4CDDF29F47E8} = {F1A107C0-C18F-454C-82C5-1B0FD8512123}
 		{F480030D-CD2D-4B9D-AE12-62DCD734E664} = {F1A107C0-C18F-454C-82C5-1B0FD8512123}
 		{DFDD281A-0C60-4463-AE02-F3D6E41584BB} = {9FF4066B-B02F-4C09-B460-3C0CACBCEEF4}
+		{EA2577F6-1DEA-4D96-94AA-4449D9CF513A} = {F8E1A27E-56B8-40D1-A6EF-AD845FEBC413}
+		{5594146D-0E2D-43B2-9378-658150D936AC} = {F8E1A27E-56B8-40D1-A6EF-AD845FEBC413}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{25CDAA92-F4FE-41AA-ABFF-20167D395406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -195,5 +203,13 @@ Global
 		{F480030D-CD2D-4B9D-AE12-62DCD734E664}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F480030D-CD2D-4B9D-AE12-62DCD734E664}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F480030D-CD2D-4B9D-AE12-62DCD734E664}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA2577F6-1DEA-4D96-94AA-4449D9CF513A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA2577F6-1DEA-4D96-94AA-4449D9CF513A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA2577F6-1DEA-4D96-94AA-4449D9CF513A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA2577F6-1DEA-4D96-94AA-4449D9CF513A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5594146D-0E2D-43B2-9378-658150D936AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5594146D-0E2D-43B2-9378-658150D936AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5594146D-0E2D-43B2-9378-658150D936AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5594146D-0E2D-43B2-9378-658150D936AC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

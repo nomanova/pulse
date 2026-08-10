@@ -11,6 +11,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\domain\Pulse.Domain\Pulse.Domain.csproj" />
+      <ProjectReference Include="..\..\plugins\Pulse.Plugin\Pulse.Plugin.csproj" />
       <ProjectReference Include="..\Pulse.App.Dto\Pulse.App.Dto.csproj" />
     </ItemGroup>
     
