@@ -60,6 +60,17 @@ X-Api-Key: {{apiKey}}
 }
 
 ###
+### Trigger
+###
+POST {{root}}/api/data/v1/workflows/trigger
+Content-Type: application/json
+X-Api-Key: {{apiKey}}
+
+{
+  "workflowId": "{{wrkId}}"
+}
+
+###
 ### Fetch Version
 ###
 POST {{root}}/api/data/v1/workflows/versions/fetch
@@ -67,7 +78,7 @@ Content-Type: application/json
 X-Api-Key: {{apiKey}}
 
 {
-  "workflowVersionId": "v4vcm4tppn5e07ynh1iuwcin"
+  "workflowVersionId": "edv2cpcs6z9dtdm41lstbnvyt"
 }
 
 ###
@@ -94,7 +105,7 @@ X-Api-Key: {{apiKey}}
 
 {
   "workflowId": "{{wrkId}}",
-  "workflowVersionId": "v4vcm4tppn5e07ynh1iuwcin"
+  "workflowVersionId": "edv2cpcs6z9dtdm41lstbnvyt"
 }
 
 ###

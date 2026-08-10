@@ -30,6 +30,11 @@ public sealed record PublishWorkflowRequest
     public string? WorkflowId { get; init; }
 }
 
+public sealed record TriggerWorkflowRequest
+{
+    public string? WorkflowId { get; init; }
+}
+
 public sealed record FetchWorkflowVersionRequest
 {
     public string? WorkflowVersionId { get; init; }

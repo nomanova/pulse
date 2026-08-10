@@ -12,7 +12,7 @@ internal static class JsonSettings
         var jsonSerializerOptions = jsonOptions.JsonSerializerOptions;
         
         jsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-        jsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
+        jsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
         jsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
         jsonSerializerOptions.WriteIndented = true;
         

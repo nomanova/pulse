@@ -63,7 +63,7 @@ public partial class WorkflowsController
         var command = new AddWorkflowVersionStepCommand
         {
             WorkflowId = request.WorkflowId.AsIdentity<WorkflowId>(),
-            VersionId = request.WorkflowVersionId.AsIdentity<WorkflowVersionId>()
+            WorkflowVersionId = request.WorkflowVersionId.AsIdentity<WorkflowVersionId>()
         };
 
         var result = await _sender.Send(command, cancellationToken);
@@ -80,8 +80,8 @@ public partial class WorkflowsController
         var command = new RemoveWorkflowVersionStepCommand
         {
             WorkflowId = request.WorkflowId.AsIdentity<WorkflowId>(),
-            VersionId = request.WorkflowVersionId.AsIdentity<WorkflowVersionId>(),
-            StepId = request.WorkflowVersionStepId.AsIdentity<WorkflowVersionStepId>()
+            WorkflowVersionId = request.WorkflowVersionId.AsIdentity<WorkflowVersionId>(),
+            WorkflowVersionStepId = request.WorkflowVersionStepId.AsIdentity<WorkflowVersionStepId>()
         };
 
         var result = await _sender.Send(command, cancellationToken);

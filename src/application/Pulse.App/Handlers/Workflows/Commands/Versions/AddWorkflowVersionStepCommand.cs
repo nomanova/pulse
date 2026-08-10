@@ -16,7 +16,7 @@ public sealed record AddWorkflowVersionStepCommand : ICommand<ErrorOr<WorkflowVe
 {
     public required WorkflowId WorkflowId { get; init; }
     
-    public required WorkflowVersionId VersionId { get; init; }
+    public required WorkflowVersionId WorkflowVersionId { get; init; }
 }
 
 public sealed class AddWorkflowVersionStepCommandAuthorizer : ApiKeyAuthorizer<AddWorkflowVersionStepCommand>;
@@ -50,7 +50,7 @@ public sealed class AddWorkflowVersionStepCommandHandler :
         // The workflow version is strictly speaking not required, as a step can
         // only be added to the (single) version currently in draft.
         // However, having the client explicitly provide the version will avoid race conditions.
-        var workflowVersion = workflow.Versions.Find(command.VersionId);
+        var workflowVersion = workflow.Versions.Find(command.WorkflowVersionId);
 
         if (workflowVersion == null)
         {

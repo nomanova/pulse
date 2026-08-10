@@ -15,9 +15,9 @@ public sealed record RemoveWorkflowVersionStepCommand : ICommand<ErrorOr<Success
 {
     public required WorkflowId WorkflowId { get; init; }
 
-    public required WorkflowVersionId VersionId { get; init; }
+    public required WorkflowVersionId WorkflowVersionId { get; init; }
 
-    public required WorkflowVersionStepId StepId { get; init; }
+    public required WorkflowVersionStepId WorkflowVersionStepId { get; init; }
 }
 
 public sealed class RemoveWorkflowVersionStepCommandAuthorizer : ApiKeyAuthorizer<RemoveWorkflowVersionStepCommand>;
@@ -48,7 +48,7 @@ public sealed class RemoveWorkflowVersionStepCommandHandler :
             return Error.NotFound();
         }
 
-        var workflowVersion = workflow.Versions.Find(command.VersionId);
+        var workflowVersion = workflow.Versions.Find(command.WorkflowVersionId);
 
         if (workflowVersion == null)
         {
@@ -56,7 +56,7 @@ public sealed class RemoveWorkflowVersionStepCommandHandler :
         }
 
         // Remove
-        workflowVersion.RemoveStep(command.StepId); // This will trip when the version is no longer in draft.
+        workflowVersion.RemoveStep(command.WorkflowVersionStepId); // This will trip when the version is no longer in draft.
 
         _workflowRepository.Update(workflow);
         await _unitOfWork.Commit(cancellationToken);

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Pulse.Domain.Aggregates.WorkflowInstances.Entities;
 using Pulse.Domain.Common.Models.Events;
 
@@ -5,11 +6,14 @@ namespace Pulse.Domain.Aggregates.WorkflowInstances.Events;
 
 public class WorkflowInstanceStepStartedEvent : IDomainEvent
 {
-    public WorkflowInstanceId WorkflowInstanceId { get; }
+    [JsonInclude]
+    public WorkflowInstanceId WorkflowInstanceId { get; private set; }
     
-    public WorkflowInstanceStepId WorkflowInstanceStepId { get; }
+    [JsonInclude]
+    public WorkflowInstanceStepId WorkflowInstanceStepId { get; private set; }
     
-    public uint Order { get; }
+    [JsonInclude]
+    public uint Order { get; private set; }
     
     public WorkflowInstanceStepStartedEvent(
         WorkflowInstanceId workflowInstanceId, 

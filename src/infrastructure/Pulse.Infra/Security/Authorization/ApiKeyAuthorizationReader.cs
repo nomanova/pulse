@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -7,6 +8,7 @@ using Pulse.App.Common.Security.Interfaces;
 using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Aggregates.WorkflowInstances;
 using Pulse.Domain.Aggregates.Workflows;
+using Pulse.Domain.Aggregates.Workflows.Entities;
 
 namespace Pulse.Infra.Security.Authorization;
 
@@ -47,6 +49,25 @@ internal sealed class ApiKeyAuthorizationReader : IApiKeyAuthorizationReader
                   && !environment.IsDeleted
                   && (environment.ApiKey.Primary == apiKey || environment.ApiKey.Secondary == apiKey)
             select workflow.Id
+        ).AnyAsync(cancellationToken);
+    }
+
+    public Task<bool> HasValidApiKeyForWorkflowVersion(
+        WorkflowVersionId workflowVersionId,
+        string apiKey,
+        CancellationToken cancellationToken)
+    {
+        return (
+            from workflowVersion in _context.WorkflowVersions.IgnoreAutoIncludes()
+            join workflow in _context.Workflows.IgnoreAutoIncludes()
+                on workflowVersion.WorkflowId equals workflow.Id
+            join environment in _context.Environments.IgnoreAutoIncludes()
+                on workflow.EnvironmentId equals environment.Id
+            where workflowVersion.Id == workflowVersionId
+                  && !workflow.IsDeleted
+                  && !environment.IsDeleted
+                  && (environment.ApiKey.Primary == apiKey || environment.ApiKey.Secondary == apiKey)
+            select workflowVersion.Id
         ).AnyAsync(cancellationToken);
     }
 

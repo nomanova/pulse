@@ -5,6 +5,7 @@ using Pulse.App.Common.Security.Interfaces;
 using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Aggregates.WorkflowInstances;
 using Pulse.Domain.Aggregates.Workflows;
+using Pulse.Domain.Aggregates.Workflows.Entities;
 
 namespace Pulse.App.Common.Authorization.Requirements;
 
@@ -14,6 +15,8 @@ public class MustHaveValidApiKeyRequirement : IAuthorizationRequirement
     
     public WorkflowId? WorkflowId { get; init; }
 
+    public WorkflowVersionId? WorkflowVersionId { get; init; }
+    
     public WorkflowInstanceId? WorkflowInstanceId { get; init; }
 }
 
@@ -48,6 +51,11 @@ public class MustHaveValidApiKeyRequirementHandler : IAuthorizationHandler<MustH
                 apiKey,
                 cancellationToken),
 
+            { WorkflowVersionId: not null } => await _apiKeyAuthorizationReader.HasValidApiKeyForWorkflowVersion(
+                request.WorkflowVersionId,
+                apiKey,
+                cancellationToken),
+            
             { WorkflowInstanceId: not null } => await _apiKeyAuthorizationReader.HasValidApiKeyForWorkflowInstance(
                 request.WorkflowInstanceId,
                 apiKey,

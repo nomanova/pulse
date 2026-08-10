@@ -1,9 +1,11 @@
 using System;
+using System.Text.Json.Serialization;
 
 namespace Pulse.Domain.Common.Models.Entities;
 
 public abstract record EntityId : IComparable<EntityId>, IComparable
 {
+    [JsonInclude]
     public string Value { get; protected init; } = null!;
 
     public sealed override string ToString()

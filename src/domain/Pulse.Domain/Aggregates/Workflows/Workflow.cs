@@ -119,6 +119,7 @@ public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INa
     public WorkflowInstance Trigger()
     {
         DomainErrors.Workflow.NoPublishedVersion.Assert(() => PublishedVersion != null);
+        
         return WorkflowInstance.Create(this, PublishedVersion!);
     }
 

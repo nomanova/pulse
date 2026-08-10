@@ -7,6 +7,7 @@ using Pulse.Api.Data.Controllers.Base;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Common.Requests;
 using Pulse.App.Dto.Common;
+using Pulse.App.Dto.WorkflowInstances;
 using Pulse.App.Dto.Workflows;
 using Pulse.App.Handlers.Workflows.Commands;
 using Pulse.App.Handlers.Workflows.Queries;
@@ -97,7 +98,7 @@ public partial class WorkflowsController : DataApiController
     }
 
     [HttpPost("publish")]
-    [ProducesResponseType(typeof(PagedSearchResultDto<WorkflowVersionDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(WorkflowVersionDto), StatusCodes.Status200OK)]
     public async Task<IActionResult> Publish(
         [FromBody] PublishWorkflowRequest request,
         CancellationToken cancellationToken = default)
@@ -107,6 +108,22 @@ public partial class WorkflowsController : DataApiController
             WorkflowId = request.WorkflowId.AsIdentity<WorkflowId>()
         };
 
+        var result = await _sender.Send(command, cancellationToken);
+
+        return result.Match(Ok, Problem);
+    }
+
+    [HttpPost("trigger")]
+    [ProducesResponseType(typeof(WorkflowInstanceDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Trigger(
+        [FromBody] TriggerWorkflowRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var command = new TriggerWorkflowCommand
+        {
+            WorkflowId = request.WorkflowId.AsIdentity<WorkflowId>()
+        };
+        
         var result = await _sender.Send(command, cancellationToken);
 
         return result.Match(Ok, Problem);
