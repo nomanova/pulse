@@ -8,7 +8,7 @@ namespace Pulse.App.Handlers.WorkflowInstances.Common;
 public interface IWorkflowStepExecutor
 {
     Task Execute(
-        WorkflowInstanceId workflowInstanceId,
-        WorkflowInstanceStepId workflowInstanceStepId,
+        WorkflowInstance workflowInstance,
+        WorkflowInstanceStep workflowInstanceStep,
         CancellationToken cancellationToken = default);
 }

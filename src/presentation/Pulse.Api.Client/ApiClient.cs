@@ -1,5 +1,4 @@
 using System;
-using Throw;
 
 namespace Pulse.Api.Client;
 
@@ -11,8 +10,7 @@ public class ApiClient : IDisposable
 
     protected ApiClient(ApiClientOptions options)
     {
-        options.ThrowIfNull();
-
+        ArgumentNullException.ThrowIfNull(options);
         HttpClient = ApiHttpClient.Create(options);
     }
 

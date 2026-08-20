@@ -20,6 +20,7 @@ public static class Setup
 
             services.AddConfiguration();
             services.AddHttpContextAccessor();
+            services.AddHttpClient();
             services.AddServices();
 
             services

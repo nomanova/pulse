@@ -4,7 +4,6 @@ using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
-using Throw;
 using CacheControlHeaderValue = System.Net.Http.Headers.CacheControlHeaderValue;
 
 namespace Pulse.Api.Client;
@@ -24,8 +23,8 @@ public sealed class ApiHttpClient : IDisposable
 
     public static ApiHttpClient Create(ApiClientOptions options)
     {
-        options.ThrowIfNull();
-        options.EndpointProvider.ThrowIfNull();
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(options.EndpointProvider);
 
         HttpMessageHandler pipeline = new HttpClientHandler();
 

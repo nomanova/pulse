@@ -1,5 +1,9 @@
 # TODO
 
+## Plugins
+
+- Add endpoint to list loaded plugins
+
 ## Workflows
 
 - Unit tests for domain logic

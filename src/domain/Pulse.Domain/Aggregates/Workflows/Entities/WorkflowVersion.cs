@@ -109,6 +109,11 @@ public sealed class WorkflowVersion : Entity<WorkflowVersionId>
         ReorderSteps();
     }
 
+    public WorkflowVersionStep? GetStep(WorkflowVersionStepId stepId)
+    {
+        return _steps.SingleOrDefault(step => step.Id == stepId);
+    }
+
     internal void Publish()
     {
         EnsureDraft();

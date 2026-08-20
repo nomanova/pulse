@@ -31,7 +31,8 @@
     <!-- Core plugins -->
     <Target Name="BuildPluginProjects" BeforeTargets="Build">
         <ItemGroup>
-            <PluginProject Include="..\..\plugins\Pulse.Plugin.Echo\Pulse.Plugin.Echo.csproj"/>
+            <PluginProject Include="..\..\plugins\Pulse.Plugin.Provider.Email.Console\Pulse.Plugin.Provider.Email.Console.csproj"/>
+            <PluginProject Include="..\..\plugins\Pulse.Plugin.Provider.Email.SendGrid\Pulse.Plugin.Provider.Email.SendGrid.csproj"/>
         </ItemGroup>
 
         <MSBuild
@@ -42,8 +43,11 @@
 
     <Target Name="CopyPluginOutputs" AfterTargets="Build">
         <ItemGroup>
-            <PluginOutput Include="..\..\plugins\Pulse.Plugin.Echo\bin\$(Configuration)\$(TargetFramework)\**\*.*">
-                <PluginName>Pulse.Plugin.Echo</PluginName>
+            <PluginOutput Include="..\..\plugins\Pulse.Plugin.Provider.Email.Console\bin\$(Configuration)\$(TargetFramework)\**\*.*">
+                <PluginName>Pulse.Plugin.Provider.Email.Console</PluginName>
+            </PluginOutput>
+            <PluginOutput Include="..\..\plugins\Pulse.Plugin.Provider.Email.SendGrid\bin\$(Configuration)\$(TargetFramework)\**\*.*">
+                <PluginName>Pulse.Plugin.Provider.Email.SendGrid</PluginName>
             </PluginOutput>
         </ItemGroup>
 

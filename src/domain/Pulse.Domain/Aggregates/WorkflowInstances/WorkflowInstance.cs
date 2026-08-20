@@ -136,7 +136,7 @@ public sealed class WorkflowInstance : DomainEntity<WorkflowInstanceId>
         SetModified();
     }
 
-    private WorkflowInstanceStep GetStep(WorkflowInstanceStepId stepId)
+    public WorkflowInstanceStep GetStep(WorkflowInstanceStepId stepId)
     {
         return _steps.SingleOrDefault(step => step.Id == stepId)
                ?? throw new InvalidOperationException("The workflow instance step does not belong to this workflow instance.");

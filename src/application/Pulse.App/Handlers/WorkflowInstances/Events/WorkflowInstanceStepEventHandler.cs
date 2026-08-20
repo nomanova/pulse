@@ -49,9 +49,11 @@ public sealed class WorkflowInstanceStepEventHandler
 
         try
         {
+            var workflowInstanceStep = workflowInstance.GetStep(notification.WorkflowInstanceStepId);
+
             await _workflowStepExecutor.Execute(
-                notification.WorkflowInstanceId,
-                notification.WorkflowInstanceStepId,
+                workflowInstance,
+                workflowInstanceStep,
                 cancellationToken);
 
             workflowInstance.CompleteStep(notification.WorkflowInstanceStepId);

@@ -4,7 +4,6 @@ using System.Net.Http.Headers;
 using System.Threading;
 using System.Threading.Tasks;
 using Pulse.Api.Client.Common;
-using Throw;
 
 namespace Pulse.Api.Client.Handlers;
 
@@ -21,7 +20,7 @@ internal class TokenRequestHandler : DelegatingHandler
         CancellationToken cancellationToken)
     {
         var tokenProvider = _tokenProviderFunc();
-        tokenProvider.ThrowIfNull();
+        ArgumentNullException.ThrowIfNull(tokenProvider);
 
         var bearerToken = await tokenProvider.Get();
         request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
