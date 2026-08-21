@@ -29,7 +29,7 @@ public sealed class SearchApplicationsQueryValidator : SearchQueryValidator<Sear
 
 public sealed class SearchApplicationsQueryAuthorizer : PermissionAuthorizer<SearchApplicationsQuery>;
 
-public class SearchApplicationsQueryHandler :
+public sealed class SearchApplicationsQueryHandler :
     IQueryHandler<SearchApplicationsQuery, ErrorOr<PagedSearchResultDto<ApplicationDto>>>
 {
     private static readonly List<string> OrderByProperties = [nameof(Application.Name)];

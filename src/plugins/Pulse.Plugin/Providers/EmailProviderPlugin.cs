@@ -32,6 +32,8 @@ public abstract class EmailProviderPlugin : IEmailProviderPlugin
 
     public abstract PluginMetadata Metadata { get; }
 
+    public ProviderChannel Channel => ProviderChannel.Email;
+    
     public virtual Task Initialize(IPluginHostContext hostContext, CancellationToken cancellationToken)
     {
         Context = hostContext;

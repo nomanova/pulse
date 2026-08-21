@@ -10,7 +10,7 @@ public sealed class WorkflowVersionStep : Entity<WorkflowVersionStepId>
     public WorkflowVersionId WorkflowVersionId { get; private set; } = null!;
 
     public uint Order { get; private set; }
-
+    
     private WorkflowVersionStep()
     {
     }

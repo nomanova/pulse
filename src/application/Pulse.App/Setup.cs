@@ -7,6 +7,7 @@ using Pulse.App.Common.Security;
 using Pulse.App.Common.Security.Interfaces;
 using Pulse.App.Common.Validation;
 using Pulse.App.Handlers.Applications.Common;
+using Pulse.App.Handlers.Connections.Common;
 using Pulse.App.Handlers.Environments.Common;
 using Pulse.App.Handlers.Memberships.Common;
 using Pulse.App.Handlers.Organizations.Common;
@@ -59,6 +60,8 @@ public static class Setup
             
             services.AddScoped<IWorkflowRepository, WorkflowRepository>();
             services.AddScoped<IWorkflowInstanceRepository, WorkflowInstanceRepository>();
+            
+            services.AddScoped<IConnectionRepository, ConnectionRepository>();
             
             // (Read) repositories (entities)
             services.AddScoped<IWorkflowVersionRepository, WorkflowVersionRepository>();

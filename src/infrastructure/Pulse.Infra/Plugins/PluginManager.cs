@@ -33,17 +33,23 @@ public sealed class PluginManager : IPluginManager
     {
         if (channel == null)
         {
-            return _plugins.Values.Select(p => p.Metadata).ToList();
+            return _plugins.Values.Select(p => p.Instance.Metadata).ToList();
         }
 
         return _plugins.Values
-            .OfType<LoadedProviderPlugin>()
-            .Where(p => p.Channel == channel)
+            .Select(p => p.Instance)
+            .OfType<IProviderPlugin>()
+            .Where(p => (Channel)p.Channel == channel)
             .Select(p => p.Metadata)
             .ToList();
     }
 
-    public async Task<PluginResult> InvokeProvider(string pluginId, ProviderPluginInvocationRequest request,
+    public IPlugin? TryGet(string pluginId)
+    {
+        return !_plugins.TryGetValue(pluginId, out var plugin) ? null : plugin.Instance;
+    }
+
+    public async Task<PluginResult> Invoke(string pluginId, PluginInvocationRequest request,
         CancellationToken cancellationToken)
     {
         if (!_plugins.TryGetValue(pluginId, out var plugin))
@@ -53,12 +59,7 @@ public sealed class PluginManager : IPluginManager
 
         try
         {
-            if (plugin is LoadedProviderPlugin loadedPlugin)
-            {
-                return await loadedPlugin.Instance.Invoke(request, cancellationToken);
-            }
-
-            throw new InvalidOperationException($"Invocation of unsupported plugin type '{plugin.GetType().Name}'.");
+            return await plugin.Instance.Invoke(request, cancellationToken);
         }
         catch (Exception ex)
         {
@@ -110,12 +111,10 @@ public sealed class PluginManager : IPluginManager
         var assembly = loadContext.LoadFromAssemblyPath(dllPath);
 
         IProviderPlugin instance;
-        Channel? channel;
 
         if (TryGetPluginType(typeof(IEmailProviderPlugin), assembly, out var pluginType))
         {
             instance = ActivatePlugin<IEmailProviderPlugin>(pluginType!, dllPath);
-            channel = Channel.Email;
         }
         else
         {
@@ -136,12 +135,10 @@ public sealed class PluginManager : IPluginManager
 
         await instance.Initialize(hostContext, cts.Token);
 
-        _plugins[metadata.Id] = new LoadedProviderPlugin
+        _plugins[metadata.Id] = new LoadedPlugin
         {
-            Metadata = metadata,
             LoadContext = loadContext,
-            Instance = instance,
-            Channel = channel.Value
+            Instance = instance
         };
 
         _logger.LogDebug("Loaded plugin {Id} v{Version} from {Dll}", metadata.Id, metadata.Version, dllPath);

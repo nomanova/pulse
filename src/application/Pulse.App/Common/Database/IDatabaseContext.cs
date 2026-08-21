@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Pulse.Domain.Aggregates.Applications;
+using Pulse.Domain.Aggregates.Connections;
 using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Aggregates.Memberships;
 using Pulse.Domain.Aggregates.Organizations;
@@ -25,9 +26,11 @@ public interface IDatabaseContext
     
     DbSet<Role> Roles { get; }
     
-    DbSet<Workflow> Workflows { get; init; }
+    DbSet<Workflow> Workflows { get; }
     
-    DbSet<WorkflowVersion> WorkflowVersions { get; init; }
+    DbSet<WorkflowVersion> WorkflowVersions { get; }
     
-    DbSet<WorkflowInstance> WorkflowInstances { get; init; }
+    DbSet<WorkflowInstance> WorkflowInstances { get; }
+    
+    DbSet<Connection> Connections { get; }
 }

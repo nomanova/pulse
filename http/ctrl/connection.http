@@ -1,0 +1,15 @@
+###
+### Add
+###
+POST {{root}}/api/ctrl/v1/connections/add
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "environmentId": "{{envId}}",
+  "pluginId": "com.nomanova.pulse.plugin.provider.email.console",
+  "parameters": {
+    "from-email": "info@nomanova.com",
+    "from-name": ""
+  }
+}

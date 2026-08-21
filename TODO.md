@@ -2,7 +2,9 @@
 
 ## Plugins
 
-- Add endpoint to list loaded plugins
+- Add endpoint to search loaded plugins
+- Add endpoint to fetch single plugin details, including connection parameters
+- Add endpoint to verify plugin connection
 
 ## Workflows
 

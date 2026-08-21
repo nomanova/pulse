@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Pulse.App.Common.Database;
 using Pulse.Domain.Aggregates.Applications;
+using Pulse.Domain.Aggregates.Connections;
 using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Aggregates.Memberships;
 using Pulse.Domain.Aggregates.Organizations;
@@ -52,6 +53,8 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
     public DbSet<WorkflowInstance> WorkflowInstances { get; init; }
     
     public DbSet<WorkflowInstanceStep> WorkflowInstanceSteps { get; init; }
+    
+    public DbSet<Connection> Connections { get; init; }
     
     protected DatabaseContext(
         IOptions<DatabaseOptions> databaseOptions,
@@ -106,6 +109,8 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
         configurationBuilder.Properties<WorkflowVersionStepId>().HaveConversion<EntityIdConverter<WorkflowVersionStepId>>();
         configurationBuilder.Properties<WorkflowInstanceId>().HaveConversion<EntityIdConverter<WorkflowInstanceId>>();
         configurationBuilder.Properties<WorkflowInstanceStepId>().HaveConversion<EntityIdConverter<WorkflowInstanceStepId>>();
+        
+        configurationBuilder.Properties<ConnectionId>().HaveConversion<EntityIdConverter<ConnectionId>>();
     }
 
     private static void ApplyConfigurations(ModelBuilder modelBuilder, DatabaseProvider provider)
@@ -127,5 +132,7 @@ public abstract class DatabaseContext : DbContext, IDatabaseContext
         
         modelBuilder.ApplyConfiguration(new WorkflowInstanceConfiguration(provider));
         modelBuilder.ApplyConfiguration(new WorkflowInstanceStepConfiguration(provider));
+        
+        modelBuilder.ApplyConfiguration(new ConnectionConfiguration(provider));
     }
 }

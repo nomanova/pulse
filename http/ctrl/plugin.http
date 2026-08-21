@@ -1,0 +1,9 @@
+###
+### Search
+###
+POST {{root}}/api/ctrl/v1/plugins/search
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+}

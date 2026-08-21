@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pulse.Domain.Aggregates.Applications;
 using Pulse.Domain.Aggregates.Environments;
-using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Infra.Database.Configurations.Base;
 
 namespace Pulse.Infra.Database.Configurations;

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using ErrorOr;
 using FluentValidation;
 using Pulse.App.Common.Dispatcher;
 
@@ -26,16 +27,18 @@ public sealed class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidat
 
         foreach (var validator in validators)
         {
-            var result = await validator.ValidateAsync(context, cancellationToken);
-            if (!result.IsValid)
+            var validationResult = await validator.ValidateAsync(context, cancellationToken);
+            if (!validationResult.IsValid)
             {
-                failures.AddRange(result.Errors);
+                failures.AddRange(validationResult.Errors);
             }
         }
 
         if (failures.Count > 0)
         {
-            throw new ValidationException(failures);
+            var errors = failures.ConvertAll(failure =>
+                Error.Validation(failure.PropertyName, failure.ErrorMessage));
+            return (dynamic)errors;
         }
 
         return await next();
