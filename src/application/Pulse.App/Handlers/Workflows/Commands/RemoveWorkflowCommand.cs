@@ -16,7 +16,7 @@ public sealed record RemoveWorkflowCommand : ICommand<ErrorOr<Success>>
     public required WorkflowId WorkflowId { get; init; }
 }
 
-public sealed class RemoveWorkflowCommandAuthorizer : ApiKeyAuthorizer<RemoveWorkflowCommand>;
+public sealed class RemoveWorkflowCommandAuthorizer : ApiKeyPermissionAuthorizer<RemoveWorkflowCommand>;
 
 public sealed class RemoveWorkflowCommandHandler : ICommandHandler<RemoveWorkflowCommand, ErrorOr<Success>>
 {

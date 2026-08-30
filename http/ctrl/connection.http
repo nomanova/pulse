@@ -13,3 +13,14 @@ Authorization: Bearer {{auth_token}}
     "from-name": ""
   }
 }
+
+###
+### Remove
+###
+POST {{root}}/api/ctrl/v1/connections/remove
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "connectionId": "{{conId}}"
+}

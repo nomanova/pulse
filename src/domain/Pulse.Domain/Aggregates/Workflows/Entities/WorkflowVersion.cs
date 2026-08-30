@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Pulse.Domain.Aggregates.Workflows.Enums;
+using Pulse.Domain.Aggregates.Workflows.ValueObjects;
 using Pulse.Domain.Common.Errors;
 using Pulse.Domain.Common.Models.Entities;
 using Pulse.Domain.Common.Services;
@@ -67,12 +68,12 @@ public sealed class WorkflowVersion : Entity<WorkflowVersionId>
         return draft;
     }
 
-    public WorkflowVersionStep AddStep()
+    public WorkflowVersionStep AddStep(IWorkflowStepDefinition definition)
     {
         EnsureDraft();
 
         var order = _steps.NextOrder();
-        var step = WorkflowVersionStep.Create(this, order);
+        var step = WorkflowVersionStep.Create(this, order, definition);
 
         _steps.Add(step);
 

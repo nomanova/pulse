@@ -1,14 +1,19 @@
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ErrorOr;
 using Pulse.App.Common.Authorization.Policies;
 using Pulse.App.Common.Database;
 using Pulse.App.Common.Dispatcher;
+using Pulse.App.Dto.Common;
 using Pulse.App.Dto.Workflows;
 using Pulse.App.Handlers.Workflows.Common;
 using Pulse.App.Handlers.Workflows.Common.Specifications;
 using Pulse.Domain.Aggregates.Workflows;
 using Pulse.Domain.Aggregates.Workflows.Entities;
+using Pulse.Domain.Aggregates.Workflows.ValueObjects;
+using Pulse.Domain.Channels;
 
 namespace Pulse.App.Handlers.Workflows.Commands.Versions;
 
@@ -17,9 +22,13 @@ public sealed record AddWorkflowVersionStepCommand : ICommand<ErrorOr<WorkflowVe
     public required WorkflowId WorkflowId { get; init; }
     
     public required WorkflowVersionId WorkflowVersionId { get; init; }
+    
+    public required ChannelDto Channel { get; init; }
+    
+    public required Dictionary<string, string> Parameters { get; init; } = new();
 }
 
-public sealed class AddWorkflowVersionStepCommandAuthorizer : ApiKeyAuthorizer<AddWorkflowVersionStepCommand>;
+public sealed class AddWorkflowVersionStepCommandAuthorizer : ApiKeyPermissionAuthorizer<AddWorkflowVersionStepCommand>;
 
 public sealed class AddWorkflowVersionStepCommandHandler : 
     ICommandHandler<AddWorkflowVersionStepCommand, ErrorOr<WorkflowVersionStepDto>>
@@ -57,8 +66,20 @@ public sealed class AddWorkflowVersionStepCommandHandler :
             return Error.NotFound();
         }
 
-        // Add
-        var step = workflowVersion.AddStep(); // This will trip when the version is no longer in draft.
+        // Step definition
+        var stepDefinitionResult = command.Channel switch
+        {
+            ChannelDto.Email => ProviderWorkflowStepDefinition.ForEmail(command.Parameters.AsParameterValues()),
+            _ => throw new NotImplementedException(command.Channel.ToString())
+        };
+
+        if (stepDefinitionResult.IsError)
+        {
+            return stepDefinitionResult.Errors;
+        }
+
+        // Add (will trip when the version is no longer in draft)
+        var step = workflowVersion.AddStep(stepDefinitionResult.Value);
         
         _workflowRepository.Update(workflow);
         await _unitOfWork.Commit(cancellationToken);

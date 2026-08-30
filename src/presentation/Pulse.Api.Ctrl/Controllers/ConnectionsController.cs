@@ -8,6 +8,7 @@ using Pulse.Api.Ctrl.Controllers.Base;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Dto.Common;
 using Pulse.App.Handlers.Connections.Commands;
+using Pulse.Domain.Aggregates.Connections;
 using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Common.Models.Entities;
 
@@ -39,5 +40,21 @@ public sealed class ConnectionsController : CtrlApiController
         var result = await _sender.Send(command, cancellationToken);
 
         return result.Match(Ok, Problem);
+    }
+
+    [HttpPost(ActionRemove)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    public async Task<IActionResult> Remove(
+        [FromBody] RemoveConnectionRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var command = new RemoveConnectionCommand
+        {
+            ConnectionId = request.ConnectionId.AsIdentity<ConnectionId>()
+        };
+
+        var result = await _sender.Send(command, cancellationToken);
+
+        return result.Match(_ => Ok(), Problem);
     }
 }

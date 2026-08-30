@@ -2,70 +2,29 @@ using System.Threading;
 using System.Threading.Tasks;
 using ErrorOr;
 using Pulse.App.Common.Security.Interfaces;
-using Pulse.Domain.Aggregates.Environments;
-using Pulse.Domain.Aggregates.WorkflowInstances;
-using Pulse.Domain.Aggregates.Workflows;
-using Pulse.Domain.Aggregates.Workflows.Entities;
 
 namespace Pulse.App.Common.Authorization.Requirements;
 
-public class MustHaveValidApiKeyRequirement : IAuthorizationRequirement
-{
-    public EnvironmentId? EnvironmentId { get; init; }
-    
-    public WorkflowId? WorkflowId { get; init; }
-
-    public WorkflowVersionId? WorkflowVersionId { get; init; }
-    
-    public WorkflowInstanceId? WorkflowInstanceId { get; init; }
-}
+/**
+ * This requirement only checks if the provided API key exists and matches a known value.
+ * If it passes, the environment linked to the API key is loaded into the EnvironmentProvider.
+ */
+public sealed class MustHaveValidApiKeyRequirement : IAuthorizationRequirement;
 
 public class MustHaveValidApiKeyRequirementHandler : IAuthorizationHandler<MustHaveValidApiKeyRequirement>
 {
-    private readonly IUserClaimProvider _userClaimProvider;
-    private readonly IApiKeyAuthorizationReader _apiKeyAuthorizationReader;
-
-    public MustHaveValidApiKeyRequirementHandler(
-        IUserClaimProvider userClaimProvider,
-        IApiKeyAuthorizationReader apiKeyAuthorizationReader)
+    private readonly IEnvironmentProvider _environmentProvider;
+    
+    public MustHaveValidApiKeyRequirementHandler(IEnvironmentProvider environmentProvider)
     {
-        _userClaimProvider = userClaimProvider;
-        _apiKeyAuthorizationReader = apiKeyAuthorizationReader;
+        _environmentProvider = environmentProvider;
     }
 
     public async Task<ErrorOr<Success>> Handle(
         MustHaveValidApiKeyRequirement request,
         CancellationToken cancellationToken)
     {
-        var apiKey = _userClaimProvider.ApiKey;
-        
-        var isValid = request switch
-        {
-            { EnvironmentId: not null } => await _apiKeyAuthorizationReader.HasValidApiKeyForEnvironment(
-                request.EnvironmentId,
-                apiKey,
-                cancellationToken),
-            
-            { WorkflowId: not null } => await _apiKeyAuthorizationReader.HasValidApiKeyForWorkflow(
-                request.WorkflowId,
-                apiKey,
-                cancellationToken),
-
-            { WorkflowVersionId: not null } => await _apiKeyAuthorizationReader.HasValidApiKeyForWorkflowVersion(
-                request.WorkflowVersionId,
-                apiKey,
-                cancellationToken),
-            
-            { WorkflowInstanceId: not null } => await _apiKeyAuthorizationReader.HasValidApiKeyForWorkflowInstance(
-                request.WorkflowInstanceId,
-                apiKey,
-                cancellationToken),
-
-            _ => false
-        };
-
-        return isValid
-            ? Result.Success
-            : AuthorizationErrors.InvalidApiKey;
+        await _environmentProvider.Get(cancellationToken);
+        return Result.Success;
     }
 }

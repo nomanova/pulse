@@ -28,11 +28,11 @@ public sealed class SearchPluginsQueryHandler :
     public Task<ErrorOr<SearchResultDto<PluginDto>>> Handle(SearchPluginsQuery request,
         CancellationToken cancellationToken)
     {
-        var pluginCatalog = _pluginManager.GetCatalog();
+        var plugins = _pluginManager.GetCatalog();
 
         return Task.FromResult<ErrorOr<SearchResultDto<PluginDto>>>(new SearchResultDto<PluginDto>
         {
-            Entities = pluginCatalog.Select(x => x.ToDto()).ToList()
+            Entities = plugins.Select(x => x.ToDto()).ToList()
         });
     }
 }

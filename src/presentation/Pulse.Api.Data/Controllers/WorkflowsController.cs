@@ -128,4 +128,21 @@ public partial class WorkflowsController : DataApiController
 
         return result.Match(Ok, Problem);
     }
+
+    [HttpPost("ad-hoc")]
+    [ProducesResponseType(typeof(WorkflowInstanceDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Trigger(
+        [FromBody] AdHocWorkflowRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var command = new AdHocWorkflowCommand
+        {
+            Channel = request.Channel,
+            Parameters = request.Parameters
+        };
+        
+        var result = await _sender.Send(command, cancellationToken);
+
+        return result.Match(Ok, Problem);
+    }
 }

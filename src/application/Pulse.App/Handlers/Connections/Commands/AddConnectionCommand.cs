@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ErrorOr;
@@ -13,8 +14,7 @@ using Pulse.App.Handlers.Environments.Common;
 using Pulse.App.Handlers.Environments.Common.Specifications;
 using Pulse.Domain.Aggregates.Connections;
 using Pulse.Domain.Aggregates.Environments;
-using Pulse.Domain.Common.Models.Enums;
-using Pulse.Plugin;
+using Pulse.Domain.Channels;
 using Pulse.Plugin.Providers;
 
 namespace Pulse.App.Handlers.Connections.Commands;
@@ -79,14 +79,14 @@ public class AddConnectionCommandHandler : ICommandHandler<AddConnectionCommand,
 
         if (!connectResult.IsSuccess)
         {
-            var errors = connectResult.Errors.ConvertAll(error =>
-                Error.Validation(error.ParameterKey ?? string.Empty, error.Message));
+            var errors = connectResult.Errors.ToList().ConvertAll(error =>
+                Error.Validation(error.ParameterKey, error.Message));
             return (dynamic)errors;
         }
 
         // Create connection
         var connection = Connection.Create(
-            environment, (Channel)providerPlugin.Channel, providerPlugin.Metadata.Id, command.Parameters);
+            environment, providerPlugin.Channel, providerPlugin.Metadata.Id, command.Parameters);
 
         _connectionRepository.Add(connection);
         await _unitOfWork.Commit(cancellationToken);

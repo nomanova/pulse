@@ -9,23 +9,12 @@ namespace Pulse.App.Common.Security.Interfaces;
 
 public interface IApiKeyAuthorizationReader
 {
-    Task<bool> HasValidApiKeyForEnvironment(
-        EnvironmentId environmentId,
-        string apiKey,
-        CancellationToken cancellationToken);
-    
-    Task<bool> HasValidApiKeyForWorkflow(
-        WorkflowId workflowId,
-        string apiKey,
-        CancellationToken cancellationToken);
+    Task<bool> BelongsToEnvironment(
+        WorkflowId workflowId, EnvironmentId environmentId, CancellationToken cancellationToken);
 
-    Task<bool> HasValidApiKeyForWorkflowVersion(
-        WorkflowVersionId workflowVersionId,
-        string apiKey,
-        CancellationToken cancellationToken);
-    
-    Task<bool> HasValidApiKeyForWorkflowInstance(
-        WorkflowInstanceId workflowInstanceId,
-        string apiKey,
-        CancellationToken cancellationToken);
+    Task<bool> BelongsToEnvironment(
+        WorkflowVersionId workflowVersionId, EnvironmentId environmentId, CancellationToken cancellationToken);
+
+    Task<bool> BelongsToEnvironment(
+        WorkflowInstanceId workflowInstanceId, EnvironmentId environmentId, CancellationToken cancellationToken);
 }

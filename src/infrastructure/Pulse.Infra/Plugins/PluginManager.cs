@@ -6,9 +6,10 @@ using System.Net.Http;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
+using ErrorOr;
 using Microsoft.Extensions.Logging;
 using Pulse.App.Common.Services.Interfaces;
-using Pulse.Domain.Common.Models.Enums;
+using Pulse.Domain.Channels;
 using Pulse.Plugin;
 using Pulse.Plugin.Providers;
 
@@ -29,18 +30,17 @@ public sealed class PluginManager : IPluginManager
         _httpClientFactory = httpClientFactory;
     }
 
-    public IReadOnlyCollection<PluginMetadata> GetCatalog(Channel? channel = null)
+    public IReadOnlyCollection<IPlugin> GetCatalog(Channel? channel = null)
     {
         if (channel == null)
         {
-            return _plugins.Values.Select(p => p.Instance.Metadata).ToList();
+            return _plugins.Values.Select(p => p.Instance).ToList();
         }
 
         return _plugins.Values
             .Select(p => p.Instance)
             .OfType<IProviderPlugin>()
-            .Where(p => (Channel)p.Channel == channel)
-            .Select(p => p.Metadata)
+            .Where(p => p.Channel == channel)
             .ToList();
     }
 
@@ -49,24 +49,26 @@ public sealed class PluginManager : IPluginManager
         return !_plugins.TryGetValue(pluginId, out var plugin) ? null : plugin.Instance;
     }
 
-    public async Task<PluginResult> Invoke(string pluginId, PluginInvocationRequest request,
+    public async Task<ErrorOr<Success>> Invoke(string pluginId, PluginInvocationRequest request,
         CancellationToken cancellationToken)
     {
         if (!_plugins.TryGetValue(pluginId, out var plugin))
         {
-            return PluginResult.Failure(new PluginError($"Unknown plugin '{pluginId}'"));
+            return Error.NotFound(description: $"Unknown plugin '{pluginId}'");
         }
 
         try
         {
-            return await plugin.Instance.Invoke(request, cancellationToken);
+            await plugin.Instance.Invoke(request, cancellationToken);
         }
         catch (Exception ex)
         {
             // Never let a plugin exception bubble unhandled
-            _logger.LogError(ex, "Plugin {Id} threw during InvokeAsync", pluginId);
-            return PluginResult.Failure(new PluginError($"Plugin '{pluginId}' failed: {ex.Message}"));
+            _logger.LogError(ex, "Plugin {Id} threw during invocation", pluginId);
+            return Error.Failure(description: $"Plugin '{pluginId}' failed: {ex.Message}");
         }
+
+        return Result.Success;
     }
 
     /// <summary>
@@ -99,7 +101,7 @@ public sealed class PluginManager : IPluginManager
             }
             catch (Exception ex)
             {
-                // A broken/malicious plugin must never take the host down at startup.
+                // A broken/malicious plugin must not take the host down at startup.
                 _logger.LogError(ex, "Failed to load plugin from {Dll}", dllPath);
             }
         }
@@ -112,9 +114,9 @@ public sealed class PluginManager : IPluginManager
 
         IProviderPlugin instance;
 
-        if (TryGetPluginType(typeof(IEmailProviderPlugin), assembly, out var pluginType))
+        if (TryGetPluginType(typeof(IProviderPlugin), assembly, out var pluginType))
         {
-            instance = ActivatePlugin<IEmailProviderPlugin>(pluginType!, dllPath);
+            instance = ActivatePlugin<IProviderPlugin>(pluginType!, dllPath);
         }
         else
         {

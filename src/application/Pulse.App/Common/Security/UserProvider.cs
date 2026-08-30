@@ -31,7 +31,9 @@ public sealed class UserProvider : IUserProvider
         }
         
         var userId = _userClaimProvider.Id;
-        var user = await _userRepository.SearchOne(new UserByIdSpecification(UserId.New(userId)), cancellationToken);
+        var specification = new UserByIdSpecification(UserId.New(userId));
+        
+        var user = await _userRepository.SearchOne(specification, cancellationToken);
         
         if (user == null)
         {

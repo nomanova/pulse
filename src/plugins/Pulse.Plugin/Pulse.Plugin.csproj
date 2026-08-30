@@ -5,5 +5,9 @@
         <Version>0.0.1</Version>
         <Authors>NOMANOVA</Authors>
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\domain\Pulse.Domain.Channels\Pulse.Domain.Channels.csproj" />
+    </ItemGroup>
     
 </Project>

@@ -1,13 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Aggregates.WorkflowInstances.Entities;
 using Pulse.Domain.Aggregates.WorkflowInstances.Enums;
 using Pulse.Domain.Aggregates.WorkflowInstances.Events;
 using Pulse.Domain.Aggregates.Workflows;
 using Pulse.Domain.Aggregates.Workflows.Entities;
+using Pulse.Domain.Aggregates.Workflows.ValueObjects;
+using Pulse.Domain.Common.Errors;
 using Pulse.Domain.Common.Models.Entities;
 using Pulse.Domain.Common.Services;
+using Environment = Pulse.Domain.Aggregates.Environments.Environment;
 
 namespace Pulse.Domain.Aggregates.WorkflowInstances;
 
@@ -15,7 +19,11 @@ public sealed record WorkflowInstanceId : EntityId<WorkflowInstanceId, WorkflowI
 
 public sealed class WorkflowInstance : DomainEntity<WorkflowInstanceId>
 {
-    public WorkflowVersionId WorkflowVersionId { get; private set; } = null!;
+    public WorkflowInstanceSource Source { get; private set; }
+
+    public EnvironmentId EnvironmentId { get; private set; } = null!;
+
+    public WorkflowVersionId? WorkflowVersionId { get; private set; }
 
     public WorkflowInstanceStatus Status { get; private set; }
 
@@ -37,29 +45,58 @@ public sealed class WorkflowInstance : DomainEntity<WorkflowInstanceId>
 
     private WorkflowInstance(
         WorkflowInstanceId id,
-        WorkflowVersionId workflowVersionId,
+        WorkflowInstanceSource source,
+        EnvironmentId environmentId,
+        WorkflowVersionId? workflowVersionId,
         WorkflowInstanceStatus status) : base(id)
     {
+        Source = source;
+        EnvironmentId = environmentId;
         WorkflowVersionId = workflowVersionId;
         Status = status;
     }
 
-    internal static WorkflowInstance Create(
-        Workflow workflow,
-        WorkflowVersion workflowVersion)
+    internal static WorkflowInstance Create(Workflow workflow, WorkflowVersion workflowVersion)
     {
+        var id = IdentityProvider.New<WorkflowInstanceId>();
+
         var instance = new WorkflowInstance(
-            IdentityProvider.New<WorkflowInstanceId>(),
+            id,
+            WorkflowInstanceSource.WorkflowVersion,
+            workflow.EnvironmentId,
             workflowVersion.Id,
             WorkflowInstanceStatus.Running);
 
         foreach (var workflowVersionStep in workflowVersion.Steps)
         {
-            instance._steps.Add(WorkflowInstanceStep.Create(instance, workflowVersionStep));
+            var step = WorkflowInstanceStep.Create(
+                instance,workflowVersionStep.Order, workflowVersionStep.Definition);
+            
+            instance._steps.Add(step);
         }
 
         instance.StartNextPendingStep();
+        instance.SetCreated();
 
+        return instance;
+    }
+
+    public static WorkflowInstance CreateAdHoc(
+        Environment environment, IWorkflowStepDefinition definition)
+    {
+        var id = IdentityProvider.New<WorkflowInstanceId>();
+
+        var instance = new WorkflowInstance(
+            id,
+            WorkflowInstanceSource.AdHoc,
+            environment.Id,
+            null,
+            WorkflowInstanceStatus.Running);
+
+        var step = WorkflowInstanceStep.Create(instance, 1, definition);
+        instance._steps.Add(step);
+
+        instance.StartNextPendingStep();
         instance.SetCreated();
 
         return instance;
@@ -139,9 +176,10 @@ public sealed class WorkflowInstance : DomainEntity<WorkflowInstanceId>
     public WorkflowInstanceStep GetStep(WorkflowInstanceStepId stepId)
     {
         return _steps.SingleOrDefault(step => step.Id == stepId)
-               ?? throw new InvalidOperationException("The workflow instance step does not belong to this workflow instance.");
+               ?? throw new InvalidOperationException(
+                   "The workflow instance step does not belong to this workflow instance.");
     }
-    
+
     private void Complete()
     {
         Status = WorkflowInstanceStatus.Completed;
@@ -160,7 +198,7 @@ public sealed class WorkflowInstance : DomainEntity<WorkflowInstanceId>
         }
 
         nextStep.Start();
-        
+
         AddEvent(new WorkflowInstanceStepStartedEvent(
             Id,
             nextStep.Id,
@@ -180,9 +218,6 @@ public sealed class WorkflowInstance : DomainEntity<WorkflowInstanceId>
 
     private void EnsureRunning()
     {
-        if (Status != WorkflowInstanceStatus.Running)
-        {
-            throw new InvalidOperationException("The workflow instance is not running.");
-        }
+        DomainErrors.WorkflowInstance.NotRunning.Assert(() => Status == WorkflowInstanceStatus.Running);
     }
 }

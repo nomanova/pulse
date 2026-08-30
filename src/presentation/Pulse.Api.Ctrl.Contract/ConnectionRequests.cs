@@ -10,3 +10,8 @@ public sealed record AddConnectionRequest
     
     public Dictionary<string, string>? Parameters { get; init; }
 }
+
+public sealed record RemoveConnectionRequest
+{
+    public string? ConnectionId { get; init; }
+}

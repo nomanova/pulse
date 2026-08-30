@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Pulse.Domain.Channels;
 using Pulse.Plugin.Providers;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -12,8 +13,10 @@ public sealed class Plugin : EmailProviderPlugin
 {
     private const string ApiKeyConnectionParameter = "api-key";
 
-    private static readonly PluginError ErrApiKeyMissing =
+    private static readonly ParameterValidationError ErrApiKeyMissing =
         new("API Key is required", ApiKeyConnectionParameter);
+
+    private IPluginHostContext _context = null!;
 
     public override PluginMetadata Metadata => new(
         Id: "com.nomanova.pulse.plugin.provider.email.sendgrid",
@@ -21,25 +24,22 @@ public sealed class Plugin : EmailProviderPlugin
         Version: "1.0.0",
         Description: "Send emails using SendGrid"
     );
+    
+    public override Task Initialize(IPluginHostContext hostContext, CancellationToken cancellationToken = default)
+    {
+        _context = hostContext;
+        return Task.CompletedTask;
+    }
 
-    public override List<PluginParameterDefinition> ConnectionParameters =>
+    public override List<ParameterDefinition> ConnectionParameters =>
     [
-        ..base.ConnectionParameters,
         new(ApiKeyConnectionParameter, "API Key", "SendGrid API Key")
     ];
 
-    public override async Task<PluginResult> CanConnect(
-        List<PluginParameterValue> connectionParameters, CancellationToken cancellationToken)
+    public override Task<ParameterValidationResult> CanConnect(
+        List<ParameterValue> connectionParameters, CancellationToken cancellationToken = default)
     {
-        var errors = new List<PluginError>();
-
-        var baseResult = await base.CanConnect(connectionParameters, cancellationToken)
-            .ConfigureAwait(false);
-
-        if (!baseResult.IsSuccess)
-        {
-            errors.AddRange(baseResult.Errors);
-        }
+        var errors = new List<ParameterValidationError>();
 
         // Api key
         var apiKey = connectionParameters.GetValue(ApiKeyConnectionParameter);
@@ -49,12 +49,12 @@ public sealed class Plugin : EmailProviderPlugin
             errors.Add(ErrApiKeyMissing);
         }
 
-        return errors.Count > 0
-            ? PluginResult.Failure(errors)
-            : PluginResult.Success();
+        // TODO - add API key validation
+
+        return Task.FromResult(ParameterValidationResult.For(errors));
     }
 
-    public override async Task<PluginResult> Invoke(ProviderPluginInvocationRequest request,
+    public override async Task Invoke(ProviderPluginInvocationRequest request,
         CancellationToken cancellationToken)
     {
         var connectionParameters = request.ConnectionParameters;
@@ -62,57 +62,58 @@ public sealed class Plugin : EmailProviderPlugin
 
         if (!connectResult.IsSuccess)
         {
-            return connectResult;
+            throw new PluginException($"Connection validation failed, call {nameof(CanConnect)} first");
         }
 
         var invocationParameters = request.InvocationParameters;
-        var invokeResult = await CanInvoke(invocationParameters, cancellationToken);
+        var invokeResult = CanInvoke(invocationParameters);
 
         if (!invokeResult.IsSuccess)
         {
-            return invokeResult;
+            throw new PluginException($"Invocation validation failed, call {nameof(CanInvoke)} first");
         }
 
         var apiKey = connectionParameters.GetValue(ApiKeyConnectionParameter);
-        var fromEmail = connectionParameters.GetValue(FromEmailConnectionParameter);
-        var fromName = connectionParameters.GetValue(FromNameConnectionParameter);
 
-        var toEmail = invocationParameters.GetValue(ToEmailInvocationParameter);
-        var toName = invocationParameters.GetValue(ToNameInvocationParameter);
+        var fromEmail = invocationParameters.GetValue(EmailProviderDefinition.FromEmailParameterKey);
+        var fromName = invocationParameters.GetValue(EmailProviderDefinition.FromNameParameterKey);
+
+        var toEmail = invocationParameters.GetValue(EmailProviderDefinition.ToEmailParameterKey);
+        var toName = invocationParameters.GetValue(EmailProviderDefinition.ToNameParameterKey);
 
         var client = new SendGridClient(apiKey);
         var fromAddress = new EmailAddress(fromEmail, fromName);
         var toAddress = new EmailAddress(toEmail, toName);
 
-        var subject = invocationParameters.GetValue(SubjectInvocationParameter);
-        var body = invocationParameters.GetValue(BodyInvocationParameter);
+        var subject = invocationParameters.GetValue(EmailProviderDefinition.SubjectParameterKey);
+        var body = invocationParameters.GetValue(EmailProviderDefinition.BodyParameterKey);
 
         var message = MailHelper.CreateSingleEmail(
             fromAddress, toAddress, subject, null, body);
 
-        Context.LogInformation($"SendGrid email to {toAddress.Email} ({subject})");
+        _context.LogInformation($"SendGrid email to {toAddress.Email} ({subject})");
+
+        Response? response;
 
         try
         {
-            var response = await client
+            response = await client
                 .SendEmailAsync(message, cancellationToken)
                 .ConfigureAwait(false);
-
-            if (!response.IsSuccessStatusCode)
-            {
-                var responseBody = await response.Body.ReadAsStringAsync(cancellationToken)
-                    .ConfigureAwait(false);
-
-                return PluginResult.Failure(new PluginError(
-                    $"SendGrid request failed with status {(int)response.StatusCode}: {responseBody}"));
-            }
         }
         catch (Exception ex)
         {
-            Context.LogError($"SendGrid request failed: {ex.Message}");
-            return PluginResult.Failure(new PluginError(ex.Message));
+            _context.LogError($"SendGrid request failed: {ex.Message}");
+            throw new PluginException(ex.Message, ex);
         }
 
-        return PluginResult.Success();
+        if (!response.IsSuccessStatusCode)
+        {
+            var responseBody = await response.Body.ReadAsStringAsync(cancellationToken)
+                .ConfigureAwait(false);
+
+            throw new PluginException(
+                $"SendGrid request failed with status {(int)response.StatusCode}: {responseBody}");
+        }
     }
 }

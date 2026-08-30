@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Pulse.Domain.Aggregates.Environments;
+using Pulse.Domain.Channels;
 using Pulse.Domain.Common.Models.Entities;
 using Pulse.Domain.Common.Models.Enums;
 using Pulse.Domain.Common.Services;

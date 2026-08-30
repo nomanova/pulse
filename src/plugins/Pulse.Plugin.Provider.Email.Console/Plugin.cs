@@ -1,6 +1,8 @@
-﻿using System.Text;
+﻿using System.Collections.Generic;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Pulse.Domain.Channels;
 using Pulse.Plugin.Providers;
 
 namespace Pulse.Plugin.Provider.Email.Console;
@@ -9,6 +11,8 @@ public sealed class Plugin : EmailProviderPlugin
 {
     private const string Separator = "*************************************************************";
 
+    private IPluginHostContext _context = null!;
+
     public override PluginMetadata Metadata => new(
         Id: "com.nomanova.pulse.plugin.provider.email.console",
         DisplayName: "Console Email",
@@ -16,33 +20,47 @@ public sealed class Plugin : EmailProviderPlugin
         Description: "Print emails on the log console (for debugging purposes)"
     );
 
-    public override async Task<PluginResult> Invoke(ProviderPluginInvocationRequest request,
-        CancellationToken cancellationToken)
+    public override Task Initialize(IPluginHostContext hostContext, CancellationToken cancellationToken = default)
+    {
+        _context = hostContext;
+        return Task.CompletedTask;
+    }
+
+    public override List<ParameterDefinition> ConnectionParameters => [];
+
+    public override Task<ParameterValidationResult> CanConnect(List<ParameterValue> connectionParameters,
+        CancellationToken cancellationToken = default)
+    {
+        return Task.FromResult(ParameterValidationResult.Success());
+    }
+
+    public override async Task Invoke(ProviderPluginInvocationRequest request,
+        CancellationToken cancellationToken = default)
     {
         var connectionParameters = request.ConnectionParameters;
         var connectResult = await CanConnect(connectionParameters, cancellationToken);
 
         if (!connectResult.IsSuccess)
         {
-            return connectResult;
+            throw new PluginException($"Connection validation failed, call {nameof(CanConnect)} first");
         }
 
         var invocationParameters = request.InvocationParameters;
-        var invokeResult = await CanInvoke(invocationParameters, cancellationToken);
+        var invokeResult = CanInvoke(invocationParameters);
 
         if (!invokeResult.IsSuccess)
         {
-            return invokeResult;
+            throw new PluginException($"Invocation validation failed, call {nameof(CanInvoke)} first");
         }
 
-        var fromEmail = connectionParameters.GetValue(FromEmailConnectionParameter);
-        var fromName = connectionParameters.GetValue(FromNameConnectionParameter);
+        var fromEmail = connectionParameters.GetValue(EmailProviderDefinition.FromEmailParameterKey);
+        var fromName = connectionParameters.GetValue(EmailProviderDefinition.FromNameParameterKey);
 
-        var toEmail = invocationParameters.GetValue(ToEmailInvocationParameter);
-        var toName = invocationParameters.GetValue(ToNameInvocationParameter);
+        var toEmail = invocationParameters.GetValue(EmailProviderDefinition.ToEmailParameterKey);
+        var toName = invocationParameters.GetValue(EmailProviderDefinition.ToNameParameterKey);
 
-        var subject = invocationParameters.GetValue(SubjectInvocationParameter);
-        var body = invocationParameters.GetValue(BodyInvocationParameter);
+        var subject = invocationParameters.GetValue(EmailProviderDefinition.SubjectParameterKey);
+        var body = invocationParameters.GetValue(EmailProviderDefinition.BodyParameterKey);
 
         var builder = new StringBuilder();
 
@@ -58,8 +76,6 @@ public sealed class Plugin : EmailProviderPlugin
         builder.AppendLine(Separator);
         builder.AppendLine();
 
-        Context.LogInformation(builder.ToString());
-
-        return PluginResult.Success();
+        _context.LogInformation(builder.ToString());
     }
 }

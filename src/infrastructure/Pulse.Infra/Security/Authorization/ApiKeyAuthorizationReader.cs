@@ -1,4 +1,3 @@
-using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,75 +20,38 @@ internal sealed class ApiKeyAuthorizationReader : IApiKeyAuthorizationReader
         _context = context;
     }
 
-    public Task<bool> HasValidApiKeyForEnvironment(
-        EnvironmentId environmentId,
-        string apiKey,
-        CancellationToken cancellationToken)
-    {
-        return (
-            from environment in _context.Environments.IgnoreAutoIncludes()
-            where environment.Id == environmentId
-                  && !environment.IsDeleted
-                  && (environment.ApiKey.Primary == apiKey || environment.ApiKey.Secondary == apiKey)
-            select environment.Id
-        ).AnyAsync(cancellationToken);
-    }
-
-    public Task<bool> HasValidApiKeyForWorkflow(
-        WorkflowId workflowId,
-        string apiKey,
-        CancellationToken cancellationToken)
+    public Task<bool> BelongsToEnvironment(
+        WorkflowId workflowId, EnvironmentId environmentId, CancellationToken cancellationToken)
     {
         return (
             from workflow in _context.Workflows.IgnoreAutoIncludes()
-            join environment in _context.Environments.IgnoreAutoIncludes()
-                on workflow.EnvironmentId equals environment.Id
             where workflow.Id == workflowId
                   && !workflow.IsDeleted
-                  && !environment.IsDeleted
-                  && (environment.ApiKey.Primary == apiKey || environment.ApiKey.Secondary == apiKey)
-            select workflow.Id
-        ).AnyAsync(cancellationToken);
+            select workflow.EnvironmentId
+        ).AnyAsync(e => e == environmentId, cancellationToken);
     }
-
-    public Task<bool> HasValidApiKeyForWorkflowVersion(
-        WorkflowVersionId workflowVersionId,
-        string apiKey,
-        CancellationToken cancellationToken)
+    
+    public Task<bool> BelongsToEnvironment(
+        WorkflowVersionId workflowVersionId, EnvironmentId environmentId, CancellationToken cancellationToken)
     {
         return (
             from workflowVersion in _context.WorkflowVersions.IgnoreAutoIncludes()
             join workflow in _context.Workflows.IgnoreAutoIncludes()
                 on workflowVersion.WorkflowId equals workflow.Id
-            join environment in _context.Environments.IgnoreAutoIncludes()
-                on workflow.EnvironmentId equals environment.Id
             where workflowVersion.Id == workflowVersionId
                   && !workflow.IsDeleted
-                  && !environment.IsDeleted
-                  && (environment.ApiKey.Primary == apiKey || environment.ApiKey.Secondary == apiKey)
-            select workflowVersion.Id
-        ).AnyAsync(cancellationToken);
+            select workflow.EnvironmentId
+        ).AnyAsync(e => e == environmentId, cancellationToken);
     }
-
-    public Task<bool> HasValidApiKeyForWorkflowInstance(
-        WorkflowInstanceId workflowInstanceId,
-        string apiKey,
-        CancellationToken cancellationToken)
+    
+    public Task<bool> BelongsToEnvironment(
+        WorkflowInstanceId workflowInstanceId, EnvironmentId environmentId, CancellationToken cancellationToken)
     {
         return (
             from workflowInstance in _context.WorkflowInstances.IgnoreAutoIncludes()
-            join workflowVersion in _context.WorkflowVersions.IgnoreAutoIncludes()
-                on workflowInstance.WorkflowVersionId equals workflowVersion.Id
-            join workflow in _context.Workflows.IgnoreAutoIncludes()
-                on workflowVersion.WorkflowId equals workflow.Id
-            join environment in _context.Environments.IgnoreAutoIncludes()
-                on workflow.EnvironmentId equals environment.Id
             where workflowInstance.Id == workflowInstanceId
                   && !workflowInstance.IsDeleted
-                  && !workflow.IsDeleted
-                  && !environment.IsDeleted
-                  && (environment.ApiKey.Primary == apiKey || environment.ApiKey.Secondary == apiKey)
-            select workflowInstance.Id
-        ).AnyAsync(cancellationToken);
+            select workflowInstance.EnvironmentId
+        ).AnyAsync(e => e == environmentId, cancellationToken);
     }
 }

@@ -16,7 +16,7 @@ public sealed record PublishWorkflowCommand : ICommand<ErrorOr<WorkflowVersionDt
     public required WorkflowId WorkflowId { get; init; }
 }
 
-public sealed class PublishWorkflowCommandAuthorizer : ApiKeyAuthorizer<PublishWorkflowCommand>;
+public sealed class PublishWorkflowCommandAuthorizer : ApiKeyPermissionAuthorizer<PublishWorkflowCommand>;
 
 public sealed class PublishWorkflowCommandHandler :
     ICommandHandler<PublishWorkflowCommand, ErrorOr<WorkflowVersionDto>>

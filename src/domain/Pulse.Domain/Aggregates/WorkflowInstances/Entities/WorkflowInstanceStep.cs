@@ -1,6 +1,7 @@
 using System;
 using Pulse.Domain.Aggregates.WorkflowInstances.Enums;
 using Pulse.Domain.Aggregates.Workflows.Entities;
+using Pulse.Domain.Aggregates.Workflows.ValueObjects;
 using Pulse.Domain.Common.Models.Entities;
 using Pulse.Domain.Common.Services;
 
@@ -12,9 +13,11 @@ public sealed class WorkflowInstanceStep : Entity<WorkflowInstanceStepId>
 {
     public WorkflowInstanceId WorkflowInstanceId { get; private set; } = null!;
 
-    public WorkflowVersionStepId WorkflowVersionStepId { get; private set; } = null!;
+    public WorkflowVersionStepId? WorkflowVersionStepId { get; private set; }
     
     public uint Order { get; private set; }
+
+    public IWorkflowStepDefinition Definition { get; private set; } = null!;
 
     public WorkflowInstanceStepStatus Status { get; private set; }
 
@@ -33,28 +36,35 @@ public sealed class WorkflowInstanceStep : Entity<WorkflowInstanceStepId>
     private WorkflowInstanceStep(
         WorkflowInstanceStepId id,
         WorkflowInstanceId workflowInstanceId,
-        WorkflowVersionStepId workflowVersionStepId,
+        WorkflowVersionStepId? workflowVersionStepId,
         uint order,
+        IWorkflowStepDefinition definition,
         WorkflowInstanceStepStatus status) : base(id)
     {
         WorkflowInstanceId = workflowInstanceId;
         WorkflowVersionStepId = workflowVersionStepId;
         Order = order;
+        Definition = definition;
         Status = status;
     }
-    
+
     internal static WorkflowInstanceStep Create(
         WorkflowInstance workflowInstance,
-        WorkflowVersionStep workflowVersionStep)
+        uint order,
+        IWorkflowStepDefinition definition,
+        WorkflowVersionStep? workflowVersionStep = null)
     {
+        var id = IdentityProvider.New<WorkflowInstanceStepId>();
+
         return new WorkflowInstanceStep(
-            IdentityProvider.New<WorkflowInstanceStepId>(),
-            workflowInstance.Id,
-            workflowVersionStep.Id,
-            workflowVersionStep.Order,
+            id, 
+            workflowInstance.Id, 
+            workflowVersionStep?.Id, 
+            order, 
+            definition,
             WorkflowInstanceStepStatus.Pending);
     }
-    
+
     internal void Start()
     {
         if (Status != WorkflowInstanceStepStatus.Pending)

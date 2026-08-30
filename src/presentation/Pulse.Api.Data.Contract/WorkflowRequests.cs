@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using Pulse.Api.Shared.Contract;
+using Pulse.App.Dto.Common;
 using Pulse.App.Dto.Workflows;
 
 namespace Pulse.Api.Data.Contract;
@@ -35,6 +37,13 @@ public sealed record TriggerWorkflowRequest
     public string? WorkflowId { get; init; }
 }
 
+public sealed record AdHocWorkflowRequest
+{
+    public ChannelDto Channel { get; init; }
+    
+    public Dictionary<string, string> Parameters { get; init; } = new();
+}
+
 public sealed record FetchWorkflowVersionRequest
 {
     public string? WorkflowVersionId { get; init; }
@@ -52,6 +61,10 @@ public sealed record AddWorkflowVersionStepRequest
     public string? WorkflowId { get; init; }
 
     public string? WorkflowVersionId { get; init; }
+    
+    public ChannelDto Channel { get; init; }
+    
+    public Dictionary<string, string> Parameters { get; init; } = new();
 }
 
 public sealed record RemoveWorkflowVersionStepRequest

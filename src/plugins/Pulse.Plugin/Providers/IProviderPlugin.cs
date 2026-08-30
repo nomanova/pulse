@@ -1,15 +1,16 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Pulse.Domain.Channels;
 
 namespace Pulse.Plugin.Providers;
 
 public interface IProviderPlugin : IPlugin<ProviderPluginInvocationRequest>
 {
-    ProviderChannel Channel { get; }
+    Channel Channel { get; }
     
-    List<PluginParameterDefinition> ConnectionParameters { get; }
+    List<ParameterDefinition> ConnectionParameters { get; }
     
-    Task<PluginResult> CanConnect(
-        List<PluginParameterValue> connectionParameters, CancellationToken cancellationToken = default);
+    Task<ParameterValidationResult> CanConnect(
+        List<ParameterValue> connectionParameters, CancellationToken cancellationToken = default);
 }

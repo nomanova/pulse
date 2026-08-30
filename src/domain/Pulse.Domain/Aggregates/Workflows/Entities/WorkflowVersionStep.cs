@@ -1,3 +1,4 @@
+using Pulse.Domain.Aggregates.Workflows.ValueObjects;
 using Pulse.Domain.Common.Models.Entities;
 using Pulse.Domain.Common.Services;
 
@@ -11,6 +12,8 @@ public sealed class WorkflowVersionStep : Entity<WorkflowVersionStepId>
 
     public uint Order { get; private set; }
     
+    public IWorkflowStepDefinition Definition { get; private set; } = null!;
+    
     private WorkflowVersionStep()
     {
     }
@@ -18,18 +21,24 @@ public sealed class WorkflowVersionStep : Entity<WorkflowVersionStepId>
     private WorkflowVersionStep(
         WorkflowVersionStepId id,
         WorkflowVersionId workflowVersionId,
-        uint order) : base(id)
+        uint order,
+        IWorkflowStepDefinition definition) : base(id)
     {
         WorkflowVersionId = workflowVersionId;
         Order = order;
+        Definition = definition;
     }
 
-    internal static WorkflowVersionStep Create(WorkflowVersion workflowVersion, uint order)
+    internal static WorkflowVersionStep Create(
+        WorkflowVersion workflowVersion, 
+        uint order,
+        IWorkflowStepDefinition definition)
     {
         return new WorkflowVersionStep(
             IdentityProvider.New<WorkflowVersionStepId>(),
             workflowVersion.Id,
-            order);
+            order,
+            definition);
     }
 
     internal static WorkflowVersionStep CreateFrom(
@@ -39,7 +48,8 @@ public sealed class WorkflowVersionStep : Entity<WorkflowVersionStepId>
         return new WorkflowVersionStep(
             IdentityProvider.New<WorkflowVersionStepId>(),
             workflowVersion.Id,
-            source.Order);
+            source.Order,
+            source.Definition);
     }
 
     internal void SetOrder(uint order)

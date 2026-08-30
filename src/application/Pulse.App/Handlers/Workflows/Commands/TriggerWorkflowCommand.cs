@@ -17,7 +17,7 @@ public sealed record TriggerWorkflowCommand : ICommand<ErrorOr<WorkflowInstanceD
     public required WorkflowId WorkflowId { get; init; }
 }
 
-public sealed class TriggerWorkflowCommandAuthorizer : ApiKeyAuthorizer<TriggerWorkflowCommand>;
+public sealed class TriggerWorkflowCommandAuthorizer : ApiKeyPermissionAuthorizer<TriggerWorkflowCommand>;
 
 public sealed class TriggerWorkflowCommandHandler :
     ICommandHandler<TriggerWorkflowCommand, ErrorOr<WorkflowInstanceDto>>

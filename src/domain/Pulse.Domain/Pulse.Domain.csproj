@@ -15,5 +15,9 @@
             <_Parameter1>$(AssemblyName).Tests</_Parameter1>
         </AssemblyAttribute>
     </ItemGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\Pulse.Domain.Channels\Pulse.Domain.Channels.csproj" />
+    </ItemGroup>
 
 </Project>

@@ -7,3 +7,44 @@ Authorization: Bearer {{auth_token}}
 
 {
 }
+
+###
+### Fetch
+###
+POST {{root}}/api/ctrl/v1/plugins/fetch
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "pluginId": "com.nomanova.pulse.plugin.provider.email.console"
+}
+
+###
+### Verify Connect
+###
+POST {{root}}/api/ctrl/v1/plugins/verify-connect
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "pluginId": "com.nomanova.pulse.plugin.provider.email.console",
+  "parameters": {
+    "fromEmail": "info@pulse.com"
+  }
+}
+
+###
+### Verify Invoke
+###
+POST {{root}}/api/ctrl/v1/plugins/verify-invoke
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "pluginId": "com.nomanova.pulse.plugin.provider.email.console",
+  "parameters": {
+    "toEmail": "user@company.com",
+    "subject": "Password Reset",
+    "body": "Press the button to reset password."
+  }
+}

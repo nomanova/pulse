@@ -63,7 +63,9 @@ public partial class WorkflowsController
         var command = new AddWorkflowVersionStepCommand
         {
             WorkflowId = request.WorkflowId.AsIdentity<WorkflowId>(),
-            WorkflowVersionId = request.WorkflowVersionId.AsIdentity<WorkflowVersionId>()
+            WorkflowVersionId = request.WorkflowVersionId.AsIdentity<WorkflowVersionId>(),
+            Channel = request.Channel,
+            Parameters = request.Parameters
         };
 
         var result = await _sender.Send(command, cancellationToken);

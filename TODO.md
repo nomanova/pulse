@@ -1,10 +1,13 @@
 # TODO
 
+Create a one-off sending of a message.
+
 ## Plugins
 
-- Add endpoint to search loaded plugins
-- Add endpoint to fetch single plugin details, including connection parameters
-- Add endpoint to verify plugin connection
+- Endpoints to remove/fetch/search connections
+- Publish the PDK on Nuget
+- Support for loading multiple versions of the same plugin
+- Validation of plugin id and version format
 
 ## Workflows
 
