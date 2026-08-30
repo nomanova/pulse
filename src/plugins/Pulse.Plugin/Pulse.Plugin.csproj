@@ -1,13 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <PackageId>Nomanova.Pulse.Plugin</PackageId>
+        <PackageId>Nomanova.Pulse.Pdk</PackageId>
         <Version>0.0.1</Version>
         <Authors>NOMANOVA</Authors>
+        <Description>Plugin development kit for Pulse.</Description>
+        <PackageTags>pulse;pdk</PackageTags>
+        <RepositoryUrl>https://github.com/nomanova/pulse</RepositoryUrl>
+        <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageProjectUrl>https://pulse.nomanova.com</PackageProjectUrl>
+        <RepositoryType>git</RepositoryType>
+        <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\domain\Pulse.Domain.Channels\Pulse.Domain.Channels.csproj" />
+        <ProjectReference Include="..\..\domain\Pulse.Domain.Channels\Pulse.Domain.Channels.csproj"/>
     </ItemGroup>
-    
+
+    <Target Name="IncludeProjectReferencesInPackage"
+            DependsOnTargets="ResolveReferences"
+            BeforeTargets="GenerateNuspec">
+
+        <ItemGroup>
+            <_ProjectReferenceOutput Include="@(ReferenceCopyLocalPaths)"
+                                     Condition="'%(ReferenceCopyLocalPaths.ReferenceSourceTarget)' == 'ProjectReference'"/>
+        </ItemGroup>
+
+        <ItemGroup>
+            <BuildOutputInPackage Include="@(_ProjectReferenceOutput)"
+                                  TargetPath="lib/$(TargetFramework)"/>
+        </ItemGroup>
+    </Target>
+
+    <ItemGroup>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
 </Project>

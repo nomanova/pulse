@@ -12,7 +12,7 @@
         <RepositoryUrl>https://github.com/nomanova/pulse</RepositoryUrl>
         <PackageLicenseExpression>AGPL-3.0-only</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <PackageProjectUrl>https://github.com/nomanova/pulse</PackageProjectUrl>
+        <PackageProjectUrl>https://pulse.nomanova.com</PackageProjectUrl>
         <RepositoryType>git</RepositoryType>
     </PropertyGroup>
 
