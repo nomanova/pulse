@@ -15,6 +15,7 @@ using Pulse.App.Handlers.Environments.Common.Specifications;
 using Pulse.Domain.Aggregates.Connections;
 using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Channels;
+using Pulse.Domain.Common.Errors;
 using Pulse.Plugin.Providers;
 
 namespace Pulse.App.Handlers.Connections.Commands;
@@ -79,14 +80,13 @@ public class AddConnectionCommandHandler : ICommandHandler<AddConnectionCommand,
 
         if (!connectResult.IsSuccess)
         {
-            var errors = connectResult.Errors.ToList().ConvertAll(error =>
-                Error.Validation(error.ParameterKey, error.Message));
+            var errors = connectResult.Errors.Map();
             return (dynamic)errors;
         }
 
         // Create connection
         var connection = Connection.Create(
-            environment, providerPlugin.Channel, providerPlugin.Metadata.Id, command.Parameters);
+            environment, providerPlugin.Channel, providerPlugin.Metadata.Id, parameters);
 
         _connectionRepository.Add(connection);
         await _unitOfWork.Commit(cancellationToken);

@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ErrorOr;
@@ -7,6 +6,7 @@ using Pulse.App.Common.Authorization.Policies;
 using Pulse.App.Common.Dispatcher;
 using Pulse.App.Common.Services.Interfaces;
 using Pulse.Domain.Channels;
+using Pulse.Domain.Common.Errors;
 
 namespace Pulse.App.Handlers.Plugins.Commands;
 
@@ -49,8 +49,7 @@ public sealed class VerifyInvokePluginCommandHandler : ICommandHandler<VerifyInv
 
         if (!invocationResult.IsSuccess)
         {
-            var errors = invocationResult.Errors.ToList().ConvertAll(error =>
-                Error.Validation(error.ParameterKey, error.Message));
+            var errors = invocationResult.Errors.Map();
             return (dynamic)errors;
         }
 

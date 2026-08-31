@@ -11,10 +11,10 @@ namespace Pulse.Plugin.Provider.Email.SendGrid;
 
 public sealed class Plugin : EmailProviderPlugin
 {
-    private const string ApiKeyConnectionParameter = "api-key";
+    private const string ApiKeyConnectionParameter = "apiKey";
 
     private static readonly ParameterValidationError ErrApiKeyMissing =
-        new("API Key is required", ApiKeyConnectionParameter);
+        new(ApiKeyConnectionParameter, "API Key is required");
 
     private IPluginHostContext _context = null!;
 
@@ -55,7 +55,7 @@ public sealed class Plugin : EmailProviderPlugin
     }
 
     public override async Task Invoke(ProviderPluginInvocationRequest request,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken = default)
     {
         var connectionParameters = request.ConnectionParameters;
         var connectResult = await CanConnect(connectionParameters, cancellationToken);

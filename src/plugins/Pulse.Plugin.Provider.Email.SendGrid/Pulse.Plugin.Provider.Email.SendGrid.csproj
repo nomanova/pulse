@@ -8,6 +8,9 @@
         <ProjectReference Include="..\Pulse.Plugin\Pulse.Plugin.csproj">
             <Private>false</Private>
         </ProjectReference>
+        <ProjectReference Include="..\..\domain\Pulse.Domain.Channels\Pulse.Domain.Channels.csproj">
+            <Private>false</Private>
+        </ProjectReference>
     </ItemGroup>
 
     <ItemGroup>

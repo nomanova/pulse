@@ -73,14 +73,17 @@ X-Api-Key: {{apiKey}}
 ###
 ### Ad-hoc (Email)
 ###
-POST {{root}}/api/data/v1/workflows/trigger
+POST {{root}}/api/data/v1/workflows/ad-hoc
 Content-Type: application/json
 X-Api-Key: {{apiKey}}
 
 {
   "channel": "Email",
   "parameters": {
-    "fromEmail": "info@pulse.com"
+    "fromEmail": "info@pulse.com",
+    "toEmail": "user@company.com",
+    "subject": "Test",
+    "body": "This is a test email"
   }
 }
 

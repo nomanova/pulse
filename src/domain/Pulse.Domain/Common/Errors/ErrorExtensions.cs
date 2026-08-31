@@ -5,6 +5,7 @@ using System.Text;
 using ErrorOr;
 using FluentValidation;
 using FluentValidation.Results;
+using Pulse.Domain.Channels;
 using Pulse.Domain.Common.Exceptions;
 using Throw;
 
@@ -40,6 +41,12 @@ public static class ErrorExtensions
     {
         error.ThrowIfNull();
         return rule.WithErrorCode(error.Value.Code).WithMessage(error.Value.Description);
+    }
+
+    public static List<Error> Map(this IEnumerable<ParameterValidationError> errors)
+    {
+        return errors.ToList().ConvertAll(error =>
+            Error.Validation(error.ParameterKey, error.Message));
     }
 
     extension(ValidationResult validationResult)

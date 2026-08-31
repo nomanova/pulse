@@ -1,19 +1,16 @@
 using System.Collections.Generic;
-using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pulse.Domain.Aggregates.Connections;
+using Pulse.Domain.Channels;
 using Pulse.Infra.Database.Configurations.Base;
 using Pulse.Infra.Database.Converters;
-using Pulse.Infra.Database.ValueComparers;
 using Environment = Pulse.Domain.Aggregates.Environments.Environment;
 
 namespace Pulse.Infra.Database.Configurations;
 
 public sealed class ConnectionConfiguration : DomainEntityTypeConfiguration<Connection>
 {
-    private static readonly JsonSerializerOptions JsonSerializerOptions = new(JsonSerializerDefaults.Web);
-
     public ConnectionConfiguration(DatabaseProvider provider) : base(provider)
     {
     }
@@ -38,8 +35,7 @@ public sealed class ConnectionConfiguration : DomainEntityTypeConfiguration<Conn
         
         builder.Property(connection => connection.Parameters)
             .IsRequired()
-            .HasConversion<JsonValueConverter<Dictionary<string, string>>>()
-            .Metadata.SetValueComparer(new DictionaryValueComparer<string, string>());
+            .HasConversion<JsonValueConverter<IReadOnlyList<ParameterValue>>>();
 
         if (Provider == DatabaseProvider.Postgres)
         {

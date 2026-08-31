@@ -72,6 +72,7 @@ public static class Setup
             services.AddScoped<IUserProvider, UserProvider>();
             services.AddScoped<IEnvironmentProvider, EnvironmentProvider>();
             
+            services.AddScoped<IProviderResolver, ProviderResolver>();
             services.AddScoped<IWorkflowStepExecutor, WorkflowStepExecutor>();
         }
     }

@@ -15,10 +15,13 @@ public sealed class WorkflowStepDefinitionJsonConverter : JsonConverter<IWorkflo
     {
         using var document = JsonDocument.ParseValue(ref reader);
 
-        if (!document.RootElement.TryGetProperty(nameof(IWorkflowStepDefinition.Type), out var typeProperty))
+        var discriminatorName = options.PropertyNamingPolicy?.ConvertName(nameof(IWorkflowStepDefinition.Type))
+                                ?? nameof(IWorkflowStepDefinition.Type);
+
+        if (!document.RootElement.TryGetProperty(discriminatorName, out var typeProperty))
         {
             throw new JsonException(
-                $"Missing workflow step definition discriminator '{nameof(IWorkflowStepDefinition.Type)}'.");
+                $"Missing workflow step definition discriminator '{discriminatorName}'.");
         }
 
         var type = typeProperty.Deserialize<WorkflowStepDefinitionType>(options);

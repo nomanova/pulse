@@ -24,7 +24,8 @@ public sealed class PluginLoadContext : AssemblyLoadContext
 {
     private static readonly HashSet<string> SharedAssemblyNames = new(StringComparer.OrdinalIgnoreCase)
     {
-        "Pulse.Plugin"
+        "Pulse.Plugin",
+        "Pulse.Domain.Channels"
     };
 
     private readonly AssemblyDependencyResolver _resolver;

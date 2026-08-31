@@ -29,11 +29,13 @@ internal sealed class PluginLoaderHostedService : IHostedService
     public async Task StartAsync(CancellationToken cancellationToken)
     {
         // Load core plugins
-        _logger.LogInformation("Loading core plugins");
+        _logger.LogInformation("Loading core plugins...");
         
         var corePluginsPath = Path.Combine(AppContext.BaseDirectory, CorePluginsDirectory);
-        await _pluginManager.LoadFromDirectoryAsync(corePluginsPath, cancellationToken);
+        var corePluginCount = await _pluginManager.LoadFromDirectoryAsync(corePluginsPath, cancellationToken);
 
+        _logger.LogInformation("Loaded {Count} core plugins", corePluginCount); 
+        
         // Load user-provided plugins
         if (string.IsNullOrWhiteSpace(_pluginOptions.RootPath))
         {
@@ -41,8 +43,11 @@ internal sealed class PluginLoaderHostedService : IHostedService
             return;
         }
 
-        _logger.LogInformation("Loading user plugins");
-        await _pluginManager.LoadFromDirectoryAsync(_pluginOptions.RootPath, cancellationToken);
+        _logger.LogInformation("Loading user plugins...");
+        
+        var userPluginCount = await _pluginManager.LoadFromDirectoryAsync(_pluginOptions.RootPath, cancellationToken);
+        
+        _logger.LogInformation("Loaded {Count} user plugins", userPluginCount);
     }
 
     public Task StopAsync(CancellationToken cancellationToken)

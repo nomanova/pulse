@@ -12,6 +12,7 @@ using Pulse.App.Common.Services.Interfaces;
 using Pulse.Domain.Common.Models.Events;
 using Pulse.Domain.Common.Services;
 using Pulse.Infra.Database.Contexts;
+using Pulse.Infra.Database.Converters;
 
 namespace Pulse.Infra.Database.Messaging.Outbox;
 
@@ -230,7 +231,8 @@ public sealed class OutboxProcessor
                 $"Event type '{message.Type}' does not implement {nameof(INotification)}.");
         }
 
-        var notification = JsonSerializer.Deserialize(message.Content, eventType);
+        var notification = JsonSerializer.Deserialize(
+            message.Content, eventType, JsonSerializerOptionsProvider.Options);
 
         if (notification is null)
         {

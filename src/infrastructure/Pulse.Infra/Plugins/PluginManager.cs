@@ -76,14 +76,16 @@ public sealed class PluginManager : IPluginManager
     /// main DLL, e.g., plugins/SamplePlugin/SamplePlugin.dll (+ its private
     /// dependency DLLs alongside it). One folder = one isolated ALC.
     /// </summary>
-    internal async Task LoadFromDirectoryAsync(string pluginsRootPath, CancellationToken cancellationToken = default)
+    internal async Task<uint> LoadFromDirectoryAsync(string pluginsRootPath, CancellationToken cancellationToken = default)
     {
+        uint pluginCount = 0;
+        
         if (!Directory.Exists(pluginsRootPath))
         {
             _logger.LogWarning("Plugins directory {Path} does not exist, skipping load", pluginsRootPath);
-            return;
+            return pluginCount;
         }
-
+        
         foreach (var pluginFolder in Directory.GetDirectories(pluginsRootPath))
         {
             var folderName = Path.GetFileName(pluginFolder);
@@ -98,6 +100,7 @@ public sealed class PluginManager : IPluginManager
             try
             {
                 await LoadPluginAsync(dllPath, cancellationToken);
+                pluginCount++;
             }
             catch (Exception ex)
             {
@@ -105,6 +108,8 @@ public sealed class PluginManager : IPluginManager
                 _logger.LogError(ex, "Failed to load plugin from {Dll}", dllPath);
             }
         }
+        
+        return pluginCount;
     }
 
     private async Task LoadPluginAsync(string dllPath, CancellationToken cancellationToken)

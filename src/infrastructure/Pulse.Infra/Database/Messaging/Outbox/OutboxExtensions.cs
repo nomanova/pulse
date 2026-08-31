@@ -2,6 +2,7 @@ using System.Text.Json;
 using Pulse.App.Common.Services.Interfaces;
 using Pulse.Domain.Common.Services;
 using Pulse.Infra.Database.Contexts;
+using Pulse.Infra.Database.Converters;
 
 namespace Pulse.Infra.Database.Messaging.Outbox;
 
@@ -16,7 +17,7 @@ internal static class OutboxExtensions
         {
             Id = IdentityProvider.New(),
             Type = message.GetType().FullName!,
-            Content = JsonSerializer.Serialize(message),
+            Content = JsonSerializer.Serialize(message, JsonSerializerOptionsProvider.Options),
             OccurredOn = dateTimeProvider.UtcNow
         };
 

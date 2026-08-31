@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Channels;
 using Pulse.Domain.Common.Models.Entities;
-using Pulse.Domain.Common.Models.Enums;
 using Pulse.Domain.Common.Services;
 
 namespace Pulse.Domain.Aggregates.Connections;
@@ -16,9 +15,9 @@ public sealed class Connection : DomainEntity<ConnectionId>, IEnvironmentScoped
     public Channel Channel { get; private set; }
 
     public string PluginId { get; private set; } = null!;
-
-    public Dictionary<string, string> Parameters { get; private set; } = new();
-
+    
+    public IReadOnlyList<ParameterValue> Parameters { get; private set; } = [];
+    
     private Connection()
     {
     }
@@ -28,7 +27,7 @@ public sealed class Connection : DomainEntity<ConnectionId>, IEnvironmentScoped
         EnvironmentId environmentId,
         Channel channel,
         string pluginId,
-        Dictionary<string, string> parameters) : base(id)
+        List<ParameterValue> parameters) : base(id)
     {
         EnvironmentId = environmentId;
         Channel = channel;
@@ -40,7 +39,7 @@ public sealed class Connection : DomainEntity<ConnectionId>, IEnvironmentScoped
         Environment environment,
         Channel channel,
         string pluginId,
-        Dictionary<string, string> parameters)
+        List<ParameterValue> parameters)
     {
         var id = IdentityProvider.New<ConnectionId>();
 

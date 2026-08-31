@@ -1,9 +1,9 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json.Serialization;
 using ErrorOr;
 using Pulse.Domain.Aggregates.Workflows.Enums;
 using Pulse.Domain.Channels;
+using Pulse.Domain.Common.Errors;
 
 namespace Pulse.Domain.Aggregates.Workflows.ValueObjects;
 
@@ -20,31 +20,31 @@ public sealed record ProviderWorkflowStepDefinition : IWorkflowStepDefinition
     public Channel Channel { get; private set; }
 
     [JsonInclude]
-    public IReadOnlyList<ParameterValue> InvocationValues { get; private set; } = [];
+    public IReadOnlyList<ParameterValue> Parameters { get; private set; } = [];
 
+    [JsonConstructor]
     private ProviderWorkflowStepDefinition()
     {
     }
 
     private ProviderWorkflowStepDefinition(
         Channel channel,
-        List<ParameterValue> invocationValues)
+        List<ParameterValue> parameters)
     {
         Channel = channel;
-        InvocationValues = invocationValues;
+        Parameters = parameters;
     }
 
     public static ErrorOr<ProviderWorkflowStepDefinition> ForEmail(
-        List<ParameterValue> invocationValues)
+        List<ParameterValue> parameters)
     {
-        var result = EmailProviderDefinition.Instance.CanInvoke(invocationValues);
+        var result = EmailProviderDefinition.Instance.CanInvoke(parameters);
 
         if (!result.IsSuccess)
         {
-            return result.Errors.ToList().ConvertAll(error =>
-                Error.Validation(error.ParameterKey, error.Message));
+            return result.Errors.Map();
         }
 
-        return new ProviderWorkflowStepDefinition(EmailProviderDefinition.Instance.Channel, invocationValues);
+        return new ProviderWorkflowStepDefinition(EmailProviderDefinition.Instance.Channel, parameters);
     }
 }

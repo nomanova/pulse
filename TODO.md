@@ -5,9 +5,8 @@ Create a one-off sending of a message.
 ## Plugins
 
 - Endpoints to remove/fetch/search connections
-- Publish the PDK on Nuget
 - Support for loading multiple versions of the same plugin
-- Validation of plugin id and version format
+- Validation of plugin id and version format (semver)
 
 ## Workflows
 
@@ -21,6 +20,11 @@ Create a one-off sending of a message.
 - Submit all steps of a workflow using JSON or YAML
 
 - Allow branching / parallel execution of workflow steps
+
+## Connections
+
+- Update endpoint
+- Search/fetch endpoints
 
 ## CLI Tool
 

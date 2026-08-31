@@ -53,8 +53,8 @@ public sealed class Plugin : EmailProviderPlugin
             throw new PluginException($"Invocation validation failed, call {nameof(CanInvoke)} first");
         }
 
-        var fromEmail = connectionParameters.GetValue(EmailProviderDefinition.FromEmailParameterKey);
-        var fromName = connectionParameters.GetValue(EmailProviderDefinition.FromNameParameterKey);
+        var fromEmail = invocationParameters.GetValue(EmailProviderDefinition.FromEmailParameterKey);
+        var fromName = invocationParameters.GetValue(EmailProviderDefinition.FromNameParameterKey);
 
         var toEmail = invocationParameters.GetValue(EmailProviderDefinition.ToEmailParameterKey);
         var toName = invocationParameters.GetValue(EmailProviderDefinition.ToNameParameterKey);
@@ -66,15 +66,13 @@ public sealed class Plugin : EmailProviderPlugin
 
         builder.AppendLine();
         builder.AppendLine(Separator);
-        builder.AppendLine($"From:    {fromName} - {fromEmail}");
-        builder.AppendLine($"To:      {toName} - {toEmail}");
+        builder.AppendLine($"From:    {fromName ?? "<no name>"} - {fromEmail}");
+        builder.AppendLine($"To:      {toName ?? "<no name>"} - {toEmail}");
         builder.AppendLine($"Subject: {subject}");
 
         builder.AppendLine(Separator);
         builder.AppendLine(body);
-
         builder.AppendLine(Separator);
-        builder.AppendLine();
 
         _context.LogInformation(builder.ToString());
     }

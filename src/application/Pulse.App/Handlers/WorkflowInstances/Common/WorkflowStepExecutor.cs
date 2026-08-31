@@ -1,24 +1,32 @@
+using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Pulse.App.Common.Services.Interfaces;
-using Pulse.App.Handlers.Workflows.Common;
-using Pulse.App.Handlers.Workflows.Common.Specifications;
+using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Aggregates.WorkflowInstances;
 using Pulse.Domain.Aggregates.WorkflowInstances.Entities;
+using Pulse.Domain.Aggregates.Workflows.Enums;
+using Pulse.Domain.Aggregates.Workflows.ValueObjects;
+using Pulse.Domain.Common.Exceptions;
+using Pulse.Plugin.Providers;
 
 namespace Pulse.App.Handlers.WorkflowInstances.Common;
 
+public interface IWorkflowStepExecutor
+{
+    Task Execute(
+        WorkflowInstance workflowInstance,
+        WorkflowInstanceStep workflowInstanceStep,
+        CancellationToken cancellationToken = default);
+}
+
 public sealed class WorkflowStepExecutor : IWorkflowStepExecutor
 {
-    private readonly IPluginManager _pluginManager;
-    private readonly IWorkflowVersionRepository _workflowVersionRepository;
+    private readonly IProviderResolver _providerResolver;
 
-    public WorkflowStepExecutor(
-        IPluginManager pluginManager,
-        IWorkflowVersionRepository workflowVersionRepository)
+    public WorkflowStepExecutor(IProviderResolver providerResolver)
     {
-        _pluginManager = pluginManager;
-        _workflowVersionRepository = workflowVersionRepository;
+        _providerResolver = providerResolver;
     }
 
     public async Task Execute(
@@ -26,27 +34,38 @@ public sealed class WorkflowStepExecutor : IWorkflowStepExecutor
         WorkflowInstanceStep workflowInstanceStep,
         CancellationToken cancellationToken = default)
     {
-        var workflowVersionId = workflowInstance.WorkflowVersionId;
+        var environmentId = workflowInstance.EnvironmentId;
+        var stepDefinition = workflowInstanceStep.Definition;
 
-        var specification = new WorkflowVersionByIdSpecification(workflowVersionId);
-        var workflowVersion = await _workflowVersionRepository.SearchOne(specification, cancellationToken);
-
-        if (workflowVersion == null)
+        switch (stepDefinition.Type)
         {
-            return;
+            case WorkflowStepDefinitionType.Provider:
+                await ExecuteProvider(environmentId, (ProviderWorkflowStepDefinition)stepDefinition, cancellationToken);
+                break;
+            default:
+                throw new NotImplementedException(stepDefinition.Type.ToString());
+        }
+    }
+
+    private async Task ExecuteProvider(
+        EnvironmentId environmentId,
+        ProviderWorkflowStepDefinition stepDefinition,
+        CancellationToken cancellationToken)
+    {
+        var context = await _providerResolver.TryResolveFor(
+            environmentId, stepDefinition.Channel, cancellationToken);
+
+        if (context == null)
+        {
+            throw new AppException($"Could not resolve provider for channel {stepDefinition.Channel}");
         }
 
-        var workflowVersionStep = workflowVersion.GetStep(workflowInstanceStep.WorkflowVersionStepId);
-
-        if (workflowVersionStep == null)
+        var request = new ProviderPluginInvocationRequest
         {
-            return;
-        }
+            ConnectionParameters = context.Connection.Parameters.ToList(),
+            InvocationParameters = stepDefinition.Parameters.ToList()
+        };
 
-        //var result = await _pluginManager.InvokeAsync()
-
-        // get plugin id from workflow version step
-        // get plugin parameters from workflow version step
-        // invoke plugin
+        await context.Plugin.Invoke(request, cancellationToken);
     }
 }
