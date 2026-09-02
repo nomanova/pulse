@@ -1,15 +1,16 @@
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using ErrorOr;
 using Pulse.App.Common.Authorization.Policies;
 using Pulse.App.Common.Database;
 using Pulse.App.Common.Dispatcher;
+using Pulse.App.Common.Errors;
 using Pulse.App.Common.Mappers;
 using Pulse.App.Common.Services.Interfaces;
 using Pulse.App.Dto.Common;
 using Pulse.App.Handlers.Connections.Common;
+using Pulse.App.Handlers.Connections.Common.Specifications;
 using Pulse.App.Handlers.Environments.Common;
 using Pulse.App.Handlers.Environments.Common.Specifications;
 using Pulse.Domain.Aggregates.Connections;
@@ -69,9 +70,23 @@ public class AddConnectionCommandHandler : ICommandHandler<AddConnectionCommand,
 
         var plugin = _pluginManager.TryGet(command.PluginId);
 
-        if (plugin is not IProviderPlugin providerPlugin)
+        if (plugin == null)
         {
             return Error.NotFound();
+        }
+
+        if (plugin is not IProviderPlugin providerPlugin)
+        {
+            return ApplicationErrors.Connection.NotProvider;
+        }
+
+        // Check for duplicate
+        var connectionSpecification = new ConnectionByPluginSpecification(environment.Id, providerPlugin.Metadata.Id);
+        var duplicateConnection = await _connectionRepository.SearchOne(connectionSpecification, cancellationToken);
+
+        if (duplicateConnection != null)
+        {
+            return ApplicationErrors.Connection.Duplicate;
         }
 
         // Verify connection

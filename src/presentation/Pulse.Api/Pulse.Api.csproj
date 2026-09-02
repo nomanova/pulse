@@ -33,6 +33,7 @@
         <ItemGroup>
             <PluginProject Include="..\..\plugins\Pulse.Plugin.Provider.Email.Console\Pulse.Plugin.Provider.Email.Console.csproj"/>
             <PluginProject Include="..\..\plugins\Pulse.Plugin.Provider.Email.SendGrid\Pulse.Plugin.Provider.Email.SendGrid.csproj"/>
+            <PluginProject Include="..\..\plugins\Pulse.Plugin.Provider.Sms.Console\Pulse.Plugin.Provider.Sms.Console.csproj"/>
         </ItemGroup>
 
         <MSBuild
@@ -48,6 +49,9 @@
             </PluginOutput>
             <PluginOutput Include="..\..\plugins\Pulse.Plugin.Provider.Email.SendGrid\bin\$(Configuration)\$(TargetFramework)\**\*.*">
                 <PluginName>Pulse.Plugin.Provider.Email.SendGrid</PluginName>
+            </PluginOutput>
+            <PluginOutput Include="..\..\plugins\Pulse.Plugin.Provider.Sms.Console\bin\$(Configuration)\$(TargetFramework)\**\*.*">
+                <PluginName>Pulse.Plugin.Provider.Sms.Console</PluginName>
             </PluginOutput>
         </ItemGroup>
 

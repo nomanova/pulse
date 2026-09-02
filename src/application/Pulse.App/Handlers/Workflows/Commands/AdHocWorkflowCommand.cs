@@ -55,7 +55,7 @@ public sealed class AdHocWorkflowCommandHandler :
         var channel = (Channel)command.Channel;
 
         // Check the presence of at least one provider
-        var specification = new ConnectionByEnvironmentSpecification(environment.Id, channel);
+        var specification = new ConnectionByChannelSpecification(environment.Id, channel);
         var connection = await _connectionRepository.SearchOne(specification, cancellationToken);
 
         if (connection == null)
@@ -67,6 +67,7 @@ public sealed class AdHocWorkflowCommandHandler :
         var stepDefinitionResult = channel switch
         {
             Channel.Email => ProviderWorkflowStepDefinition.ForEmail(command.Parameters.AsParameterValues()),
+            Channel.Sms => ProviderWorkflowStepDefinition.ForSms(command.Parameters.AsParameterValues()),
             _ => throw new NotImplementedException(command.Channel.ToString())
         };
 

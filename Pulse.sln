@@ -93,6 +93,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Plugin.Provider.Email
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Domain.Channels", "src\domain\Pulse.Domain.Channels\Pulse.Domain.Channels.csproj", "{A01DF98A-2A81-441C-BF2F-F50E4582920C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Pulse.Plugin.Provider.Sms.Console", "src\plugins\Pulse.Plugin.Provider.Sms.Console\Pulse.Plugin.Provider.Sms.Console.csproj", "{BF06032D-4E96-41F3-8E86-D44A9F71876F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +127,7 @@ Global
 		{5594146D-0E2D-43B2-9378-658150D936AC} = {F8E1A27E-56B8-40D1-A6EF-AD845FEBC413}
 		{B2F156F2-8A50-4F58-81F8-F589F1DEA3E0} = {F8E1A27E-56B8-40D1-A6EF-AD845FEBC413}
 		{A01DF98A-2A81-441C-BF2F-F50E4582920C} = {FB35BCD8-1BC7-4BD6-8452-03EF5ED474A8}
+		{BF06032D-4E96-41F3-8E86-D44A9F71876F} = {F8E1A27E-56B8-40D1-A6EF-AD845FEBC413}
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{25CDAA92-F4FE-41AA-ABFF-20167D395406}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -227,5 +230,9 @@ Global
 		{A01DF98A-2A81-441C-BF2F-F50E4582920C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A01DF98A-2A81-441C-BF2F-F50E4582920C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A01DF98A-2A81-441C-BF2F-F50E4582920C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF06032D-4E96-41F3-8E86-D44A9F71876F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF06032D-4E96-41F3-8E86-D44A9F71876F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF06032D-4E96-41F3-8E86-D44A9F71876F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF06032D-4E96-41F3-8E86-D44A9F71876F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

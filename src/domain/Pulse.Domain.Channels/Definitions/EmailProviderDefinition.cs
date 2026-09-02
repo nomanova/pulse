@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Pulse.Domain.Channels;
+namespace Pulse.Domain.Channels.Definitions;
 
 public sealed class EmailProviderDefinition : IProviderDefinition
 {

@@ -6,19 +6,19 @@ using Pulse.Domain.Channels;
 using Pulse.Domain.Channels.Definitions;
 using Pulse.Plugin.Providers;
 
-namespace Pulse.Plugin.Provider.Email.Console;
+namespace Pulse.Plugin.Provider.Sms.Console;
 
-public sealed class Plugin : EmailProviderPlugin
+public sealed class Plugin : SmsProviderPlugin
 {
     private const string Separator = "*************************************************************";
 
     private IPluginHostContext? _context;
 
     public override PluginMetadata Metadata => new(
-        Id: "com.nomanova.pulse.plugin.provider.email.console",
-        DisplayName: "Console Email",
+        Id: "com.nomanova.pulse.plugin.provider.sms.console",
+        DisplayName: "Console SMS",
         Version: "1.0.0",
-        Description: "Print emails on the log console (for debugging purposes)"
+        Description: "Print SMS messages on the log console (for debugging purposes)"
     );
 
     public override Task Initialize(IPluginHostContext hostContext, CancellationToken cancellationToken = default)
@@ -59,22 +59,14 @@ public sealed class Plugin : EmailProviderPlugin
             throw new PluginException($"Invocation validation failed, call {nameof(CanInvoke)} first");
         }
 
-        var fromEmail = invocationParameters.GetValue(EmailProviderDefinition.FromEmailParameterKey);
-        var fromName = invocationParameters.GetValue(EmailProviderDefinition.FromNameParameterKey);
-
-        var toEmail = invocationParameters.GetValue(EmailProviderDefinition.ToEmailParameterKey);
-        var toName = invocationParameters.GetValue(EmailProviderDefinition.ToNameParameterKey);
-
-        var subject = invocationParameters.GetValue(EmailProviderDefinition.SubjectParameterKey);
-        var body = invocationParameters.GetValue(EmailProviderDefinition.BodyParameterKey);
+        var toPhoneNumber = invocationParameters.GetValue(SmsProviderDefinition.ToPhoneNumberParameterKey);
+        var body = invocationParameters.GetValue(SmsProviderDefinition.BodyParameterKey);
 
         var builder = new StringBuilder();
 
         builder.AppendLine();
         builder.AppendLine(Separator);
-        builder.AppendLine($"From:    {fromName ?? "<no name>"} - {fromEmail}");
-        builder.AppendLine($"To:      {toName ?? "<no name>"} - {toEmail}");
-        builder.AppendLine($"Subject: {subject}");
+        builder.AppendLine($"To:      {toPhoneNumber}");
 
         builder.AppendLine(Separator);
         builder.AppendLine(body);

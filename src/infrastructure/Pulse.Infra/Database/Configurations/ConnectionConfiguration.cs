@@ -5,6 +5,7 @@ using Pulse.Domain.Aggregates.Connections;
 using Pulse.Domain.Channels;
 using Pulse.Infra.Database.Configurations.Base;
 using Pulse.Infra.Database.Converters;
+using Pulse.Infra.Database.ValueComparers;
 using Environment = Pulse.Domain.Aggregates.Environments.Environment;
 
 namespace Pulse.Infra.Database.Configurations;
@@ -33,10 +34,12 @@ public sealed class ConnectionConfiguration : DomainEntityTypeConfiguration<Conn
         builder.Property(connection => connection.PluginId)
             .IsRequired();
         
-        builder.Property(connection => connection.Parameters)
+        var parametersProperty = builder.Property(connection => connection.Parameters)
             .IsRequired()
             .HasConversion<JsonValueConverter<IReadOnlyList<ParameterValue>>>();
 
+        parametersProperty.Metadata.SetValueComparer(new ParameterValueListComparer());
+        
         if (Provider == DatabaseProvider.Postgres)
         {
             builder.Property(connection => connection.Parameters)

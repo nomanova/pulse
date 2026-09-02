@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Pulse.Domain.Channels;
+using Pulse.Domain.Channels.Definitions;
 using Pulse.Plugin.Providers;
 using SendGrid;
 using SendGrid.Helpers.Mail;
@@ -16,7 +17,7 @@ public sealed class Plugin : EmailProviderPlugin
     private static readonly ParameterValidationError ErrApiKeyMissing =
         new(ApiKeyConnectionParameter, "API Key is required");
 
-    private IPluginHostContext _context = null!;
+    private IPluginHostContext? _context;
 
     public override PluginMetadata Metadata => new(
         Id: "com.nomanova.pulse.plugin.provider.email.sendgrid",
@@ -57,6 +58,11 @@ public sealed class Plugin : EmailProviderPlugin
     public override async Task Invoke(ProviderPluginInvocationRequest request,
         CancellationToken cancellationToken = default)
     {
+        if (_context == null)
+        {
+            throw new PluginException("Plugin not initialized");
+        }
+        
         var connectionParameters = request.ConnectionParameters;
         var connectResult = await CanConnect(connectionParameters, cancellationToken);
 

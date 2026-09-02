@@ -38,7 +38,7 @@ public sealed class ProviderResolver : IProviderResolver
         EnvironmentId environmentId, Channel channel, CancellationToken cancellationToken = default)
     {
         // Resolve connection
-        var specification = new ConnectionByEnvironmentSpecification(environmentId, channel);
+        var specification = new ConnectionByChannelSpecification(environmentId, channel);
         var connections = await _connectionRepository.Search(specification, cancellationToken);
 
         if (connections.Count == 0)

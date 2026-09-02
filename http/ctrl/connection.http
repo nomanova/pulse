@@ -27,6 +27,19 @@ Authorization: Bearer {{auth_token}}
 }
 
 ###
+### Add (SMS - Console)
+###
+POST {{root}}/api/ctrl/v1/connections/add
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "environmentId": "{{envId}}",
+  "pluginId": "com.nomanova.pulse.plugin.provider.sms.console",
+  "parameters": {}
+}
+
+###
 ### Remove
 ###
 POST {{root}}/api/ctrl/v1/connections/remove
