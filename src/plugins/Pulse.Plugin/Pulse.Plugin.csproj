@@ -12,6 +12,10 @@
         <PackageProjectUrl>https://pulse.nomanova.com</PackageProjectUrl>
         <RepositoryType>git</RepositoryType>
         <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+        <NoWarn>$(NoWarn);NU5128</NoWarn>
+        <TargetsForTfmSpecificBuildOutput>
+            $(TargetsForTfmSpecificBuildOutput);IncludeProjectReferencesInPackage
+        </TargetsForTfmSpecificBuildOutput>
     </PropertyGroup>
 
     <ItemGroup>
@@ -19,17 +23,11 @@
     </ItemGroup>
 
     <Target Name="IncludeProjectReferencesInPackage"
-            DependsOnTargets="ResolveReferences"
-            BeforeTargets="GenerateNuspec">
+            DependsOnTargets="ResolveReferences">
 
         <ItemGroup>
-            <_ProjectReferenceOutput Include="@(ReferenceCopyLocalPaths)"
-                                     Condition="'%(ReferenceCopyLocalPaths.ReferenceSourceTarget)' == 'ProjectReference'"/>
-        </ItemGroup>
-
-        <ItemGroup>
-            <BuildOutputInPackage Include="@(_ProjectReferenceOutput)"
-                                  TargetPath="lib/$(TargetFramework)"/>
+            <BuildOutputInPackage Include="@(ReferenceCopyLocalPaths)"
+                                  Condition="'%(ReferenceCopyLocalPaths.ReferenceSourceTarget)' == 'ProjectReference'" />
         </ItemGroup>
     </Target>
 
