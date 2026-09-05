@@ -47,9 +47,17 @@ public static class AppHost
                 .WithEnvironment("Database__Provider", dbProvider)
                 .WithEnvironment("Database__ConnectionString", dbResource.Resource.ConnectionStringExpression);
             
+            var web = builder
+                .AddProject<Projects.Pulse_Web>("web")
+                .WithReference(api)
+                .WaitFor(api);
+            
             builder
                 .AddProject<Projects.Pulse_Proxy>("proxy")
-                .WaitFor(api);
+                .WithReference(api)
+                .WithReference(web)
+                .WaitFor(api)
+                .WaitFor(web);
         }
 
         await builder.Build().RunAsync(cancellationToken);
