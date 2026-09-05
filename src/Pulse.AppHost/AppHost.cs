@@ -39,13 +39,17 @@ public static class AppHost
 
         if (!dbOnly)
         {
-            builder
+            var api = builder
                 .AddProject<Projects.Pulse_Api>("api")
                 .WithReference(dbResource)
                 .WaitFor(dbResource)
                 .WithEnvironment("PULSE_ADMIN_PASSWORD", "Admin123456")
                 .WithEnvironment("Database__Provider", dbProvider)
                 .WithEnvironment("Database__ConnectionString", dbResource.Resource.ConnectionStringExpression);
+            
+            builder
+                .AddProject<Projects.Pulse_Proxy>("proxy")
+                .WaitFor(api);
         }
 
         await builder.Build().RunAsync(cancellationToken);

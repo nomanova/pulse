@@ -7,10 +7,12 @@
 
   <ItemGroup>
     <ProjectReference Include="..\presentation\Pulse.Api\Pulse.Api.csproj" />
+    <ProjectReference Include="..\Pulse.Proxy\Pulse.Proxy.csproj" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.PostgreSQL" Version="13.4.6" />
+    <PackageReference Include="Aspire.Hosting.Yarp" Version="13.5.3" />
     <PackageReference Include="CommunityToolkit.Aspire.Hosting.Sqlite" Version="13.3.0" />
   </ItemGroup>
 
