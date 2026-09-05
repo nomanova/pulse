@@ -6,8 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Pulse.Api.Ctrl.Contract;
 using Pulse.Api.Ctrl.Controllers.Base;
 using Pulse.App.Common.Dispatcher;
+using Pulse.App.Common.Requests;
 using Pulse.App.Dto.Common;
+using Pulse.App.Dto.Connections;
 using Pulse.App.Handlers.Connections.Commands;
+using Pulse.App.Handlers.Connections.Queries;
 using Pulse.Domain.Aggregates.Connections;
 using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Common.Models.Entities;
@@ -38,6 +41,41 @@ public sealed class ConnectionsController : CtrlApiController
         };
 
         var result = await _sender.Send(command, cancellationToken);
+
+        return result.Match(Ok, Problem);
+    }
+
+    [HttpPost(ActionFetch)]
+    [ProducesResponseType(typeof(ConnectionDto), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Fetch(
+        [FromBody] FetchConnectionRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new FetchConnectionQuery
+        {
+            ConnectionId = request.ConnectionId.AsIdentity<ConnectionId>()
+        };
+
+        var result = await _sender.Send(query, cancellationToken);
+
+        return result.Match(Ok, Problem);
+    }
+
+    [HttpPost(ActionSearch)]
+    [ProducesResponseType(typeof(PagedSearchResultDto<ConnectionDto>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> Search(
+        [FromBody] SearchConnectionsRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var query = new SearchConnectionsQuery
+        {
+            LastId = request.LastId,
+            PageSize = request.PageSize ?? ISearchQuery.DefaultPageSize,
+            Ascending = request.Ascending,
+            EnvironmentId = request.EnvironmentId.AsIdentity<EnvironmentId>()
+        };
+
+        var result = await _sender.Send(query, cancellationToken);
 
         return result.Match(Ok, Problem);
     }

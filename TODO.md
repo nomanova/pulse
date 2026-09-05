@@ -1,10 +1,12 @@
 # TODO
 
-Create a one-off sending of a message.
+# Providers
+
+- SMTP Email plugin
+- Twilio SMS plugin
 
 ## Plugins
 
-- Endpoints to remove/fetch/search connections
 - Support for loading multiple versions of the same plugin
 - Validation of plugin id and version format (semver)
 
@@ -21,6 +23,10 @@ Create a one-off sending of a message.
 
 - Allow branching / parallel execution of workflow steps
 
+# Workflow instances
+
+- Allow fetching workflow status through its instance
+
 ## Connections
 
 - Update endpoint
@@ -32,6 +38,14 @@ Create a one-off sending of a message.
 - Confirmation on delete
 - Sanitize server url
 - When removing a server/organization/application/environment and only one is left, auto-select it
+
+## SDK
+
+- Initial version
+
+# Web
+
+- Initial version
 
 ## Others
 

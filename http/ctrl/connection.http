@@ -40,6 +40,32 @@ Authorization: Bearer {{auth_token}}
 }
 
 ###
+### Fetch
+###
+POST {{root}}/api/ctrl/v1/connections/fetch
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "connectionId": "3gqjyyhe7chfklwvvmabi21sk"
+}
+
+###
+### Search
+###
+POST {{root}}/api/ctrl/v1/connections/search
+Content-Type: application/json
+Authorization: Bearer {{auth_token}}
+
+{
+  "lastId": null,
+  "pageSize": null,
+  "ascending": true,
+  "environmentId": "{{envId}}",
+  "status": null
+}
+
+###
 ### Remove
 ###
 POST {{root}}/api/ctrl/v1/connections/remove

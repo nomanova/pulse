@@ -16,7 +16,7 @@ public sealed record PluginDto
     
     public ChannelDto? Channel { get; set; }
     
-    public List<PluginParameterDefinitionDto>? InvocationParameters { get; set; }
+    public List<ParameterDefinitionDto>? InvocationParameters { get; set; }
     
-    public List<PluginParameterDefinitionDto>? ConnectionParameters { get; set; }
+    public List<ParameterDefinitionDto>? ConnectionParameters { get; set; }
 }

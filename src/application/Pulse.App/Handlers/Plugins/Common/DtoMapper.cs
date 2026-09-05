@@ -34,9 +34,9 @@ public static class DtoMapper
         return dto;
     }
 
-    private static List<PluginParameterDefinitionDto> ToDto(this IEnumerable<ParameterDefinition> parameters)
+    private static List<ParameterDefinitionDto> ToDto(this IEnumerable<ParameterDefinition> parameters)
     {
-        return parameters.Select(p => new PluginParameterDefinitionDto
+        return parameters.Select(p => new ParameterDefinitionDto
         {
             Key = p.Key,
             Name = p.Name,

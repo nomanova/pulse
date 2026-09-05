@@ -13,7 +13,9 @@ public sealed class CtrlApiClient : ApiClient, ICtrlApiClient
     public IApplicationsService Applications { get; private set; } = null!;
 
     public IEnvironmentsService Environments { get; private set; } = null!;
-    
+
+    public IConnectionsService Connections { get; private set; } = null!;
+
     public CtrlApiClient(ApiClientOptions options) : base(options)
     {
         CreateServices(options);
@@ -25,5 +27,6 @@ public sealed class CtrlApiClient : ApiClient, ICtrlApiClient
         Organizations = new OrganizationsService(options.EndpointProvider, options.TokenProvider, HttpClient);
         Applications = new ApplicationsService(options.EndpointProvider, options.TokenProvider, HttpClient);
         Environments = new EnvironmentsService(options.EndpointProvider, options.TokenProvider, HttpClient);
+        Connections = new ConnectionsService(options.EndpointProvider, options.TokenProvider, HttpClient);
     }
 }

@@ -11,4 +11,6 @@ public interface ICtrlApiClient
     IApplicationsService Applications { get; }
     
     IEnvironmentsService Environments { get; }
+    
+    IConnectionsService Connections { get; }
 }

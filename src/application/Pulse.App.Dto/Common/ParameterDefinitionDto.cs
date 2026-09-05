@@ -1,6 +1,6 @@
-namespace Pulse.App.Dto.Plugins;
+namespace Pulse.App.Dto.Common;
 
-public record PluginParameterDefinitionDto
+public record ParameterDefinitionDto
 {
     public required string Key { get; init; }
     
