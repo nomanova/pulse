@@ -78,6 +78,7 @@ public static class Setup
 
         public WebAssemblyHostBuilder AddServices()
         {
+            builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
             builder.Services.AddScoped<IPageNavigator, PageNavigator>();
             builder.Services.AddScoped<IClipboard, Clipboard>();
 
