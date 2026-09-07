@@ -1,9 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-    <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
-        <Nullable>enable</Nullable>
-    </PropertyGroup>
+    <ItemGroup>
+        <PackageReference Include="Humanizer" Version="3.0.10" />
+        <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.9" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Pulse.Api.Ctrl.Client\Pulse.Api.Ctrl.Client.csproj" />
+      <ProjectReference Include="..\Pulse.Api.Ctrl.Contract\Pulse.Api.Ctrl.Contract.csproj" />
+      <ProjectReference Include="..\Pulse.Api.Data.Client\Pulse.Api.Data.Client.csproj" />
+      <ProjectReference Include="..\Pulse.Api.Data.Contract\Pulse.Api.Data.Contract.csproj" />
+    </ItemGroup>
 
 </Project>
