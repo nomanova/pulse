@@ -17,6 +17,7 @@ public static class Program
             .AddLogging()
             .AddApi()
             .AddMud()
+            .AddSecurity()
             .AddServices()
             .AddCore();
 

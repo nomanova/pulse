@@ -8,7 +8,7 @@ using Pulse.Web.Core.Services.Interfaces;
 
 namespace Pulse.Web.Common.Services;
 
-public sealed class LocalStorageService(IJSRuntime jsRuntime) : ILocalStorageService
+public sealed class LocalStorage(IJSRuntime jsRuntime) : ILocalStorage
 {
     private static readonly JsonSerializerOptions JsonSerializerOptions = new(JsonSerializerDefaults.Web);
 

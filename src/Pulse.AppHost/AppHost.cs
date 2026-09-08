@@ -30,6 +30,11 @@ public static class AppHost
             bool.TryParse(await dbOnlyParameter.Resource.GetValueAsync(cancellationToken), out var parsedDbOnly) &&
             parsedDbOnly;
 
+        var withWebParameter = builder.AddParameter("WithWeb");
+        var withWeb = 
+            bool.TryParse(await withWebParameter.Resource.GetValueAsync(cancellationToken), out var parsedWithWeb) && 
+            parsedWithWeb;
+        
         var dbResource = dbProvider switch
         {
             DbProviderSqlite => await builder.WithSqlite(cancellationToken),
@@ -47,17 +52,19 @@ public static class AppHost
                 .WithEnvironment("Database__Provider", dbProvider)
                 .WithEnvironment("Database__ConnectionString", dbResource.Resource.ConnectionStringExpression);
             
-            var web = builder
-                .AddProject<Projects.Pulse_Web>("web")
-                .WithReference(api)
-                .WaitFor(api);
-            
-            builder
-                .AddProject<Projects.Pulse_Proxy>("proxy")
-                .WithReference(api)
-                .WithReference(web)
-                .WaitFor(api)
-                .WaitFor(web);
+            var proxyResourceBuilder = builder.AddProject<Projects.Pulse_Proxy>("proxy")
+                    .WithReference(api)
+                    .WaitFor(api);
+
+            if (withWeb)
+            {
+                var web = builder
+                    .AddProject<Projects.Pulse_Web>("web")
+                    .WithReference(api)
+                    .WaitFor(api);
+                
+                proxyResourceBuilder.WithReference(web).WaitFor(web);
+            }
         }
 
         await builder.Build().RunAsync(cancellationToken);

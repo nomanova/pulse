@@ -1,4 +1,5 @@
 using System;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using MudExtensions.Services;
 using Pulse.Api.Ctrl.Client;
 using Pulse.Api.Data.Client;
 using Pulse.Web.Common;
+using Pulse.Web.Common.Security;
 using Pulse.Web.Common.Services;
 using Pulse.Web.Core;
 using Pulse.Web.Core.Services.Interfaces;
@@ -76,9 +78,18 @@ public static class Setup
             return builder;
         }
 
+        public WebAssemblyHostBuilder AddSecurity()
+        {
+            builder.Services.AddScoped<AuthenticationStateProvider, UserAuthenticationStateProvider>();
+            builder.Services.AddScoped<IAuthenticationStore, AuthenticationStore>();
+            builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
+            
+            return builder;
+        }
+
         public WebAssemblyHostBuilder AddServices()
         {
-            builder.Services.AddScoped<ILocalStorageService, LocalStorageService>();
+            builder.Services.AddScoped<ILocalStorage, LocalStorage>();
             builder.Services.AddScoped<IPageNavigator, PageNavigator>();
             builder.Services.AddScoped<IClipboard, Clipboard>();
 

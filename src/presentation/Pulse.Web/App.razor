@@ -1,10 +1,12 @@
 ﻿@using Pulse.Web.Common.Layouts
+@using Pulse.Web.Pages.Common
+
 <MudThemeProvider Theme="Theme"/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 <MudPopoverProvider/>
 
-<Router AppAssembly="@typeof(App).Assembly" NotFoundPage="typeof(Pages.NotFound)">
+<Router AppAssembly="@typeof(App).Assembly" NotFoundPage="typeof(NotFound)">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(CmpMainLayout)"/>
         <FocusOnNavigate RouteData="@routeData" Selector="h1"/>

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Pulse.Web.Core.Services.Interfaces;
 
-public interface ILocalStorageService
+public interface ILocalStorage
 {
     ValueTask ClearAsync(CancellationToken cancellationToken = default);
 
