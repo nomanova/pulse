@@ -5,6 +5,94 @@
 @source "../**/*.html";
 @source "../**/*.cs";
 
+@theme {
+    --color-app-white: #ffffff;
+    --color-app-black: #000000;
+
+    --color-app-primary: #3083c7;
+    --color-app-secondary: #3baea3;
+
+    --color-app-success: #39c171;
+    --color-app-warning: #f0ad2f;
+    --color-app-error: #ed4646;
+
+    --color-app-blue-50: #f2f7fd;
+    --color-app-blue-100: #e5eef9;
+    --color-app-blue-200: #c4dcf3;
+    --color-app-blue-300: #91c0e8;
+    --color-app-blue-400: #56a0da;
+    --color-app-blue-500: #3083c7;
+    --color-app-blue-600: #2167a8;
+    --color-app-blue-700: #1c5388;
+    --color-app-blue-800: #1b4771;
+    --color-app-blue-900: #1b3c5f;
+    --color-app-blue-950: #12273f;
+
+    --color-app-cyan-50: #f2fbf9;
+    --color-app-cyan-100: #d2f5ef;
+    --color-app-cyan-200: #a5eadf;
+    --color-app-cyan-300: #70d8cb;
+    --color-app-cyan-400: #3baea3;
+    --color-app-cyan-500: #29a39a;
+    --color-app-cyan-600: #1e837d;
+    --color-app-cyan-700: #1c6965;
+    --color-app-cyan-800: #1b5453;
+    --color-app-cyan-900: #1a4745;
+    --color-app-cyan-950: #092a2a;
+
+    --color-app-grey-50: #f8fafa;
+    --color-app-grey-100: #f2f4f5;
+    --color-app-grey-200: #e7ebed;
+    --color-app-grey-300: #d4dbde;
+    --color-app-grey-400: #bbc4ca;
+    --color-app-grey-500: #9eabb4;
+    --color-app-grey-600: #8794a0;
+    --color-app-grey-700: #74808d;
+    --color-app-grey-800: #616c76;
+    --color-app-grey-900: #515961;
+    --color-app-grey-950: #353b40;
+
+    --color-app-green-50: #f1fcf5;
+    --color-app-green-100: #e0f8e9;
+    --color-app-green-200: #c2f0d4;
+    --color-app-green-300: #92e3b3;
+    --color-app-green-400: #5bcd8a;
+    --color-app-green-500: #39c171;
+    --color-app-green-600: #269353;
+    --color-app-green-700: #217444;
+    --color-app-green-800: #1f5c39;
+    --color-app-green-900: #1b4c30;
+    --color-app-green-950: #0a2918;
+
+    --color-app-red-50: #fef2f2;
+    --color-app-red-100: #fee2e2;
+    --color-app-red-200: #fdcbcb;
+    --color-app-red-300: #fba6a6;
+    --color-app-red-400: #f67373;
+    --color-app-red-500: #ed4646;
+    --color-app-red-600: #da2828;
+    --color-app-red-700: #b71e1e;
+    --color-app-red-800: #981c1c;
+    --color-app-red-900: #7e1e1e;
+    --color-app-red-950: #440b0b;
+
+    --color-app-yellow-50: #fef9ec;
+    --color-app-yellow-100: #fbeeca;
+    --color-app-yellow-200: #f7db90;
+    --color-app-yellow-300: #f3c456;
+    --color-app-yellow-400: #f0ad2f;
+    --color-app-yellow-500: #e98d17;
+    --color-app-yellow-600: #ce6911;
+    --color-app-yellow-700: #ab4a12;
+    --color-app-yellow-800: #8b3a15;
+    --color-app-yellow-900: #733014;
+    --color-app-yellow-950: #421706;
+}
+
+body {
+    overflow: hidden;
+}
+
 /* ==========================================================================
    Blazor Standard Styles (Loading & Error UI)
    ========================================================================== */

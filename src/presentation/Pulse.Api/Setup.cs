@@ -70,6 +70,8 @@ internal static class Setup
         app.UseFileServer();
         app.UseRouting();
 
+        app.UseCors();
+        
         app.UseAuthentication();
         app.UseAuthorization();
 

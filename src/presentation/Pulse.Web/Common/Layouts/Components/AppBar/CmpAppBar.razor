@@ -1,7 +1,14 @@
 <div class="flex flex-col">
-    App Bar
+    <div class="flex px-6 bg-app-blue-500" style="height: 48px">
+        <CmpAppBarLogo/>
+        <MudSpacer/>
+        <AuthorizeView>
+            <CmpAppBarUserItem/>
+        </AuthorizeView>
+    </div>
 </div>
 
-@code {
-    
+@code
+{
+    [CascadingParameter] private Task<AuthenticationState> AuthenticationStateTask { get; set; } = null!;
 }

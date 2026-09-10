@@ -80,7 +80,12 @@ public static class Setup
 
         public WebAssemblyHostBuilder AddSecurity()
         {
-            builder.Services.AddScoped<AuthenticationStateProvider, UserAuthenticationStateProvider>();
+            builder.Services.AddAuthorizationCore();
+
+            builder.Services.AddScoped<UserAuthenticationStateProvider>();
+            builder.Services.AddScoped<AuthenticationStateProvider>(provider =>
+                provider.GetRequiredService<UserAuthenticationStateProvider>());
+            
             builder.Services.AddScoped<IAuthenticationStore, AuthenticationStore>();
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();
             

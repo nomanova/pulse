@@ -1,4 +1,6 @@
-﻿@using Pulse.Web.Common.Layouts
+﻿@using Pulse.Web.Common.Components
+@using Pulse.Web.Common.Layouts
+@using Pulse.Web.Common.Navigation
 @using Pulse.Web.Pages.Common
 
 <MudThemeProvider Theme="Theme"/>
@@ -6,9 +8,18 @@
 <MudSnackbarProvider/>
 <MudPopoverProvider/>
 
-<Router AppAssembly="@typeof(App).Assembly" NotFoundPage="typeof(NotFound)">
-    <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(CmpMainLayout)"/>
-        <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
-    </Found>
-</Router>
+<CascadingAuthenticationState>
+    <Router AppAssembly="@typeof(App).Assembly" NotFoundPage="typeof(NotFound)">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(CmpMainLayout)">
+                <NotAuthorized>
+                    <RedirectNotAuthorized/>
+                </NotAuthorized>
+                <Authorizing>
+                    <CmpLoader/>
+                </Authorizing>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+        </Found>
+    </Router>
+</CascadingAuthenticationState>

@@ -1,11 +1,76 @@
 @attribute [AllowAnonymous]
 @page "/sign-in"
 @layout CmpMainLayout
+@inherits MvvmComponentBase<SignInViewModel>
 
 <CmpCenteredPage>
-    
+
     <MudPaper Class="pa-6" Outlined="true">
         <MudText Typo="Typo.h4">Sign in</MudText>
+
+        @if (ViewModel.IsFailed)
+        {
+            <MudAlert Class="mt-6 mb-6" Severity="Severity.Error">@(ViewModel.ErrorMessage)</MudAlert>
+        }
+
+        <MudForm Model="@ViewModel.Model"
+                 @ref="@_form"
+                 Validation="@(ViewModel.ModelValidator.ValidateValue)"
+                 ValidationDelay="0"
+                 FieldChanged="@(() => ViewModel.FieldChangedCommand.Execute(null))">
+
+            <MudTextField @bind-Value="@ViewModel.Model.Username"
+                          For="@(() => ViewModel.Model.Username)"
+                          Class="mt-4"
+                          Immediate="false"
+                          MaxLength="150"
+                          Required="true"
+                          InputType="InputType.Text"
+                          Disabled="@ViewModel.IsLoading"
+                          Label="Username"
+                          data-test-id="inp-username"/>
+
+            <MudTextField @bind-Value="@ViewModel.Model.Password"
+                          For="@(() => ViewModel.Model.Password)"
+                          Class="mt-4"
+                          Immediate="false"
+                          MaxLength="50"
+                          Required="true"
+                          InputType="@(ViewModel.IsPasswordShown ? InputType.Text : InputType.Password)"
+                          Disabled="@ViewModel.IsLoading"
+                          Label="Password"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@(ViewModel.IsPasswordShown ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff)"
+                          OnAdornmentClick="@(() => ViewModel.TogglePasswordCommand.Execute(null))"
+                          data-test-id="inp-password"/>
+
+            <div class="mt-2">
+                <CmpButton
+                    Text="Sign in"
+                    Class="w-full mt-6"
+                    IsLoading="@ViewModel.IsLoading"
+                    UseCaps="true"
+                    OnClick="@OnSubmit"
+                    data-test-id="btn-sign-in"/>
+            </div>
+
+        </MudForm>
     </MudPaper>
 
 </CmpCenteredPage>
+
+@code{
+
+    private MudForm _form = null!;
+
+    private async Task OnSubmit()
+    {
+        await _form.ValidateAsync();
+
+        if (_form.IsValid)
+        {
+            await ViewModel.SubmitCommand.ExecuteAsync(null);
+        }
+    }
+
+}

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Pulse.Domain.Aggregates.Users.Services;
 using Pulse.Infra.Security.Authentication;
 using Pulse.Infra.Security.Authorization;
+using Pulse.Infra.Security.Cors;
 using Pulse.Infra.Security.DataProtection;
 using Pulse.Infra.Security.Password;
 using Throw;
@@ -11,25 +12,28 @@ namespace Pulse.Infra.Security;
 
 public static class Setup
 {
-    public static IServiceCollection AddSecurity(
-        this IServiceCollection services, IConfiguration configuration)
+    extension(IServiceCollection services)
     {
-        services.ThrowIfNull();
-        configuration.ThrowIfNull();
+        public IServiceCollection AddSecurity(IConfiguration configuration)
+        {
+            services.ThrowIfNull();
+            configuration.ThrowIfNull();
         
-        services
-            .AddAppDataProtection(configuration)
-            .AddAppUserServices()
-            .AddAppAuthentication(configuration)
-            .AddAppAuthorization();
+            services
+                .AddAppDataProtection(configuration)
+                .AddAppUserServices()
+                .AddAppAuthentication(configuration)
+                .AddAppCors(configuration)
+                .AddAppAuthorization();
         
-        return services;
-    }
+            return services;
+        }
 
-    private static IServiceCollection AddAppUserServices(this IServiceCollection services)
-    {
-        services.AddSingleton<IUserPasswordHasher, BCryptPasswordHasher>();
+        private IServiceCollection AddAppUserServices()
+        {
+            services.AddSingleton<IUserPasswordHasher, BCryptPasswordHasher>();
         
-        return services;
+            return services;
+        }
     }
 }

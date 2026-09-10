@@ -1,0 +1,48 @@
+@inject NavigationManager NavigationManager
+@inject IAuthenticationService AuthenticationService
+
+<MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
+    <ActivatorContent>
+        <MudButton OnClick="@context.ToggleAsync" Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" Class="rounded-0 pr-2"
+                   Style="height: 48px" data-test-id="btn-appbar-user">
+            <div class="d-flex align-center">
+                <div style="display: inline-block">
+                    <MudText Align="Align.Right" style="width: 100%; font-size: 14px; font-weight: bold;"
+                             data-test-id="lbl-appbar-user">@(_username)</MudText>
+                </div>
+                <div class="d-flex align-center pl-4">
+                    <MudIcon Icon="@Icons.Material.Outlined.AccountCircle" Style="font-size: 24px;"/>
+                </div>
+            </div>
+        </MudButton>
+    </ActivatorContent>
+    <ChildContent>
+        <MudMenuItem
+            OnClick="@OnSignOut"
+            Icon="@Icons.Material.Filled.Logout"
+            IconColor="@Color.Tertiary"
+            data-test-id="btn-appbar-user-sign-out">
+            Sign out
+        </MudMenuItem>
+    </ChildContent>
+</MudMenu>
+
+@code {
+
+    private string _username = null!;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        
+        var userProfile = await AuthenticationService.UserProfile();
+        _username = userProfile?.Username ?? string.Empty;
+    }
+
+    private async Task OnSignOut()
+    {
+        await AuthenticationService.SignOut();
+        NavigationManager.NavigateTo(Routes.SignIn);
+    }
+
+}

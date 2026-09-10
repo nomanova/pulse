@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using Pulse.Api.Client.Common;
 using Pulse.Api.Ctrl.Client;
 using Pulse.Api.Ctrl.Contract;
+using Pulse.Web.Core.Models;
 using Pulse.Web.Core.Services.Interfaces;
 
 namespace Pulse.Web.Common.Security;
@@ -20,6 +21,21 @@ public sealed class AuthenticationService : IAuthenticationService
         _apiClient = apiClient;
         _authenticationStateProvider = authenticationStateProvider;
         _authenticationStore = authenticationStore;
+    }
+
+    public async Task<UserProfile?> UserProfile()
+    {
+        var authDto = await _authenticationStore.Get();
+        if (authDto is null)
+        {
+            return null;
+        }
+
+        return new UserProfile
+        {
+            Id = authDto.User.Id,
+            Username = authDto.User.Username
+        };
     }
 
     public async Task<bool> SignIn(string? username, string? password)
