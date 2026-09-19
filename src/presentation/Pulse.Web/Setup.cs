@@ -6,9 +6,12 @@ using Microsoft.Extensions.Logging;
 using MudBlazor;
 using MudBlazor.Services;
 using MudExtensions.Services;
+using Pulse.Api.Client.Common;
+using Pulse.Api.Client.Handlers;
 using Pulse.Api.Ctrl.Client;
 using Pulse.Api.Data.Client;
 using Pulse.Web.Common;
+using Pulse.Web.Common.Navigation;
 using Pulse.Web.Common.Security;
 using Pulse.Web.Common.Services;
 using Pulse.Web.Core;
@@ -36,10 +39,15 @@ public static class Setup
             Console.WriteLine($"Environment: {environment}");
             Console.WriteLine($"Api Endpoint: {apiEndpoint}");
 
-            builder.Services.AddScoped<ICtrlApiClient>(_ =>
+            //builder.Services.AddScoped<IResponseHandler, GlobalResponseHandler>();
+            builder.Services.AddScoped<ITokenProvider, TokenProvider>();
+            
+            builder.Services.AddScoped<ICtrlApiClient>(provider =>
                 new CtrlApiClientBuilder()
                     .WithEndpoint(new EndpointProvider(apiEndpoint))
                     .WithTimeout(TimeSpan.FromSeconds(apiTimeout))
+                    //.WithResponseHandler(provider.GetRequiredService<IResponseHandler>())
+                    .WithTokenProvider(provider.GetRequiredService<ITokenProvider>())
                     .Build()
             );
 
@@ -84,7 +92,7 @@ public static class Setup
 
             builder.Services.AddScoped<UserAuthenticationStateProvider>();
             builder.Services.AddScoped<AuthenticationStateProvider>(provider =>
-                provider.GetRequiredService<UserAuthenticationStateProvider>());
+                 provider.GetRequiredService<UserAuthenticationStateProvider>());
             
             builder.Services.AddScoped<IAuthenticationStore, AuthenticationStore>();
             builder.Services.AddScoped<IAuthenticationService, AuthenticationService>();

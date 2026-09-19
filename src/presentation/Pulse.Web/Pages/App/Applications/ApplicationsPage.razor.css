@@ -1,0 +1,22 @@
+.application-flex {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.application-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+    place-items: center;
+}
+
+::deep .mud-button-group-outlined.mud-button-group-override-styles .mud-button-root {
+    border: 1px solid var(--mud-palette-lines-inputs);
+}
+
+::deep .mud-input-control.mud-input-control-margin-dense.mud-input-outlined-with-label {
+    margin-top: 0;
+    margin-bottom: 0;
+}

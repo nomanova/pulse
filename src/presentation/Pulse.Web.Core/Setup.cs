@@ -12,6 +12,10 @@ public static class Setup
         public IServiceCollection AddViewModels()
         {
             services.AddTransient<SignInViewModel>();
+            services.AddTransient<HomeViewModel>();
+            services.AddTransient<SelectOrganizationViewModel>();
+            services.AddTransient<NewOrganizationViewModel>();
+            services.AddTransient<ApplicationsViewModel>();
             
             return services;
         }

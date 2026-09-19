@@ -1,0 +1,63 @@
+@page "/new-organization"
+@inherits MvvmComponentBase<NewOrganizationViewModel>
+
+<PageTitle>@ViewModel.Title</PageTitle>
+
+<CmpCenteredPage>
+
+    <MudPaper Class="pa-6" Outlined="true">
+        <MudText Typo="Typo.h4">New organization</MudText>
+
+        @if (ViewModel.IsFailed)
+        {
+            <MudAlert Class="mt-6 mb-6" Severity="Severity.Error">
+                <MudText>@(ViewModel.ErrorMessage)</MudText>
+            </MudAlert>
+        }
+
+        <MudForm Model="@ViewModel.Model"
+                 @ref="@_form"
+                 Validation="@(ViewModel.ModelValidator.ValidateValue)"
+                 ValidationDelay="0"
+                 FieldChanged="@(() => ViewModel.FieldChangedCommand.Execute(null))">
+
+            <MudTextField @bind-Value="@ViewModel.Model.Name"
+                          For="@(() => ViewModel.Model.Name)"
+                          Class="mt-2"
+                          Immediate="false"
+                          MaxLength="50"
+                          Required="true"
+                          Disabled="@ViewModel.IsLoading"
+                          HelperText="Name your new organization"
+                          Label="Name"
+                          data-test-id="inp-name"/>
+
+            <CmpButton
+                Text="Create"
+                Class="w-full mt-8"
+                IsLoading="@ViewModel.IsLoading"
+                UseCaps="true"
+                OnClick="@OnSubmit"
+                data-test-id="btn-create"/>
+
+        </MudForm>
+
+    </MudPaper>
+
+</CmpCenteredPage>
+
+@code {
+
+    private MudForm _form = null!;
+
+    private async Task OnSubmit()
+    {
+        await _form.ValidateAsync();
+
+        if (_form.IsValid)
+        {
+            await ViewModel.SubmitCommand.ExecuteAsync(null);
+        }
+    }
+
+}

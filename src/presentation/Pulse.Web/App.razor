@@ -3,13 +3,14 @@
 @using Pulse.Web.Common.Navigation
 @using Pulse.Web.Pages.Common
 
+@* Mud Blazor *@
 <MudThemeProvider Theme="Theme"/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
 <MudPopoverProvider/>
 
 <CascadingAuthenticationState>
-    <Router AppAssembly="@typeof(App).Assembly" NotFoundPage="typeof(NotFound)">
+    <Router AppAssembly="@typeof(App).Assembly" NotFoundPage="typeof(Error404Page)">
         <Found Context="routeData">
             <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(CmpMainLayout)">
                 <NotAuthorized>

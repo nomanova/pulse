@@ -4,6 +4,7 @@ using System.Net.Http.Headers;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
+using Pulse.Api.Client.Handlers;
 using CacheControlHeaderValue = System.Net.Http.Headers.CacheControlHeaderValue;
 
 namespace Pulse.Api.Client;
@@ -28,6 +29,11 @@ public sealed class ApiHttpClient : IDisposable
 
         HttpMessageHandler pipeline = new HttpClientHandler();
 
+        if (options.ResponseHandler != null)
+        {
+            pipeline = pipeline.DecorateWith(new UserResponseHandler(options.ResponseHandler));
+        }
+        
         var httpClient = new HttpClient(pipeline)
         {
             Timeout = options.RequestTimeout ?? DefaultRequestTimeout

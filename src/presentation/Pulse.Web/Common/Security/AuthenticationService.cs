@@ -23,21 +23,6 @@ public sealed class AuthenticationService : IAuthenticationService
         _authenticationStore = authenticationStore;
     }
 
-    public async Task<UserProfile?> UserProfile()
-    {
-        var authDto = await _authenticationStore.Get();
-        if (authDto is null)
-        {
-            return null;
-        }
-
-        return new UserProfile
-        {
-            Id = authDto.User.Id,
-            Username = authDto.User.Username
-        };
-    }
-
     public async Task<bool> SignIn(string? username, string? password)
     {
         var request = new SignInRequest { Username = username, Password = password };
@@ -48,16 +33,29 @@ public sealed class AuthenticationService : IAuthenticationService
             return false;
         }
 
-        var response = result.Data!;
-        await _authenticationStore.Set(response);
+        var auth = result.Data!;
+
+        await _authenticationStore.SetToken(auth.AccessToken);
+        await _authenticationStore.SetUser(auth.ToUserProfile());
 
         _authenticationStateProvider.Notify();
         return true;
     }
 
+    public async Task<OrganizationProfile?> GetOrganization()
+    {
+        return await _authenticationStore.GetOrganization();
+    }
+
+    public async Task SwitchOrganization(OrganizationProfile profile)
+    {
+        await _authenticationStore.SetOrganization(profile);
+        _authenticationStateProvider.Notify();
+    }
+
     public async Task<bool> SignOut()
     {
-        await _authenticationStore.Clear();
+        await _authenticationStore.ClearUser();
         _authenticationStateProvider.Notify();
 
         return true;

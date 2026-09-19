@@ -27,7 +27,6 @@ public sealed class SignInModelValidator : BaseModelValidator<SignInModel>
 public partial class SignInViewModel : ViewModelBase
 {
     private const string ErrInvalidCredentials = "Invalid credentials";
-    private const string ErrGeneral = "Sign in failed, please try again later";
 
     public readonly SignInModelValidator ModelValidator = new();
 
@@ -42,7 +41,7 @@ public partial class SignInViewModel : ViewModelBase
         _authenticationService = authenticationService;
     }
 
-    [ObservableProperty] public partial SignInModel Model { get; set; } = new();
+    [ObservableProperty] public partial SignInModel Model { get; private set; } = new();
 
     [ObservableProperty] public partial bool IsLoading { get; private set; }
 
@@ -72,9 +71,9 @@ public partial class SignInViewModel : ViewModelBase
     }
 
     [RelayCommand]
-    private void OnFieldChanged()
+    private static void OnFieldChanged()
     {
-        IsFailed = false;
+        // NOP
     }
 
     [RelayCommand]
@@ -86,7 +85,6 @@ public partial class SignInViewModel : ViewModelBase
     private void SetFailed(string message)
     {
         ErrorMessage = message;
-        Model.Password = string.Empty;
         IsFailed = true;
     }
 }

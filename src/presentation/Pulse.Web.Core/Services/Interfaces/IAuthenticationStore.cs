@@ -1,13 +1,23 @@
 using System.Threading.Tasks;
-using Pulse.App.Dto.Users;
+using Pulse.Web.Core.Models;
 
 namespace Pulse.Web.Core.Services.Interfaces;
 
 public interface IAuthenticationStore
 {
-    Task Set(AuthDto auth);
-
-    Task<AuthDto?> Get();
+    Task SetToken(string token);
     
-    Task Clear();
+    Task<string?> GetToken();
+    
+    Task SetUser(UserProfile profile);
+    
+    Task<UserProfile?> GetUser();
+
+    Task SetOrganization(OrganizationProfile profile);
+    
+    Task<OrganizationProfile?> GetOrganization();
+    
+    Task ClearUser();
+    
+    Task ClearAll();
 }

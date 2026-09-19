@@ -55,7 +55,7 @@ public static class AppHost
             var proxyResourceBuilder = builder.AddProject<Projects.Pulse_Proxy>("proxy")
                     .WithReference(api)
                     .WaitFor(api);
-
+            
             if (withWeb)
             {
                 var web = builder

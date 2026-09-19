@@ -1,0 +1,77 @@
+@page "/org/{OrganizationId}/apps"
+
+@using Constants = Pulse.Web.Constants
+@inherits MvvmComponentBase<ApplicationsViewModel>
+
+<CmpBasicPage>
+    <div class="grid grid-cols-1 grid-rows-[auto_1fr] overflow-hidden">
+
+        @* Header *@
+        <div class="pt-6 pb-6 d-flex align-center">
+
+            @* Spinner *@
+            <div class="d-flex justify-end" style="flex-basis: 0; flex-grow: 1;">
+                @if (ViewModel.IsLoading)
+                {
+                    <MudProgressCircular Color="Color.Dark" Indeterminate="true" Size="Size.Small" Class="mr-4"/>
+                }
+            </div>
+
+            @* Searchbox *@
+            <div style="flex-basis: 0; flex-grow: 2">
+                <MudTextField
+                    @bind-Value="@ViewModel.SearchText"
+                    DebounceInterval="@Constants.SearchDebounceInMs"
+                    OnDebounceIntervalElapsed="@(searchText => ViewModel.SearchCommand.ExecuteAsync(searchText))"
+                    Label="Search"
+                    Variant="Variant.Outlined"
+                    Margin="Margin.Dense"
+                    Adornment="Adornment.End"
+                    AdornmentIcon="@Icons.Material.Filled.Search"
+                    Clearable="true"
+                    data-test-id="inp-search"/>
+            </div>
+
+            @* Switch *@
+            <div style="flex-basis: 0; flex-grow: 1">
+                <MudButtonGroup Class="ml-4" Style="height: 40px;" Variant="Variant.Outlined" Color="Color.Inherit">
+                    <MudToggleIconButton
+                        Toggled="@ViewModel.IsGridView"
+                        Icon="@Icons.Material.Filled.GridView"
+                        ToggledIcon="@Icons.Material.Filled.GridView"
+                        Color="Color.Inherit"
+                        ToggledColor="@Color.Primary"
+                        ToggledChanged="@(() => ViewModel.DisplayGridCommand.ExecuteAsync(true))"
+                        data-test-id="btn-grid-view"/>
+                    <MudToggleIconButton
+                        Toggled="@ViewModel.IsListView"
+                        Icon="@Icons.Material.Filled.List"
+                        ToggledIcon="@Icons.Material.Filled.List"
+                        Color="Color.Inherit"
+                        ToggledColor="@Color.Primary"
+                        ToggledChanged="@(() => ViewModel.DisplayListCommand.ExecuteAsync(true))"
+                        data-test-id="btn-list-view"/>
+                </MudButtonGroup>
+            </div>
+
+        </div>
+
+        @* Items *@
+        <div class="mb-6 pl-6 pr-6 pt-1 pb-4" style="overflow-y: scroll; overflow-x: hidden">
+
+        </div>
+
+    </div>
+</CmpBasicPage>
+
+@code {
+
+    [Parameter] public required string OrganizationId { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        ViewModel.OrganizationId = OrganizationId;
+        base.OnParametersSet();
+    }
+
+}

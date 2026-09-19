@@ -39,7 +39,7 @@ public static class DependencyInjection
 
         services.AddSingleton<ICtrlApiClient>(provider => new CtrlApiClientBuilder()
             .WithEndpoint(provider.GetRequiredService<IEndpointProvider>())
-            .WithToken(provider.GetRequiredService<ITokenProvider>())
+            .WithTokenProvider(provider.GetRequiredService<ITokenProvider>())
             .Build());
 
         return new TypeRegistrar(services);

@@ -1,6 +1,5 @@
 @attribute [AllowAnonymous]
 @page "/sign-in"
-@layout CmpMainLayout
 @inherits MvvmComponentBase<SignInViewModel>
 
 <CmpCenteredPage>
@@ -10,13 +9,14 @@
 
         @if (ViewModel.IsFailed)
         {
-            <MudAlert Class="mt-6 mb-6" Severity="Severity.Error">@(ViewModel.ErrorMessage)</MudAlert>
+            <MudAlert Class="mt-6 mb-2" Severity="Severity.Error">@(ViewModel.ErrorMessage)</MudAlert>
         }
-
+        
         <MudForm Model="@ViewModel.Model"
                  @ref="@_form"
                  Validation="@(ViewModel.ModelValidator.ValidateValue)"
                  ValidationDelay="0"
+                 Disabled="@ViewModel.IsLoading"
                  FieldChanged="@(() => ViewModel.FieldChangedCommand.Execute(null))">
 
             <MudTextField @bind-Value="@ViewModel.Model.Username"

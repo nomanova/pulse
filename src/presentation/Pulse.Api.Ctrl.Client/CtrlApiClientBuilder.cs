@@ -10,7 +10,8 @@ public sealed class CtrlApiClientBuilder : ApiClientBuilder<CtrlApiClient>
         {
             EndpointProvider = EndpointProvider,
             TokenProvider = TokenProvider,
-            RequestTimeout = RequestTimeout
+            RequestTimeout = RequestTimeout,
+            ResponseHandler = ResponseHandler
         };
         
         return new CtrlApiClient(clientOptions);
