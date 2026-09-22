@@ -24,6 +24,17 @@
         </MudButton>
     </ActivatorContent>
     <ChildContent>
+        @if (!string.IsNullOrEmpty(_organization))
+        {
+            <MudMenuItem
+                OnClick="@OnSwitchOrganization"
+                Icon="@Icons.Material.Filled.CompareArrows"
+                IconColor="@Color.Tertiary"
+                data-test-id="btn-appbar-user-switch-organization">
+                Switch organization
+            </MudMenuItem>
+            <MudDivider/>
+        }
         <MudMenuItem
             OnClick="@OnSignOut"
             Icon="@Icons.Material.Filled.Logout"
@@ -52,10 +63,14 @@
         }
     }
 
+    private void OnSwitchOrganization()
+    {
+        NavigationManager.NavigateTo(Routes.SelectOrganization);
+    }
+    
     private async Task OnSignOut()
     {
         await AuthenticationService.SignOut();
         NavigationManager.NavigateTo(Routes.SignIn);
     }
-
 }

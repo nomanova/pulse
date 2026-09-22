@@ -1,8 +1,81 @@
 @page "/select-organization"
-@inherits MvvmComponentBase<SelectOrganizationViewModel>
+@using Pulse.App.Dto.Organizations
+@inherits Pulse.Web.Common.Components.Base.MvvmCmpBase<SelectOrganizationViewModel>
 
-<h3>SelectOrganizationPage</h3>
+<PageTitle>@ViewModel.Title</PageTitle>
+
+<CmpCenteredPage>
+
+    <MudPaper Class="pa-6" Outlined="true">
+        <MudText Typo="Typo.h4">Select organization</MudText>
+
+        @if (ViewModel.IsLoading)
+        {
+            <div class="d-flex align-center justify-center py-12">
+                <MudProgressCircular Color="Color.Dark" Indeterminate="true" Size="Size.Medium"/>
+            </div>
+        }
+        else
+        {
+            @if (ViewModel.Organizations == null || !ViewModel.Organizations.Any())
+            {
+                <MudText Class="mt-8" Style="font-style: italic">No organizations found</MudText>
+            }
+            else
+            {
+                <MudTable
+                    Items="@ViewModel.Organizations"
+                    T="@OrganizationDto"
+                    Elevation="0"
+                    Striped="true"
+                    Hover="true"
+                    Class="mt-8"
+                    RowClass="cursor-pointer"
+                    RowClassFunc="@SelectedRowClass"
+                    OnRowClick="@(args => ViewModel.SetSelectedCommand.Execute(args.Item))">
+                    <ColGroup>
+                        <col style="width: 100%;"/>
+                    </ColGroup>
+                    <RowTemplate>
+                        <MudTd DataLabel="Name">
+                            <MudText Typo="Typo.body1">@context.Name</MudText>
+                        </MudTd>
+                        <MudTd DataLabel="Active" Style="text-align: right">
+                            @if (ViewModel.CurrentOrganization != null && ViewModel.CurrentOrganization.Id == context.Id)
+                            {
+                                <MudChip T="string" Variant="Variant.Text" Color="Color.Dark" Size="Size.Small"
+                                         Class="mr-2" Style="pointer-events: none; margin: 0 !important;">Active
+                                </MudChip>
+                            }
+                        </MudTd>
+                    </RowTemplate>
+                </MudTable>
+
+                <CmpButton
+                    Text="Select"
+                    Style="width: 100%"
+                    Class="mt-8"
+                    IsDisabled="@(ViewModel.SelectedOrganization == null)"
+                    UseCaps="true"
+                    OnClick="@(() => ViewModel.ConfirmCommand.Execute(null))"
+                    data-test-id="btn-select-organization"/>
+
+                <div class="d-flex justify-center mt-6">
+                    <MudLink OnClick="@(() => ViewModel.CancelCommand.Execute(null))" data-test-id="btn-cancel">Cancel
+                    </MudLink>
+                </div>
+            }
+        }
+
+    </MudPaper>
+
+</CmpCenteredPage>
 
 @code {
-    
+
+    private string SelectedRowClass(OrganizationDto organization, int rowNumber)
+    {
+        return organization.Id == ViewModel.CurrentOrganization?.Id ? "bg-app-blue-50" : string.Empty;
+    }
+
 }

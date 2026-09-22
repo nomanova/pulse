@@ -1,7 +1,10 @@
 @page "/org/{OrganizationId}/apps"
 
+@using Pulse.App.Dto.Applications
 @using Constants = Pulse.Web.Constants
-@inherits MvvmComponentBase<ApplicationsViewModel>
+@inherits Pulse.Web.Common.Components.Base.MvvmCmpBase<Pulse.Web.Core.ViewModels.Applications.ApplicationsViewModel>
+
+<PageTitle>@ViewModel.Title</PageTitle>
 
 <CmpBasicPage>
     <div class="grid grid-cols-1 grid-rows-[auto_1fr] overflow-hidden">
@@ -59,6 +62,66 @@
         @* Items *@
         <div class="mb-6 pl-6 pr-6 pt-1 pb-4" style="overflow-y: scroll; overflow-x: hidden">
 
+            @if (!ViewModel.Applications.Any() && ViewModel.IsInitialized)
+            {
+                <CmpTableLoader
+                    EntitySingular="application"
+                    EntityPlural="applications"
+                    SearchText="@ViewModel.SearchText"
+                    IsLoading="@ViewModel.IsLoading"
+                    OnAddItem="@(() => ViewModel.CreateApplicationCommand.Execute(null))"/>
+            }
+            else
+            {
+                if (ViewModel.IsGridView)
+                {
+                    <div class="@GridClass()">
+                        @foreach (var application in ViewModel.Applications)
+                        {
+                            <ApplicationCardView
+                                Application="@application"
+                                FixedWidth="@(ViewModel.Applications.Count < GridCutoff)"
+                                OnClick="@(appId => ViewModel.ApplicationDetailCommand.Execute(appId))"/>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <MudTable
+                        Items="@ViewModel.Applications"
+                        T="ApplicationDto"
+                        Elevation="0"
+                        Striped="true"
+                        Hover="true"
+                        OnRowClick="@(args => ViewModel.ApplicationDetailCommand.Execute(args.Item?.Id))"
+                        RowClass="cursor-pointer">
+                        <HeaderContent>
+                            <MudTh>Name</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd DataLabel="Name">
+                                @context.Name
+                            </MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                }
+
+                @if (ViewModel.HasMoreItems)
+                {
+                    <CmpLoadMore
+                        Class="mt-6"
+                        OnLoadMore="@(() => ViewModel.LoadMoreCommand.ExecuteAsync(null))"
+                        IsLoading="@ViewModel.IsLoading"/>
+                }
+            }
+
+            <MudFab
+                Color="Color.Primary"
+                Style="position: fixed; bottom: 24px; right: 24px;"
+                Ripple="false"
+                StartIcon="@Icons.Material.Filled.Add"
+                OnClick="@(() => ViewModel.CreateApplicationCommand.Execute(null))"/>
+
         </div>
 
     </div>
@@ -66,12 +129,19 @@
 
 @code {
 
+    private const int GridCutoff = 6;
+
     [Parameter] public required string OrganizationId { get; set; }
 
     protected override void OnParametersSet()
     {
         ViewModel.OrganizationId = OrganizationId;
         base.OnParametersSet();
+    }
+
+    private string GridClass()
+    {
+        return ViewModel.Applications.Count < GridCutoff ? "application-flex" : "application-grid";
     }
 
 }

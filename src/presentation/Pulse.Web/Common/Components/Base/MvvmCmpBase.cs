@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
 using Pulse.Web.Core.ViewModels.Common;
 
-namespace Pulse.Web.Common.Components;
+namespace Pulse.Web.Common.Components.Base;
 
-public abstract class MvvmComponentBase<TViewModel> : ComponentBase, IDisposable where TViewModel : IViewModelBase
+public abstract class MvvmCmpBase<TViewModel> : ComponentBase, IDisposable where TViewModel : IViewModelBase
 {
     [Inject] [NotNull] protected TViewModel ViewModel { get; set; } = default!;
 
@@ -26,16 +26,10 @@ public abstract class MvvmComponentBase<TViewModel> : ComponentBase, IDisposable
 
     public void Dispose()
     {
-        if (_disposed)
-        {
-            return;
-        }
-
         Dispose(true);
         GC.SuppressFinalize(this);
-        _disposed = true;
     }
-
+    
     private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         PropertyChanged(e.PropertyName);
@@ -45,13 +39,20 @@ public abstract class MvvmComponentBase<TViewModel> : ComponentBase, IDisposable
     protected virtual void PropertyChanged(string? propertyName)
     {
     }
-
+    
     protected virtual void Dispose(bool disposing)
     {
+        if (_disposed)
+        {
+            return;
+        }
+
         if (disposing)
         {
             ViewModel.PropertyChanged -= OnPropertyChanged;
             ViewModel.Dispose();
         }
+
+        _disposed = true;
     }
 }

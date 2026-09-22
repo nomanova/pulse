@@ -4,7 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 
 namespace Pulse.Web.Core.ViewModels.Common;
 
-public partial class ViewModelBase : ObservableObject, IViewModelBase
+public abstract partial class ViewModelBase : ObservableObject, IViewModelBase
 {
     [RelayCommand]
     public virtual async Task OnInitializedAsync()
@@ -15,4 +15,8 @@ public partial class ViewModelBase : ObservableObject, IViewModelBase
     public virtual void Dispose()
     {
     }
+
+    public string Title => Subtitle == null ? Constants.AppName : $"{Subtitle} | {Constants.AppName}";
+
+    protected virtual string? Subtitle => null;
 }

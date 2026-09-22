@@ -6,6 +6,7 @@ public static class Routes
 
     // App
     public const string Applications = "org/{0}/apps";
+    public const string ApplicationDetail = "org/{0}/app/{1}";
 
     // Account
     public const string SignIn = "sign-in";

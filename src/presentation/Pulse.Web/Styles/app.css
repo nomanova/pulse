@@ -1,4 +1,4 @@
-@import "tailwindcss";
+@import "tailwindcss" important;
 
 /* Ensure Tailwind scans all Razor files and HTML templates across projects */
 @source "../**/*.razor";

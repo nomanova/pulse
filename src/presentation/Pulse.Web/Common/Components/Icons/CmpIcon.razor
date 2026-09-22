@@ -1,0 +1,123 @@
+
+@inherits Pulse.Web.Common.Components.Base.CmpResizable
+
+<MudLink Class="hover:no-underline" OnClick="@OnClick" Disabled="@(State == IconState.Disabled)">
+    <div @ref="@Element" class="flex items-center justify-center @(WrapperClasses())">
+        <span class="material-symbols-rounded select-none @(IconClasses())"
+              style="font-size: @GetFontSize(); font-variation-settings: @GetFontVariation()">
+            @(MapIconValue())
+        </span>
+    </div>
+</MudLink>
+
+@code {
+
+    [Parameter] public IconState State { get; set; } = IconState.Default;
+
+    [Parameter] public IconValue? Value { get; set; } = IconValue.Default;
+    
+    [Parameter] public IconSize Size { get; set; } = IconSize.Large;
+
+    [Parameter] public bool HasBackground { get; set; } = true;
+
+    [Parameter] public bool HasMargin { get; set; } = true;
+
+    [Parameter] public bool Rounded { get; set; }
+
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    private string WrapperClasses()
+    {
+        string classes;
+
+        if (HasBackground)
+        {
+            classes = State switch
+            {
+                IconState.Default => "bg-app-blue-50",
+                IconState.Disabled => "bg-app-grey-50",
+                IconState.Error => "bg-app-red-50",
+                _ => throw new NotImplementedException(State.ToString())
+            };
+        }
+        else
+        {
+            classes = "bg-transparent";
+        }
+
+        var rounded = Rounded ? "rounded-full" : "rounded";
+        var roundedMd = Rounded ? "rounded-full" : "rounded-md";
+
+        classes += Size switch
+        {
+            IconSize.Small => $" h-9 w-9 {rounded}",
+            IconSize.Medium => $" h-16 w-16 {rounded}",
+            IconSize.Large => $" h-24 w-24 {roundedMd}",
+            IconSize.Full => Width == null ? "" : $" h-full w-full aspect-square {roundedMd}",
+            _ => throw new NotImplementedException(Size.ToString())
+        };
+
+        return classes;
+    }
+
+    private string IconClasses()
+    {
+        var classes = State switch
+        {
+            IconState.Default => "text-app-blue-500",
+            IconState.Disabled => "text-app-grey-300",
+            IconState.Error => "text-app-red-400",
+            _ => throw new NotImplementedException(State.ToString())
+        };
+
+        return classes;
+    }
+
+    private string GetFontSize()
+    {
+        if (Width == null)
+        {
+            return "0px";
+        }
+
+        var factor = HasMargin ? 0.6 : 1.0;
+        var size = (int)(Width * factor);
+
+        return $"{size}px";
+    }
+
+    private string GetFontVariation()
+    {
+        if (Width == null)
+        {
+            return "'OPSZ' 22, 'wght' 400";
+        }
+
+        var size = (int)(Width * 0.6);
+
+        
+        if (size < 30)
+        {
+            return "'OPSZ' 22, 'wght' 400";
+        }
+
+        if (size < 60)
+        {
+            return "'OPSZ' 44, 'wght' 300";
+        }
+
+        return "'OPSZ' 72, 'wght' 300";
+    }
+
+    /*
+     * https://fonts.google.com/icons
+     */
+    private string MapIconValue()
+    {
+        return Value switch
+        {
+            IconValue.Default => "deployed_code",
+            _ => ""
+        };
+    }
+}

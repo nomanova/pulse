@@ -1,6 +1,8 @@
 @attribute [AllowAnonymous]
 @page "/sign-in"
-@inherits MvvmComponentBase<SignInViewModel>
+@inherits Pulse.Web.Common.Components.Base.MvvmCmpBase<SignInViewModel>
+
+<PageTitle>@ViewModel.Title</PageTitle>
 
 <CmpCenteredPage>
 

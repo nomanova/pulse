@@ -41,6 +41,8 @@ public partial class SignInViewModel : ViewModelBase
         _authenticationService = authenticationService;
     }
 
+    protected override string Subtitle => "Sign In";
+    
     [ObservableProperty] public partial SignInModel Model { get; private set; } = new();
 
     [ObservableProperty] public partial bool IsLoading { get; private set; }

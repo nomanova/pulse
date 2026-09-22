@@ -44,9 +44,9 @@ public partial class NewOrganizationViewModel : ActionViewModelBase
         _ctrlApiClient = ctrlApiClient;
         _authenticationService = authenticationService;
     }
-
-    [ObservableProperty] public partial string Title { get; private set; } = "New Organization";
-
+    
+    protected override string Subtitle => "New Organization";
+    
     [ObservableProperty] public partial NewOrganizationModel Model { get; private set; } = new();
 
     [RelayCommand]

@@ -1,0 +1,29 @@
+.app-card {
+    cursor: pointer;
+    background-color: white;
+    border-radius: var(--mud-default-borderradius);
+    box-shadow: var(--mud-elevation-1);
+    position: relative;
+    min-width: 300px;
+    max-width: 300px;
+    width: 100%;
+}
+
+.app-card-stretch {
+    max-width: 400px !important;
+}
+
+.app-card:hover {
+    background-color: var(--mud-palette-table-striped);
+    box-shadow: var(--mud-elevation-2);
+}
+
+::deep .app-card-label {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+::deep .mud-card-content {
+    background-color: var(--mud-palette-table-striped);
+}

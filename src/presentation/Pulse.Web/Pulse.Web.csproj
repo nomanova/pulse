@@ -23,6 +23,10 @@
     <ItemGroup>
       <ProjectReference Include="..\Pulse.Web.Core\Pulse.Web.Core.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <Folder Include="wwwroot\fonts\material\" />
+    </ItemGroup>
 
     <!-- Run npm install before restore if node_modules is missing -->
     <Target Name="NpmInstall" BeforeTargets="Build" Condition="!Exists('node_modules')">

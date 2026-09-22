@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Pulse.Web.Core.ViewModels;
+using ApplicationsViewModel = Pulse.Web.Core.ViewModels.Applications.ApplicationsViewModel;
 
 namespace Pulse.Web.Core;
 

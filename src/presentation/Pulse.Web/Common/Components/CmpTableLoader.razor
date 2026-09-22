@@ -1,0 +1,38 @@
+@using Pulse.Web.Common.Components.Empty
+
+<div class="py-6 flex justify-center items-center">
+
+    @if (string.IsNullOrEmpty(SearchText))
+    {
+        if (IsLoading)
+        {
+            <CmpLoader/>
+        }
+        else
+        {
+            <CmpEmpty
+                Variant="EmptyVariant.Items"
+                EntityPlural="@EntityPlural"
+                EntitySingular="@EntitySingular"
+                OnAddItem="@OnAddItem"/>
+        }
+    }
+    else
+    {
+        <CmpEmpty Variant="EmptyVariant.Search"/>
+    }
+
+</div>
+
+@code {
+
+    [Parameter] public string? EntitySingular { get; set; }
+
+    [Parameter] public string? EntityPlural { get; set; }
+
+    [Parameter] public string? SearchText { get; set; }
+
+    [Parameter] public bool IsLoading { get; set; }
+
+    [Parameter] public EventCallback OnAddItem { get; set; }
+}
