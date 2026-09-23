@@ -1,0 +1,13 @@
+@page "/org/{OrganizationId}/app/{ApplicationId}"
+
+@inherits MvvmCmpBase<ApplicationDetailViewModel>
+
+<h3>ApplicationDetailPage</h3>
+
+@code {
+    
+    [Parameter] public required string OrganizationId { get; set; }
+    
+    [Parameter] public required string ApplicationId { get; set; }
+    
+}

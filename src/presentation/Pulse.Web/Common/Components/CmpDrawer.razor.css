@@ -1,0 +1,54 @@
+.drawer {
+    background-color: white;
+    position: fixed;
+    height: 100vh;
+    width: 560px;
+    top: 0;
+    right: -560px;
+    transition: right 0.2s ease-out;
+    overflow: hidden;
+    z-index: 1001;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr auto;
+}
+
+.drawer-open {
+    right: 0 !important;
+    box-shadow: 0 0 3px rgba(0,0,0,0.5);
+    clip-path: inset(0px 0px 0px -3px);
+}
+
+.drawer-overlay {
+    z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(33,33,33,0.4980392156862745);
+    visibility: hidden;
+}
+
+.drawer-overlay-shown {
+    visibility: visible !important;
+}
+
+.drawer-header {
+    display: flex;
+    flex-direction: column;
+    padding: 24px;
+}
+
+.drawer-title {
+    display: flex;
+}
+
+.drawer-error {
+    margin-top: 24px;
+}
+
+.drawer-footer {
+    display: flex;
+    padding: 24px;
+}

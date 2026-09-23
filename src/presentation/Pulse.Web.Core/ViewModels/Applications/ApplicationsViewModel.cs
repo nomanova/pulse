@@ -113,7 +113,12 @@ public partial class ApplicationsViewModel : ViewModelBase
     [RelayCommand]
     private void OnCreateApplication()
     {
-        var message = new CreateApplicationMessage();
+        if (OrganizationId == null)
+        {
+            return;
+        }
+
+        var message = new AddApplicationMessage(OrganizationId);
         _messenger.Send(message);
     }
 

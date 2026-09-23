@@ -1,0 +1,94 @@
+<div class="drawer-overlay @(IsOpen ? "drawer-overlay-shown" : "")" @onclick="@Close">
+</div>
+
+<div class="drawer @(IsOpen ? "drawer-open" : "")">
+    <div class="drawer-header">
+        <div class="drawer-title">
+            @if (string.IsNullOrEmpty(Subtitle))
+            {
+                <MudText Typo="Typo.h6" Class="flex align-center">@(Title)</MudText>
+            }
+            else
+            {
+                <div class="flex flex-col">
+                    <MudText Typo="Typo.h6">@(Title)</MudText>
+                    <MudText Typo="Typo.body1" Class="opacity-75">@(Subtitle)</MudText>
+                </div>
+            }
+            <div class="grow"></div>
+            <div class="flex align-center">
+                <MudIconButton Icon="@MudBlazor.Icons.Material.Filled.Close" Size="Size.Medium" OnClick="@Close"/>
+            </div>
+        </div>
+        @if (Error != null)
+        {
+            <div class="drawer-error">
+                <MudAlert
+                    Severity="Severity.Error"
+                    ShowCloseIcon="true"
+                    CloseIconClicked="@OnErrorClose">
+                    <MudText>@(Error)</MudText>
+                </MudAlert>
+            </div>
+        }
+    </div>
+    @ChildContent
+    <div class="drawer-footer">
+        <CmpButton
+            Text="@(ActionText)"
+            IsDisabled="@(IsActionDisabled)"
+            IsLoading="@(IsLoading)"
+            OnClick="@(OnAction)"/>
+
+        <CmpSecondaryButton
+            Text="Cancel"
+            Class="ml-4"
+            IsDisabled="@(IsLoading)"
+            OnClick="@(Close)"/>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string? Title { get; set; }
+
+    [Parameter] public string? Subtitle { get; set; }
+
+    [Parameter] public string? ActionText { get; set; }
+
+    [Parameter] public bool IsActionDisabled { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    [Parameter] public bool IsLoading { get; set; }
+
+    [Parameter] public EventCallback OnAction { get; set; }
+
+    [Parameter] public EventCallback OnCancel { get; set; }
+
+    [Parameter] public bool IsOpen { get; set; }
+
+    [Parameter] public EventCallback<bool> IsOpenChanged { get; set; }
+
+    [Parameter] public string? Error { get; set; }
+
+    [Parameter] public EventCallback<string?> ErrorChanged { get; set; }
+
+    private async Task Close()
+    {
+        await OnCancel.InvokeAsync();
+
+        await OnErrorClose();
+
+        IsOpen = false;
+        await IsOpenChanged.InvokeAsync(IsOpen);
+
+        StateHasChanged();
+    }
+
+    private async Task OnErrorClose()
+    {
+        Error = null;
+        await ErrorChanged.InvokeAsync(Error);
+    }
+
+}

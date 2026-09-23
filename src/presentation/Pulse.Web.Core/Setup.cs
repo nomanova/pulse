@@ -2,7 +2,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.Extensions.DependencyInjection;
 using Pulse.Web.Core.ViewModels;
-using ApplicationsViewModel = Pulse.Web.Core.ViewModels.Applications.ApplicationsViewModel;
+using Pulse.Web.Core.ViewModels.Applications;
 
 namespace Pulse.Web.Core;
 
@@ -16,7 +16,8 @@ public static class Setup
             services.AddTransient<HomeViewModel>();
             services.AddTransient<SelectOrganizationViewModel>();
             services.AddTransient<NewOrganizationViewModel>();
-            services.AddTransient<ApplicationsViewModel>();
+
+            services.AddApplicationViewModels();
             
             return services;
         }

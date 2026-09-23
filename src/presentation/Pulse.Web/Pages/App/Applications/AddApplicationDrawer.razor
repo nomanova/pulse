@@ -1,0 +1,48 @@
+@inherits MvvmCmpBase<AddApplicationViewModel>
+
+<CmpDrawer
+    Title="Add application"
+    ActionText="Add"
+    OnAction="@OnSubmit"
+    @bind-IsOpen="@ViewModel.IsOpen"
+    @bind-Error="@ViewModel.Error"
+    IsLoading="@ViewModel.IsSubmitting">
+
+    <div class="px-6">
+        @if (ViewModel.IsOpen)
+        {
+            <MudForm Model="@ViewModel.Model"
+                     @ref="@(_form)"
+                     Validation="@(ViewModel.ModelValidator.ValidateValue)"
+                     ValidationDelay="0"
+                     FieldChanged="@(() => ViewModel.FieldChangedCommand.Execute(null))">
+
+                <MudTextField @bind-Value="@ViewModel.Model.Name"
+                              For="@(() => ViewModel.Model.Name)"
+                              Variant="Variant.Outlined"
+                              Immediate="false"
+                              MaxLength="50"
+                              Required="true"
+                              Disabled="@ViewModel.IsSubmitting"
+                              Label="Name"/>
+            </MudForm>
+        }
+    </div>
+
+</CmpDrawer>
+
+@code {
+
+    private MudForm _form = null!;
+
+    private async Task OnSubmit()
+    {
+        await _form.ValidateAsync();
+
+        if (_form.IsValid)
+        {
+            await ViewModel.SubmitCommand.ExecuteAsync(null);
+        }
+    }
+
+}

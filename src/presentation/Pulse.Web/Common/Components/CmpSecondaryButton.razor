@@ -1,0 +1,23 @@
+<MudButton
+    Variant="Variant.Text"
+    Color="Color.Dark"
+    DropShadow="false"
+    Style="@Style"
+    Class="@Class"
+    Disabled="@IsDisabled"
+    OnClick="@OnClick">
+    <MudText>@Text</MudText>
+</MudButton>
+
+@code{
+
+    [Parameter] public string? Text { get; set; }
+
+    [Parameter] public bool IsDisabled { get; set; }
+
+    [Parameter] public EventCallback OnClick { get; set; }
+
+    [Parameter] public string? Style { get; set; }
+
+    [Parameter] public string? Class { get; set; }
+}
