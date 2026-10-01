@@ -5,4 +5,6 @@ namespace Pulse.App.Dto.Environments;
 public sealed record EnvironmentDto : IdentityDto
 {
     public required string Name { get; init; }
+    
+    public bool IsPrimary { get; init; }
 }

@@ -4,6 +4,7 @@ using ErrorOr;
 using Pulse.App.Common.Authorization.Policies;
 using Pulse.App.Common.Database;
 using Pulse.App.Common.Dispatcher;
+using Pulse.App.Common.Errors;
 using Pulse.App.Handlers.Environments.Common;
 using Pulse.App.Handlers.Environments.Common.Specifications;
 using Pulse.Domain.Aggregates.Environments;
@@ -39,6 +40,12 @@ public sealed class RemoveEnvironmentCommandHandler : ICommandHandler<RemoveEnvi
         if (environment == null)
         {
             return Error.NotFound();
+        }
+
+        // Validate status
+        if (environment.IsPrimary)
+        {
+            return ApplicationErrors.Environment.RemovePrimary;
         }
 
         // Remove

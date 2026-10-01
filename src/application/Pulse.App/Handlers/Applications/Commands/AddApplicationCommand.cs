@@ -10,10 +10,12 @@ using Pulse.App.Common.Security.Interfaces;
 using Pulse.App.Dto.Common;
 using Pulse.App.Handlers.Applications.Common;
 using Pulse.App.Handlers.Applications.Common.Specifications;
+using Pulse.App.Handlers.Environments.Common;
 using Pulse.App.Handlers.Memberships.Common;
 using Pulse.App.Handlers.Organizations.Common;
 using Pulse.App.Handlers.Organizations.Common.Specifications;
 using Pulse.Domain.Aggregates.Applications;
+using Pulse.Domain.Aggregates.Environments;
 using Pulse.Domain.Aggregates.Memberships;
 using Pulse.Domain.Aggregates.Organizations;
 using Pulse.Domain.Aggregates.Roles;
@@ -23,7 +25,7 @@ namespace Pulse.App.Handlers.Applications.Commands;
 public sealed record AddApplicationCommand : ICommand<ErrorOr<IdentityDto>>
 {
     public required OrganizationId OrganizationId { get; init; }
-    
+
     public required string? ApplicationName { get; init; }
 }
 
@@ -34,6 +36,7 @@ public class AddApplicationCommandHandler : ICommandHandler<AddApplicationComman
     private readonly IUserProvider _userProvider;
     private readonly IOrganizationRepository _organizationRepository;
     private readonly IApplicationRepository _applicationRepository;
+    private readonly IEnvironmentRepository _environmentRepository;
     private readonly IMembershipRepository _membershipRepository;
     private readonly IUnitOfWork _unitOfWork;
 
@@ -41,12 +44,14 @@ public class AddApplicationCommandHandler : ICommandHandler<AddApplicationComman
         IUserProvider userProvider,
         IOrganizationRepository organizationRepository,
         IApplicationRepository applicationRepository,
+        IEnvironmentRepository environmentRepository,
         IMembershipRepository membershipRepository,
         IUnitOfWork unitOfWork)
     {
         _userProvider = userProvider;
         _organizationRepository = organizationRepository;
         _applicationRepository = applicationRepository;
+        _environmentRepository = environmentRepository;
         _membershipRepository = membershipRepository;
         _unitOfWork = unitOfWork;
     }
@@ -66,21 +71,29 @@ public class AddApplicationCommandHandler : ICommandHandler<AddApplicationComman
         }
 
         // Duplicate name detection
-        var applicationSpecification = new ApplicationByNameSpecification(organization.Id, command.ApplicationName); 
+        var applicationSpecification = new ApplicationByNameSpecification(organization.Id, command.ApplicationName);
         var existingApplication = await _applicationRepository.SearchOne(applicationSpecification, cancellationToken);
 
         if (existingApplication != null)
         {
             return ApplicationErrors.NameInUse;
         }
-       
+
         // Create application
         var application = Application.Create(command.ApplicationName, organization);
         _applicationRepository.Add(application);
 
         // Set the creating user as the initial owner of the application
-        var membership = Membership.Create(user, Role.BuiltIn.AppOwner, application);
-        _membershipRepository.Add(membership);
+        var applicationMembership = Membership.Create(user, Role.BuiltIn.AppOwner, application);
+        _membershipRepository.Add(applicationMembership);
+
+        // Create (primary) environment
+        var environment = Environment.Create(Environment.DefaultName, application, true);
+        _environmentRepository.Add(environment);
+
+        // Set the creating user as the initial owner of the environment
+        var environmentMembership = Membership.Create(user, Role.BuiltIn.EnvOwner, environment);
+        _membershipRepository.Add(environmentMembership);
 
         await _unitOfWork.Commit(cancellationToken);
 
