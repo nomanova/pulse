@@ -42,17 +42,6 @@ public sealed class AuthenticationService : IAuthenticationService
         return true;
     }
 
-    public async Task<OrganizationProfile?> GetOrganization()
-    {
-        return await _authenticationStore.GetOrganization();
-    }
-
-    public async Task SwitchOrganization(OrganizationProfile profile)
-    {
-        await _authenticationStore.SetOrganization(profile);
-        _authenticationStateProvider.Notify();
-    }
-
     public async Task<bool> SignOut()
     {
         await _authenticationStore.ClearUser();

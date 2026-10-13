@@ -5,4 +5,6 @@ public static class Constants
     public const string AppName = "Pulse";
     
     public const string ErrNameInUse = "General.NameInUse";
+    
+    public const uint MaxEnvironmentCount = 10;
 }

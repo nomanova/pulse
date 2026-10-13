@@ -1,11 +1,10 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using FluentValidation;
 using Pulse.Api.Client.Common;
 using Pulse.Api.Ctrl.Client;
 using Pulse.Api.Ctrl.Contract;
-using Pulse.Web.Core.Helpers;
+using Pulse.Web.Core.Common.Validation;
 using Pulse.Web.Core.Models;
 using Pulse.Web.Core.Services.Interfaces;
 using Pulse.Web.Core.ViewModels.Common;
@@ -31,18 +30,18 @@ public partial class NewOrganizationViewModel : ActionViewModelBase
 
     public readonly NewOrganizationModelValidator ModelValidator = new();
 
+    private readonly IContextProvider _contextProvider;
     private readonly IPageNavigator _navigator;
     private readonly ICtrlApiClient _ctrlApiClient;
-    private readonly IAuthenticationService _authenticationService;
 
     public NewOrganizationViewModel(
+        IContextProvider contextProvider,
         IPageNavigator navigator,
-        ICtrlApiClient ctrlApiClient,
-        IAuthenticationService authenticationService)
+        ICtrlApiClient ctrlApiClient)
     {
+        _contextProvider = contextProvider;
         _navigator = navigator;
         _ctrlApiClient = ctrlApiClient;
-        _authenticationService = authenticationService;
     }
     
     protected override string Subtitle => "New Organization";
@@ -81,8 +80,8 @@ public partial class NewOrganizationViewModel : ActionViewModelBase
             return;
         }
 
-        var organization = fetchResult.Data!.ToOrganizationProfile();
-        await _authenticationService.SwitchOrganization(organization);
+        var organization = fetchResult.Data!;
+        _contextProvider.Organization = new NamedIdentity(organization.Id, organization.Name);
 
         _navigator.NavigateTo(string.Format(Routes.Applications, organization.Id), replace: true);
     }

@@ -12,7 +12,7 @@ using Pulse.Web.Core.ViewModels.Common;
 
 namespace Pulse.Web.Core.ViewModels.Applications;
 
-public partial class ApplicationsViewModel : ViewModelBase
+public partial class ApplicationListViewModel : OrganizationContextViewModel
 {
     private const string ErrLoad = "Loading applications failed";
 
@@ -26,12 +26,13 @@ public partial class ApplicationsViewModel : ViewModelBase
     private readonly IFlagManager _flagManager;
     private readonly IPageNavigator _navigator;
 
-    public ApplicationsViewModel(
+    public ApplicationListViewModel(
         IMessenger messenger,
+        IContextProvider contextProvider,
         ICtrlApiClient ctrlApiClient,
         ILocalStorage localStorage,
         IFlagManager flagManager, 
-        IPageNavigator navigator)
+        IPageNavigator navigator) : base(contextProvider)
     {
         _messenger = messenger;
         _ctrlApiClient = ctrlApiClient;
@@ -41,10 +42,6 @@ public partial class ApplicationsViewModel : ViewModelBase
     }
 
     protected override string Subtitle => "Applications";
-
-    [ObservableProperty] public partial string? OrganizationId { get; set; }
-
-    [ObservableProperty] public partial bool IsLoading { get; private set; }
 
     [ObservableProperty] public partial bool IsListView { get; private set; }
 
@@ -65,9 +62,9 @@ public partial class ApplicationsViewModel : ViewModelBase
         await SetView();
     }
 
-    partial void OnOrganizationIdChanged(string? value)
+    protected override async Task OnOrganizationLoaded()
     {
-        Task.Run(() => LoadApplications());
+        await LoadApplications();
     }
 
     [RelayCommand]

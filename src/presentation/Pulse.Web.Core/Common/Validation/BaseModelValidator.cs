@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluentValidation;
 
-namespace Pulse.Web.Core.Helpers;
+namespace Pulse.Web.Core.Common.Validation;
 
 public class BaseModelValidator<T> : AbstractValidator<T>
 {

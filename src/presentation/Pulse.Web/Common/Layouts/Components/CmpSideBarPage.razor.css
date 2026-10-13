@@ -1,0 +1,10 @@
+.wrapper {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    overflow: hidden;
+}
+
+.sidebar {
+    box-shadow: 0 0 3px rgba(0,0,0,0.5);
+    clip-path: inset(0px -3px 0px 0px);
+}

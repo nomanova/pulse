@@ -2,7 +2,7 @@
 
 @using Pulse.App.Dto.Applications
 @using Constants = Pulse.Web.Constants
-@inherits MvvmCmpBase<ApplicationsViewModel>
+@inherits MvvmCmpBase<ApplicationListViewModel>
 
 <PageTitle>@ViewModel.Title</PageTitle>
 
@@ -135,10 +135,9 @@
 
     [Parameter] public required string OrganizationId { get; set; }
 
-    protected override void OnParametersSet()
+    protected override async Task OnParametersSetAsync()
     {
-        ViewModel.OrganizationId = OrganizationId;
-        base.OnParametersSet();
+        await ViewModel.InitializeOrganizationContext(OrganizationId);
     }
 
     private string GridClass()

@@ -1,0 +1,36 @@
+@inherits MvvmCmpBase<EnvironmentContainerViewModel>
+
+<CmpSideBarPage>
+    <SideBar>
+        <CmpEnvironmentMenu
+            OrganizationId="@OrganizationId"
+            ApplicationId="@ApplicationId"
+            EnvironmentId="@EnvironmentId"/>
+    </SideBar>
+    <Content>
+        @if (ViewModel.IsLoading)
+        {
+            <CmpLoader/>
+        }
+        else
+        {
+            @ChildContent
+        }
+    </Content>
+</CmpSideBarPage>
+
+@code {
+    [Parameter] public required string OrganizationId { get; set; }
+
+    [Parameter] public required string ApplicationId { get; set; }
+
+    [Parameter] public required string EnvironmentId { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await ViewModel.InitializeApplicationContext(OrganizationId, ApplicationId, EnvironmentId);
+    }
+
+}

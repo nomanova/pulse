@@ -17,18 +17,18 @@ public partial class SelectOrganizationViewModel : ViewModelBase
 {
     private const string ErrLoadOrganizations = "Could not load organizations";
 
-    private readonly IAuthenticationService _authenticationService;
+    private readonly IContextProvider _contextProvider;
     private readonly ICtrlApiClient _ctrlApiClient;
     private readonly IFlagManager _flagManager;
     private readonly IPageNavigator _navigator;
 
     public SelectOrganizationViewModel(
-        IAuthenticationService authenticationService,
+        IContextProvider contextProvider,
         ICtrlApiClient ctrlApiClient,
         IFlagManager flagManager,
         IPageNavigator navigator)
     {
-        _authenticationService = authenticationService;
+        _contextProvider = contextProvider;
         _ctrlApiClient = ctrlApiClient;
         _flagManager = flagManager;
         _navigator = navigator;
@@ -38,7 +38,7 @@ public partial class SelectOrganizationViewModel : ViewModelBase
     
     [ObservableProperty] public partial bool IsLoading { get; private set; }
 
-    [ObservableProperty] public partial OrganizationProfile? CurrentOrganization { get; private set; }
+    [ObservableProperty] public partial NamedIdentity? CurrentOrganization { get; private set; }
 
     [ObservableProperty] public partial List<OrganizationDto>? Organizations { get; private set; }
 
@@ -48,7 +48,7 @@ public partial class SelectOrganizationViewModel : ViewModelBase
     {
         IsLoading = true;
 
-        CurrentOrganization = await _authenticationService.GetOrganization();
+        CurrentOrganization = _contextProvider.Organization;
 
         var result = await _ctrlApiClient.Organizations.Search(new PagedSearchRequest());
 
@@ -77,9 +77,9 @@ public partial class SelectOrganizationViewModel : ViewModelBase
             return;
         }
 
-        var organization = SelectedOrganization.ToOrganizationProfile();
-        await _authenticationService.SwitchOrganization(organization);
-
+        var organization = SelectedOrganization;
+        _contextProvider.Organization = new NamedIdentity(organization.Id, organization.Name);
+        
         _navigator.NavigateTo(string.Format(Routes.Applications, organization.Id), replace: true);
     }
     

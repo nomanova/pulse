@@ -2,7 +2,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using FluentValidation;
 
-namespace Pulse.Web.Core.Helpers;
+namespace Pulse.Web.Core.Common.Validation;
 
 public static partial class Validators
 {

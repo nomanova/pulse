@@ -8,5 +8,8 @@ public static partial class ApplicationErrors
     {
         public static readonly Error RemovePrimary = 
             Error.Validation("Environment.RemovePrimary", "Cannot remove primary environment");
+        
+        public static readonly Error MaxCountReached =
+            Error.Validation("Environment.MaxCountReached", "Maximum environment count reached");
     }
 }

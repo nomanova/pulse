@@ -23,7 +23,7 @@ namespace Pulse.App.Handlers.Environments.Commands;
 public sealed record AddEnvironmentCommand : ICommand<ErrorOr<IdentityDto>>
 {
     public required ApplicationId ApplicationId { get; init; }
-    
+
     public required string? EnvironmentName { get; init; }
 }
 
@@ -31,6 +31,8 @@ public sealed class AddEnvironmentCommandAuthorizer : PermissionAuthorizer<AddEn
 
 public sealed class AddEnvironmentCommandHandler : ICommandHandler<AddEnvironmentCommand, ErrorOr<IdentityDto>>
 {
+    private const uint MaxEnvironmentCount = 10;
+
     private readonly IUserProvider _userProvider;
     private readonly IApplicationRepository _applicationRepository;
     private readonly IEnvironmentRepository _environmentRepository;
@@ -64,10 +66,19 @@ public sealed class AddEnvironmentCommandHandler : ICommandHandler<AddEnvironmen
         {
             return Error.NotFound();
         }
-        
+
+        // Verify environment count
+        var countSpecification = new SearchEnvironmentsSpecification(application.Id);
+        var environmentCount = await _environmentRepository.Count(countSpecification, cancellationToken);
+
+        if (environmentCount >= MaxEnvironmentCount)
+        {
+            return ApplicationErrors.Environment.MaxCountReached;
+        }
+
         // Duplicate name detection
-        var specification = new EnvironmentByNameSpecification(application.Id, command.EnvironmentName);
-        var existingEnvironment = await _environmentRepository.SearchOne(specification, cancellationToken);
+        var byNameSpecification = new EnvironmentByNameSpecification(application.Id, command.EnvironmentName);
+        var existingEnvironment = await _environmentRepository.SearchOne(byNameSpecification, cancellationToken);
 
         if (existingEnvironment != null)
         {

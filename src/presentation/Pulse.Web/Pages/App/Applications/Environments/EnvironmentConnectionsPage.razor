@@ -1,0 +1,23 @@
+@page "/org/{OrganizationId}/app/{ApplicationId}/env/{EnvironmentId}/connections"
+
+@inherits MvvmCmpBase<EnvironmentConnectionsViewModel>
+
+<PageTitle>@ViewModel.Title</PageTitle>
+
+<CmpEnvironmentPage OrganizationId="@OrganizationId"
+                    ApplicationId="@ApplicationId"
+                    EnvironmentId="@EnvironmentId">
+
+    <h3>Environment Connections</h3>
+    @* Page-specific content and controls *@
+    
+</CmpEnvironmentPage>
+
+@code {
+    
+    [Parameter] public required string OrganizationId { get; set; }
+
+    [Parameter] public required string ApplicationId { get; set; }
+
+    [Parameter] public required string EnvironmentId { get; set; }
+}

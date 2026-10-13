@@ -1,0 +1,24 @@
+@page "/org/{OrganizationId}/app/{ApplicationId}/env/{EnvironmentId}"
+
+@inherits MvvmCmpBase<EnvironmentViewModel>
+
+<PageTitle>@ViewModel.Title</PageTitle>
+
+<CmpCenteredPage>
+    <CmpLoader/>
+</CmpCenteredPage>
+
+@code {
+
+    [Parameter] public required string OrganizationId { get; set; }
+
+    [Parameter] public required string ApplicationId { get; set; }
+
+    [Parameter] public required string EnvironmentId { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await ViewModel.InitializeApplicationContext(OrganizationId, ApplicationId, EnvironmentId);
+    }
+
+}

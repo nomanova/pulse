@@ -2,7 +2,7 @@ using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using FluentValidation;
-using Pulse.Web.Core.Helpers;
+using Pulse.Web.Core.Common.Validation;
 using Pulse.Web.Core.Services.Interfaces;
 using Pulse.Web.Core.ViewModels.Common;
 

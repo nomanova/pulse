@@ -1,0 +1,19 @@
+<MudNavMenu Class="mt-7" Dense="false" Rounded="false" Bordered="false" Color="Color.Primary" Margin="Margin.None">
+    <CmpMenuLink
+        Title="Connections"
+        Icon="@MaterialSymbols.Outlined.DeveloperGuide"
+        Route="@($"/org/{OrganizationId}/app/{ApplicationId}/env/{EnvironmentId}/connections")"/>
+
+    <CmpMenuLink
+        Title="API Keys"
+        Icon="@MaterialSymbols.Outlined.DeveloperGuide"
+        Route="@($"/org/{OrganizationId}/app/{ApplicationId}/env/{EnvironmentId}/api-keys")"/>
+</MudNavMenu>
+
+@code {
+    [Parameter] public required string OrganizationId { get; set; }
+
+    [Parameter] public required string ApplicationId { get; set; }
+
+    [Parameter] public required string EnvironmentId { get; set; }
+}

@@ -1,6 +1,4 @@
-@inject NavigationManager NavigationManager
-@inject IAuthenticationService AuthenticationService
-@inject IAuthenticationStore AuthenticationStore
+@inherits MvvmCmpBase<UserViewModel>
 
 <MudMenu AnchorOrigin="Origin.BottomRight" TransformOrigin="Origin.TopRight">
     <ActivatorContent>
@@ -10,11 +8,11 @@
             <div class="d-flex align-center">
                 <div style="display: inline-block">
                     <MudText Align="Align.Right" style="width: 100%; font-size: 14px; font-weight: bold;"
-                             data-test-id="lbl-appbar-user">@(_username)</MudText>
-                    @if (!string.IsNullOrEmpty(_organization))
+                             data-test-id="lbl-appbar-user">@(ViewModel.Username)</MudText>
+                    @if (ViewModel.Organization != null)
                     {
                         <MudText Align="Align.Right" style="width: 100%; font-size: 11px;"
-                                 data-test-id="lbl-appbar-organization">@(_organization)</MudText>
+                                 data-test-id="lbl-appbar-organization">@(ViewModel.Organization)</MudText>
                     }
                 </div>
                 <div class="d-flex align-center pl-4">
@@ -24,10 +22,10 @@
         </MudButton>
     </ActivatorContent>
     <ChildContent>
-        @if (!string.IsNullOrEmpty(_organization))
+        @if (!string.IsNullOrEmpty(ViewModel.Organization))
         {
             <MudMenuItem
-                OnClick="@OnSwitchOrganization"
+                OnClick="@(() => ViewModel.SwitchOrganizationCommand.Execute(null))"
                 Icon="@Icons.Material.Filled.CompareArrows"
                 IconColor="@Color.Tertiary"
                 data-test-id="btn-appbar-user-switch-organization">
@@ -36,7 +34,7 @@
             <MudDivider/>
         }
         <MudMenuItem
-            OnClick="@OnSignOut"
+            OnClick="@(() => ViewModel.SignOutCommand.Execute(null))"
             Icon="@Icons.Material.Filled.Logout"
             IconColor="@Color.Tertiary"
             data-test-id="btn-appbar-user-sign-out">
@@ -44,33 +42,3 @@
         </MudMenuItem>
     </ChildContent>
 </MudMenu>
-
-@code {
-
-    private string _username = null!;
-    private string _organization = null!;
-
-    protected override async Task OnInitializedAsync()
-    {
-        var userProfile = await AuthenticationStore.GetUser();
-        _username = userProfile?.Username ?? string.Empty;
-
-        var organizationProfile = await AuthenticationStore.GetOrganization();
-
-        if (organizationProfile != null)
-        {
-            _organization = organizationProfile.Name.ToUpperInvariant();
-        }
-    }
-
-    private void OnSwitchOrganization()
-    {
-        NavigationManager.NavigateTo(Routes.SelectOrganization);
-    }
-    
-    private async Task OnSignOut()
-    {
-        await AuthenticationService.SignOut();
-        NavigationManager.NavigateTo(Routes.SignIn);
-    }
-}

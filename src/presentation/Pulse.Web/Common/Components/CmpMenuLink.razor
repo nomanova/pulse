@@ -1,0 +1,16 @@
+<MudNavLink
+    Class="[&>*:first-child]:pl-6 [&_.mud-icon-root]:opacity-75"
+    Icon="@Icon"
+    Match="NavLinkMatch.Prefix"
+    Href="@Route">
+    @Title
+</MudNavLink>
+
+@code
+{
+    [Parameter] public string? Title { get; set; }
+
+    [Parameter] public string? Route { get; set; }
+
+    [Parameter] public string? Icon { get; set; }
+}

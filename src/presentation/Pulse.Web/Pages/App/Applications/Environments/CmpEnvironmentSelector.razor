@@ -1,0 +1,60 @@
+@inject NavigationManager NavigationManager
+
+<div class="px-3 pb-3">
+    <MudSelect T="string"
+               Value="@EnvironmentId"
+               ValueChanged="OnEnvironmentSelected"
+               Variant="Variant.Outlined"
+               Margin="Margin.Dense"
+               Dense="true"
+               AnchorOrigin="Origin.BottomCenter"
+               TransformOrigin="Origin.TopCenter">
+        @foreach (var env in Environments)
+        {
+            <MudSelectItem Value="@env.Id">
+                <div class="d-flex align-center gap-2">
+                    <MudText Typo="Typo.body2">@env.Name</MudText>
+                    @if (env.IsPrimary)
+                    {
+                        <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Text">Primary
+                        </MudChip>
+                    }
+                </div>
+            </MudSelectItem>
+        }
+    </MudSelect>
+</div>
+
+@code {
+    [Parameter] public required string OrganizationId { get; set; }
+    [Parameter] public required string ApplicationId { get; set; }
+    [Parameter] public required string EnvironmentId { get; set; }
+    [Parameter] public IReadOnlyList<EnvironmentDto> Environments { get; set; } = [];
+
+    private void OnEnvironmentSelected(string? targetEnvironmentId)
+    {
+        if (string.Equals(EnvironmentId, targetEnvironmentId, StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        var currentUri = NavigationManager.Uri;
+        var currentEnvSegment = $"/env/{EnvironmentId}";
+        var targetEnvSegment = $"/env/{targetEnvironmentId}";
+
+        // Preserve current subpage (e.g., /api-keys or /connections) if present
+        if (currentUri.Contains(currentEnvSegment, StringComparison.OrdinalIgnoreCase))
+        {
+            var targetRelativePath = NavigationManager.ToBaseRelativePath(currentUri)
+                .Replace($"env/{EnvironmentId}", $"env/{targetEnvironmentId}", StringComparison.OrdinalIgnoreCase);
+
+            NavigationManager.NavigateTo("/" + targetRelativePath);
+        }
+        else
+        {
+            // Default fallback page for newly selected environment
+            NavigationManager.NavigateTo($"/org/{OrganizationId}/app/{ApplicationId}/env/{targetEnvironmentId}/connections");
+        }
+    }
+
+}

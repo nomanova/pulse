@@ -1,0 +1,16 @@
+<div class="wrapper">
+    <div class="sidebar">
+        @SideBar
+    </div>
+    @Content
+</div>
+
+@code {
+
+    [Parameter]
+    public RenderFragment? SideBar { get; set; }
+
+    [Parameter]
+    public RenderFragment? Content { get; set; }
+
+}

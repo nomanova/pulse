@@ -27,6 +27,14 @@
     <ItemGroup>
       <Folder Include="wwwroot\fonts\material\" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\App\Environments\CmpEnvironmentMenu.razor" />
+      <_ContentIncludedByDefault Remove="Pages\App\Environments\CmpEnvironmentPage.razor" />
+      <_ContentIncludedByDefault Remove="Pages\App\Environments\EnvironmentApiKeysPage.razor" />
+      <_ContentIncludedByDefault Remove="Pages\App\Environments\EnvironmentConnectionsPage.razor" />
+      <_ContentIncludedByDefault Remove="Pages\App\Environments\_Imports.razor" />
+    </ItemGroup>
 
     <!-- Run npm install before restore if node_modules is missing -->
     <Target Name="NpmInstall" BeforeTargets="Build" Condition="!Exists('node_modules')">

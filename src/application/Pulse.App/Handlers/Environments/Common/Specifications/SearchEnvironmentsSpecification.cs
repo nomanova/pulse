@@ -16,7 +16,7 @@ public sealed class SearchEnvironmentsSpecification : Specification<Environment>
 
     public SearchEnvironmentsSpecification(
         ApplicationId applicationId,
-        string? query)
+        string? query = null)
     {
         _applicationId = applicationId;
         _query = query.AsNormalizedQueryable();

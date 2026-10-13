@@ -5,7 +5,7 @@ using CommunityToolkit.Mvvm.Messaging;
 using Pulse.Api.Client.Common;
 using Pulse.Api.Ctrl.Client;
 using Pulse.Api.Ctrl.Contract;
-using Pulse.Web.Core.Helpers;
+using Pulse.Web.Core.Common.Validation;
 using Pulse.Web.Core.Services.Interfaces;
 using Pulse.Web.Core.ViewModels.Common;
 

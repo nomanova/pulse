@@ -1,6 +1,5 @@
 using System.Linq;
 using System.Threading.Tasks;
-using CommunityToolkit.Mvvm.ComponentModel;
 using Pulse.Api.Client.Common;
 using Pulse.Api.Ctrl.Client;
 using Pulse.Api.Shared.Contract;
@@ -14,25 +13,28 @@ public partial class HomeViewModel : ViewModelBase
 {
     private const string ErrFetchOrganizations = "Could not fetch organizations";
 
+    private readonly IContextProvider _contextProvider;
     private readonly IPageNavigator _navigator;
     private readonly IFlagManager _flagManager;
     private readonly IAuthenticationService _authenticationService;
     private readonly ICtrlApiClient _ctrlApiClient;
 
     public HomeViewModel(
+        IContextProvider contextProvider,
         IPageNavigator navigator,
         IFlagManager flagManager,
         IAuthenticationService authenticationService,
         ICtrlApiClient ctrlApiClient)
     {
+        _contextProvider = contextProvider;
         _navigator = navigator;
         _flagManager = flagManager;
         _authenticationService = authenticationService;
         _ctrlApiClient = ctrlApiClient;
     }
-
-    [ObservableProperty] public partial string Title { get; private set; } = "Home";
-
+    
+    protected override string Subtitle => "Home";
+    
     public override async Task OnInitializedAsync()
     {
         // Fetch available organizations
@@ -55,8 +57,19 @@ public partial class HomeViewModel : ViewModelBase
             return;
         }
 
+        if (availableOrganizations.Count == 1)
+        {
+            // Select only organization by default
+            var defaultOrganization = availableOrganizations[0];
+            
+            _contextProvider.Organization = new NamedIdentity(defaultOrganization.Id, defaultOrganization.Name);
+            _navigator.NavigateTo(string.Format(Routes.Applications, defaultOrganization.Id), replace: true);
+
+            return;
+        }
+
         // Set organization
-        var currentOrganization = await _authenticationService.GetOrganization();
+        var currentOrganization = _contextProvider.Organization;
 
         OrganizationProfile? organization = null;
 
@@ -76,7 +89,7 @@ public partial class HomeViewModel : ViewModelBase
             return;
         }
 
-        await _authenticationService.SwitchOrganization(organization);
+        _contextProvider.Organization = new NamedIdentity(organization.Id, organization.Name);
         _navigator.NavigateTo(string.Format(Routes.Applications, organization.Id), replace: true);
     }
 }

@@ -12,12 +12,6 @@ public interface IAuthenticationStore
     Task SetUser(UserProfile profile);
     
     Task<UserProfile?> GetUser();
-
-    Task SetOrganization(OrganizationProfile profile);
-    
-    Task<OrganizationProfile?> GetOrganization();
     
     Task ClearUser();
-    
-    Task ClearAll();
 }

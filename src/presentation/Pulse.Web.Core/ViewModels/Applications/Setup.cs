@@ -6,9 +6,10 @@ public static class Setup
 {
     public static IServiceCollection AddApplicationViewModels(this IServiceCollection services)
     {
-        services.AddTransient<ApplicationsViewModel>();
+        services.AddTransient<ApplicationListViewModel>();
         services.AddTransient<AddApplicationViewModel>();
-        services.AddTransient<ApplicationDetailViewModel>();
+
+        services.AddTransient<ApplicationViewModel>();
 
         return services;
     }
