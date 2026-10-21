@@ -42,7 +42,7 @@
     </Target>
 
     <!-- Compile Tailwind CSS before project build -->
-    <Target Name="BuildTailwind" BeforeTargets="BeforeBuild">
+    <Target Name="BuildTailwind" BeforeTargets="BeforeBuild" DependsOnTargets="NpmInstall">
         <Exec Command="npm run build:css" WorkingDirectory="$(MSBuildProjectDirectory)" />
     </Target>
 

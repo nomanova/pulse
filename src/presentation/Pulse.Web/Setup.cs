@@ -82,6 +82,7 @@ public static class Setup
             builder.Services.AddMudExtensions();
 
             builder.Services.AddScoped<IFlagManager, FlagManager>();
+            builder.Services.AddScoped<IDialogManager, DialogManager>();
 
             return builder;
         }

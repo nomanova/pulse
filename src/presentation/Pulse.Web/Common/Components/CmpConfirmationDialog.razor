@@ -1,0 +1,65 @@
+@using ErrorOr
+@using Pulse.Web.Core.Models
+
+<MudDialog Gutters="false">
+
+    <DialogContent>
+        <MudContainer Style="min-height: 100px; max-height: 350px; width: 450px; overflow-y: scroll;">
+            <MudText>@_renderedBodyText</MudText>
+        </MudContainer>
+    </DialogContent>
+
+    <DialogActions>
+        <div class="pa-2">
+            <CmpSecondaryButton
+                Text="Cancel"
+                OnClick="@OnCancel"/>
+
+            <CmpButton
+                Text="@ActionText"
+                Color="@(ActionColor())"
+                Class="ml-2"
+                OnClick="@OnAction"/>
+        </div>
+    </DialogActions>
+
+</MudDialog>
+
+@code
+{
+    [CascadingParameter] public IMudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter] public DialogStyle Style { get; set; }
+
+    [Parameter] public string? TitleText { get; set; }
+
+    [Parameter] public string? BodyText { get; set; }
+
+    [Parameter] public string? ActionText { get; set; }
+
+    private MarkupString? _renderedBodyText;
+
+    private void OnCancel() => MudDialog.Cancel();
+
+    private void OnAction()
+    {
+        MudDialog.Close(DialogResult.Ok(Result.Success));
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        _renderedBodyText = BodyText == null ? new MarkupString(string.Empty) : new MarkupString(BodyText);
+    }
+
+    private Color ActionColor()
+    {
+        return Style switch
+        {
+            DialogStyle.Info => Color.Primary,
+            DialogStyle.Warning => Color.Error,
+            _ => throw new NotImplementedException(Style.ToString())
+        };
+    }
+}

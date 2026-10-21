@@ -792,16 +792,19 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                     b.HasOne("Pulse.Domain.Aggregates.Applications.Application", null)
                         .WithMany()
                         .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_memberships_applications_application_id");
 
                     b.HasOne("Pulse.Domain.Aggregates.Environments.Environment", null)
                         .WithMany()
                         .HasForeignKey("EnvironmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_memberships_environments_environment_id");
 
                     b.HasOne("Pulse.Domain.Aggregates.Organizations.Organization", null)
                         .WithMany()
                         .HasForeignKey("OrganizationId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("fk_memberships_organizations_organization_id");
 
                     b.HasOne("Pulse.Domain.Aggregates.Roles.Role", null)

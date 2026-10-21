@@ -25,6 +25,7 @@ public partial class ApplicationListViewModel : OrganizationContextViewModel
     private readonly ILocalStorage _localStorage;
     private readonly IFlagManager _flagManager;
     private readonly IPageNavigator _navigator;
+    private readonly IDialogManager _dialogManager;
 
     public ApplicationListViewModel(
         IMessenger messenger,
@@ -32,13 +33,15 @@ public partial class ApplicationListViewModel : OrganizationContextViewModel
         ICtrlApiClient ctrlApiClient,
         ILocalStorage localStorage,
         IFlagManager flagManager, 
-        IPageNavigator navigator) : base(contextProvider)
+        IPageNavigator navigator, 
+        IDialogManager dialogManager) : base(contextProvider)
     {
         _messenger = messenger;
         _ctrlApiClient = ctrlApiClient;
         _localStorage = localStorage;
         _flagManager = flagManager;
         _navigator = navigator;
+        _dialogManager = dialogManager;
     }
 
     protected override string Subtitle => "Applications";
@@ -123,6 +126,36 @@ public partial class ApplicationListViewModel : OrganizationContextViewModel
     private void OnApplicationDetail(string applicationId)
     {
         _navigator.NavigateTo(string.Format(Routes.ApplicationDetail, OrganizationId, applicationId));
+    }
+
+    [RelayCommand]
+    private async Task OnRemoveApplication(ApplicationDto application)
+    {
+        var confirmation = await _dialogManager.GetRemoveConfirmation("application", application.Name);
+        
+        if (!confirmation)
+        {
+            return;
+        }
+
+        IsLoading = true;
+
+        var result = await _ctrlApiClient.Applications.Remove(new RemoveApplicationRequest
+        {
+            ApplicationId = application.Id
+        });
+
+        IsLoading = false;
+
+        if (result.Success)
+        {
+            _lastId = null;
+            await LoadApplications(SearchText);
+        }
+        else
+        {
+            _flagManager.RaiseError("Could not delete application");
+        }
     }
 
     private async Task SetView()

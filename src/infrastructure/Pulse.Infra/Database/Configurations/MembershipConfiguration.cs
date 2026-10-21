@@ -1,3 +1,4 @@
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Pulse.Domain.Aggregates.Applications;
 using Pulse.Domain.Aggregates.Environments;
@@ -37,15 +38,18 @@ public sealed class MembershipConfiguration : DomainEntityTypeConfiguration<Memb
 
         builder.HasOne<Organization>()
             .WithMany()
-            .HasForeignKey(membership => membership.OrganizationId);
+            .HasForeignKey(membership => membership.OrganizationId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<Application>()
             .WithMany()
-            .HasForeignKey(membership => membership.ApplicationId);
+            .HasForeignKey(membership => membership.ApplicationId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.HasOne<Environment>()
             .WithMany()
-            .HasForeignKey(membership => membership.EnvironmentId);
+            .HasForeignKey(membership => membership.EnvironmentId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         // As a user should be a member of a particular resource at most once,
         // which is enforced on DB level.

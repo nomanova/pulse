@@ -40,22 +40,26 @@
             @* Switch *@
             <div style="flex-basis: 0; flex-grow: 1">
                 <MudButtonGroup Class="ml-4" Style="height: 40px;" Variant="Variant.Outlined" Color="Color.Inherit">
-                    <MudToggleIconButton
-                        Toggled="@ViewModel.IsGridView"
-                        Icon="@Icons.Material.Filled.GridView"
-                        ToggledIcon="@Icons.Material.Filled.GridView"
-                        Color="Color.Inherit"
-                        ToggledColor="@Color.Primary"
-                        ToggledChanged="@(() => ViewModel.DisplayGridCommand.ExecuteAsync(true))"
-                        data-test-id="btn-grid-view"/>
-                    <MudToggleIconButton
-                        Toggled="@ViewModel.IsListView"
-                        Icon="@Icons.Material.Filled.List"
-                        ToggledIcon="@Icons.Material.Filled.List"
-                        Color="Color.Inherit"
-                        ToggledColor="@Color.Primary"
-                        ToggledChanged="@(() => ViewModel.DisplayListCommand.ExecuteAsync(true))"
-                        data-test-id="btn-list-view"/>
+                    <MudTooltip Text="Grid">
+                        <MudToggleIconButton
+                            Toggled="@ViewModel.IsGridView"
+                            Icon="@Icons.Material.Filled.GridView"
+                            ToggledIcon="@Icons.Material.Filled.GridView"
+                            Color="Color.Inherit"
+                            ToggledColor="@Color.Primary"
+                            ToggledChanged="@(() => ViewModel.DisplayGridCommand.ExecuteAsync(true))"
+                            data-test-id="btn-grid-view"/>
+                    </MudTooltip>
+                    <MudTooltip Text="Table">
+                        <MudToggleIconButton
+                            Toggled="@ViewModel.IsListView"
+                            Icon="@Icons.Material.Filled.List"
+                            ToggledIcon="@Icons.Material.Filled.List"
+                            Color="Color.Inherit"
+                            ToggledColor="@Color.Primary"
+                            ToggledChanged="@(() => ViewModel.DisplayListCommand.ExecuteAsync(true))"
+                            data-test-id="btn-list-view"/>
+                    </MudTooltip>
                 </MudButtonGroup>
             </div>
 
@@ -83,7 +87,8 @@
                             <ApplicationCardView
                                 Application="@application"
                                 FixedWidth="@(ViewModel.Applications.Count < GridCutoff)"
-                                OnClick="@(appId => ViewModel.ApplicationDetailCommand.Execute(appId))"/>
+                                OnClick="@(appId => ViewModel.ApplicationDetailCommand.Execute(appId))"
+                                OnRemove="@(app => ViewModel.RemoveApplicationCommand.Execute(app))"/>
                         }
                     </div>
                 }
@@ -99,10 +104,25 @@
                         RowClass="cursor-pointer">
                         <HeaderContent>
                             <MudTh>Name</MudTh>
+                            <MudTh></MudTh>
                         </HeaderContent>
                         <RowTemplate>
                             <MudTd DataLabel="Name">
                                 @context.Name
+                            </MudTd>
+                            <MudTd Style="padding: 0 !important; text-align: right">
+                                <MudMenu
+                                    AnchorOrigin="Origin.BottomRight"
+                                    TransformOrigin="Origin.TopRight"
+                                    Class="mr-2"
+                                    Icon="@Icons.Material.Filled.MoreVert">
+                                    <MudMenuItem
+                                        OnClick="@(() => ViewModel.RemoveApplicationCommand.ExecuteAsync(context))"
+                                        Icon="@Icons.Material.Filled.Delete"
+                                        IconColor="Color.Tertiary">
+                                        Remove
+                                    </MudMenuItem>
+                                </MudMenu>
                             </MudTd>
                         </RowTemplate>
                     </MudTable>
