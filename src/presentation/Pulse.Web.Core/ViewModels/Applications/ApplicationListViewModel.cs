@@ -79,7 +79,9 @@ public partial class ApplicationListViewModel : OrganizationContextViewModel
     [RelayCommand]
     private async Task OnSearch(string searchText)
     {
-        await LoadApplications(searchText, _lastId);
+        SearchText = searchText;
+        
+        await LoadApplications(searchText);
     }
 
     [RelayCommand]
@@ -208,7 +210,9 @@ public partial class ApplicationListViewModel : OrganizationContextViewModel
         }
 
         HasMoreItems = response.HasNext;
-        _lastId = response.HasNext ? response.Entities[^1].Id : null;
+        _lastId = response is { HasNext: true, Entities.Count: > 0 }
+            ? response.Entities[^1].Id
+            : null;
 
         OnPropertyChanged(nameof(Applications));
 

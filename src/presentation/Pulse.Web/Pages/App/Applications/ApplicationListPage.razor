@@ -25,9 +25,11 @@
             @* Searchbox *@
             <div style="flex-basis: 0; flex-grow: 2">
                 <MudTextField
-                    @bind-Value="@ViewModel.SearchText"
+                    T="string"
+                    Value="@_searchText"
+                    ValueChanged="@OnSearchTextChanged"
                     DebounceInterval="@Constants.SearchDebounceInMs"
-                    OnDebounceIntervalElapsed="@(searchText => ViewModel.SearchCommand.ExecuteAsync(searchText))"
+                    OnDebounceIntervalElapsed="@OnSearchDebounced"
                     Label="Search"
                     Variant="Variant.Outlined"
                     Margin="Margin.Dense"
@@ -153,6 +155,8 @@
 
     private const int GridCutoff = 6;
 
+    private string? _searchText;
+    
     [Parameter] public required string OrganizationId { get; set; }
 
     protected override async Task OnParametersSetAsync()
@@ -160,9 +164,18 @@
         await ViewModel.InitializeOrganizationContext(OrganizationId);
     }
 
+    private void OnSearchTextChanged(string? searchText)
+    {
+        _searchText = searchText;
+    }
+
+    private Task OnSearchDebounced(string searchText)
+    {
+        return ViewModel.SearchCommand.ExecuteAsync(searchText);
+    }
+    
     private string GridClass()
     {
         return ViewModel.Applications.Count < GridCutoff ? "application-flex" : "application-grid";
     }
-
 }

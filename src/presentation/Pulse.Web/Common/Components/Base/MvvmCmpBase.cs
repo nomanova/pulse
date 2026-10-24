@@ -33,7 +33,7 @@ public abstract class MvvmCmpBase<TViewModel> : ComponentBase, IDisposable where
     private void OnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         PropertyChanged(e.PropertyName);
-        StateHasChanged();
+        _ = InvokeAsync(StateHasChanged);
     }
 
     protected virtual void PropertyChanged(string? propertyName)
