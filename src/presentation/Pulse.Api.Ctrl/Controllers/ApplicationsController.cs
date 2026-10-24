@@ -35,7 +35,8 @@ public sealed class ApplicationsController : CtrlApiController
         var command = new AddApplicationCommand
         {
             OrganizationId = request.OrganizationId.AsIdentity<OrganizationId>(),
-            ApplicationName = request.ApplicationName
+            ApplicationName = request.ApplicationName,
+            ApplicationKey = request.ApplicationKey
         };
 
         var result = await _sender.Send(command, cancellationToken);

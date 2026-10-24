@@ -30,7 +30,7 @@ public sealed class UserSignOutCommand : Command<UserSignOutCommand.Settings>
             return Exit.Error;
         }
 
-        var serverName = config.Context.ServerName!;
+        var serverName = config.Context.ServerKey!;
 
         config.SignOut();
         _configService.Save(config);

@@ -77,7 +77,7 @@ public sealed class EnvSelectCommandTests : CliTests
         {
             Entities = new List<EnvironmentDto>
             {
-                new() { Id = "1", Name = "prod" }
+                new() { Id = "1", Name = "Production", Key = "prod" }
             },
             HasNext = false
         };
@@ -94,7 +94,7 @@ public sealed class EnvSelectCommandTests : CliTests
         Assert.Contains("Selected environment 'prod'", result.Output);
         
         var savedConfig = ConfigService.Load();
-        Assert.Equal("prod", savedConfig.Context.Environment?.Name);
+        Assert.Equal("prod", savedConfig.Context.Environment?.Key);
     }
 
     [Fact]
@@ -110,8 +110,8 @@ public sealed class EnvSelectCommandTests : CliTests
         {
             Entities = new List<EnvironmentDto>
             {
-                new() { Id = "1", Name = "prod" },
-                new() { Id = "2", Name = "stage" }
+                new() { Id = "1", Name = "Production", Key = "prod" },
+                new() { Id = "2", Name = "Staging", Key = "stage" }
             },
             HasNext = false
         };
@@ -131,7 +131,7 @@ public sealed class EnvSelectCommandTests : CliTests
         Assert.Contains("Selected environment 'prod'", result.Output);
 
         var savedConfig = ConfigService.Load();
-        Assert.Equal("prod", savedConfig.Context.Environment?.Name);
+        Assert.Equal("prod", savedConfig.Context.Environment?.Key);
     }
 
     private Config ServerConfig()

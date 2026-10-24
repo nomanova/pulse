@@ -62,7 +62,8 @@ public partial class HomeViewModel : ViewModelBase
             // Select only organization by default
             var defaultOrganization = availableOrganizations[0];
             
-            _contextProvider.Organization = new NamedIdentity(defaultOrganization.Id, defaultOrganization.Name);
+            _contextProvider.Organization = new ObjectIdentity(
+                defaultOrganization.Id, defaultOrganization.Name, defaultOrganization.Key);
             _navigator.NavigateTo(string.Format(Routes.Applications, defaultOrganization.Id), replace: true);
 
             return;
@@ -89,7 +90,7 @@ public partial class HomeViewModel : ViewModelBase
             return;
         }
 
-        _contextProvider.Organization = new NamedIdentity(organization.Id, organization.Name);
+        _contextProvider.Organization = new ObjectIdentity(organization.Id, organization.Name, organization.Key);
         _navigator.NavigateTo(string.Format(Routes.Applications, organization.Id), replace: true);
     }
 }

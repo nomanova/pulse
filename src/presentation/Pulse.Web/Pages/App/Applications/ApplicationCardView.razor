@@ -8,10 +8,14 @@
     </div>
     <MudCardContent>
         <div class="flex align-center">
-            <MudText Typo="Typo.h6" Class="app-card-label">@Application.Name</MudText>
-
-            <div class="grow"></div>
             
+            <div class="flex flex-col">
+                <MudText Typo="Typo.h6" Class="app-card-label">@Application.Name</MudText>
+                <MudText Typo="Typo.body1" Class="app-card-label opacity-75">@Application.Key</MudText>
+            </div>
+            
+            <div class="grow"></div>
+
             <MudTooltip Text="Remove">
                 <MudIconButton
                     Icon="@Icons.Material.Filled.Delete"

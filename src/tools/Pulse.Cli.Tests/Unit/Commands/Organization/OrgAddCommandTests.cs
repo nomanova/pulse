@@ -34,7 +34,7 @@ public sealed class OrgAddCommandTests : CliTests
     public void Run_NoServerSelected_ShouldFail()
     {
         // Act
-        var result = App.Run("default");
+        var result = App.Run("Default", "default");
 
         // Assert
         Assert.Equal(Exit.Error, result.ExitCode);
@@ -60,7 +60,7 @@ public sealed class OrgAddCommandTests : CliTests
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "org_1" }, HttpStatusCode.OK));
 
         // Act
-        var result = App.Run("default");
+        var result = App.Run("Default", "default");
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
@@ -68,7 +68,7 @@ public sealed class OrgAddCommandTests : CliTests
         CtrlApiClient.OrganizationsMock.Verify(
             organizations => organizations.Add(
                 It.Is<AddOrganizationRequest>(request =>
-                    request.OrganizationName == "default"),
+                    request.OrganizationName == "Default"),
                 It.IsAny<CancellationToken>()),
             Times.Once);
     }
@@ -86,11 +86,11 @@ public sealed class OrgAddCommandTests : CliTests
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "org_1" }, HttpStatusCode.OK));
 
         // Act
-        var result = App.Run("default");
+        var result = App.Run("Default", "default");
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Equal("default", ConfigService.SavedConfig.Context.Organization?.Name);
+        Assert.Equal("default", ConfigService.SavedConfig.Context.Organization?.Key);
     }
 
     [Fact]
@@ -106,11 +106,11 @@ public sealed class OrgAddCommandTests : CliTests
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "org_1" }, HttpStatusCode.OK));
 
         // Act
-        var result = App.Run("default");
+        var result = App.Run("Default", "default");
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Equal("default", ConfigService.SavedConfig.Context.Organization?.Name);
+        Assert.Equal("default", ConfigService.SavedConfig.Context.Organization?.Key);
     }
 
     [Fact]
@@ -126,11 +126,11 @@ public sealed class OrgAddCommandTests : CliTests
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "org_1" }, HttpStatusCode.OK));
 
         // Act
-        var result = App.Run("default");
+        var result = App.Run("Default", "default");
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Contains("Organization 'default' added", result.Output);
+        Assert.Contains("Organization 'Default' ('default') added", result.Output);
     }
 
     [Fact]
@@ -146,7 +146,7 @@ public sealed class OrgAddCommandTests : CliTests
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "org_1" }, HttpStatusCode.OK));
 
         // Act
-        var result = App.Run("default");
+        var result = App.Run("Default", "default");
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
@@ -172,7 +172,7 @@ public sealed class OrgAddCommandTests : CliTests
                 }));
 
         // Act
-        var result = App.Run("default");
+        var result = App.Run("Default", "default");
 
         // Assert
         Assert.Equal(Exit.Error, result.ExitCode);

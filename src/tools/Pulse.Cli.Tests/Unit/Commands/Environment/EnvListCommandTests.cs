@@ -76,8 +76,8 @@ public sealed class EnvListCommandTests : CliTests
         {
             Entities = new List<EnvironmentDto>
             {
-                new() { Id = "1", Name = "prod" },
-                new() { Id = "2", Name = "stage" }
+                new() { Id = "1", Name = "Production", Key = "prod" },
+                new() { Id = "2", Name = "Staging", Key = "stage" }
             },
             HasNext = false
         };
@@ -109,8 +109,8 @@ public sealed class EnvListCommandTests : CliTests
         {
             Entities = new List<EnvironmentDto>
             {
-                new() { Id = "1", Name = "prod" },
-                new() { Id = "2", Name = "stage" }
+                new() { Id = "1", Name = "Production", Key = "prod" },
+                new() { Id = "2", Name = "Staging", Key = "stage" }
             },
             HasNext = false
         };

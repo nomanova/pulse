@@ -21,6 +21,8 @@ public sealed record AddWorkflowCommand : ICommand<ErrorOr<IdentityDto>>
     public required EnvironmentId EnvironmentId { get; init; }
     
     public string? WorkflowName { get; init; }
+    
+    public string? WorkflowKey { get; init; }
 }
 
 public sealed class AddWorkflowCommandAuthorizer : ApiKeyPermissionAuthorizer<AddWorkflowCommand>;
@@ -52,17 +54,17 @@ public sealed class AddWorkflowCommandHandler : ICommandHandler<AddWorkflowComma
             return Error.NotFound();
         }
         
-        // Duplicate name detection
-        var specification = new WorkflowByNameSpecification(environment.Id, command.WorkflowName);
+        // Duplicate key detection
+        var specification = new WorkflowByKeySpecification(environment.Id, command.WorkflowKey);
         var existingWorkflow = await _workflowRepository.SearchOne(specification, cancellationToken);
 
         if (existingWorkflow != null)
         {
-            return ApplicationErrors.NameInUse;
+            return ApplicationErrors.KeyInUse;
         }
 
         // Create workflow
-        var workflow = Workflow.Create(environment, command.WorkflowName);
+        var workflow = Workflow.Create(environment, command.WorkflowName, command.WorkflowKey);
         _workflowRepository.Add(workflow);
 
         await _unitOfWork.Commit(cancellationToken);

@@ -9,13 +9,16 @@ namespace Pulse.Domain.Aggregates.Environments;
 
 public sealed record EnvironmentId : EntityId<EnvironmentId, Environment>;
 
-public class Environment : DomainEntity<EnvironmentId>, IApplicationScoped, INamedObject
+public class Environment : DomainEntity<EnvironmentId>, IApplicationScoped, INamedObject, IKeyedObject
 {
-    public const string DefaultName = "production";
+    public const string DefaultName = "Production";
+    public const string DefaultKey = "production";
     
     public ApplicationId ApplicationId { get; } = null!;
 
     public ObjectName Name { get; private set; } = null!;
+
+    public ObjectKey Key { get; private set; } = null!;
 
     public bool IsPrimary { get; private set; }
 
@@ -29,18 +32,22 @@ public class Environment : DomainEntity<EnvironmentId>, IApplicationScoped, INam
         EnvironmentId id,
         ApplicationId applicationId,
         ObjectName name,
+        ObjectKey key,
         bool isPrimary,
         ApiKey apiKey) : base(id)
     {
         ApplicationId = applicationId;
         Name = name;
+        Key = key;
         IsPrimary = isPrimary;
         ApiKey = apiKey;
     }
 
-    public static Environment Create(string? name, Application application, bool isPrimary = false)
+    public static Environment Create(string? name, string? key, Application application, bool isPrimary = false)
     {
         var objectName = ObjectName.Create(name).Assert();
+        var objectKey = ObjectKey.Create(key).Assert();
+        
         var id = IdentityProvider.New<EnvironmentId>();
         var apiKey = ApiKey.Create();
 
@@ -48,6 +55,7 @@ public class Environment : DomainEntity<EnvironmentId>, IApplicationScoped, INam
             id,
             application.Id,
             objectName,
+            objectKey,
             isPrimary,
             apiKey);
 
@@ -58,6 +66,6 @@ public class Environment : DomainEntity<EnvironmentId>, IApplicationScoped, INam
 
     public override string ToString()
     {
-        return $"[{Id.Value}] {Name.Value}";
+        return $"[{Id.Value}] {Name.Value} ({Key.Value})";
     }
 }

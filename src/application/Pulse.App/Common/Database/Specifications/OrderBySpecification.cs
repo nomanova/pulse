@@ -48,7 +48,7 @@ public sealed class OrderBySpecification<T, Tk, Tp> : IOrderBySpecification<T>
         propertyInfo.ThrowIfNull();
 
         var rawValue = propertyInfo.GetValue(entity, null);
-        var value = rawValue is ObjectName objectName
+        var value = rawValue is ObjectKey objectName
             ? (Tp?)(object)objectName.Value
             : (Tp?)rawValue;
 
@@ -85,9 +85,9 @@ public sealed class OrderBySpecification<T, Tk, Tp> : IOrderBySpecification<T>
             return propExpr;
         }
 
-        if (propExpr.Type == typeof(ObjectName))
+        if (propExpr.Type == typeof(ObjectKey))
         {
-            var valueExpr = Expression.Property(propExpr, nameof(ObjectName.Value));
+            var valueExpr = Expression.Property(propExpr, nameof(ObjectKey.Value));
 
             if (valueExpr.Type == typeof(Tp))
             {

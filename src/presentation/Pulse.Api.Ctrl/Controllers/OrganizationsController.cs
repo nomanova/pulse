@@ -34,7 +34,8 @@ public sealed class OrganizationsController : CtrlApiController
     {
         var command = new AddOrganizationCommand
         {
-            OrganizationName = request.OrganizationName
+            OrganizationName = request.OrganizationName,
+            OrganizationKey = request.OrganizationKey
         };
 
         var result = await _sender.Send(command, cancellationToken);

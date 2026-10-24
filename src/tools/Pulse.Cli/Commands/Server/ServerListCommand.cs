@@ -36,12 +36,12 @@ public sealed class ServerListCommand : Command<ServerListCommand.Settings>
         table.Border(TableBorder.None);
         
         table.AddColumn("");
-        table.AddColumn("name");
+        table.AddColumn("key");
         table.AddColumn("url");
 
         foreach (var server in config.Servers)
         {
-            var isSelected = config.Context.ServerName == server.Key;
+            var isSelected = config.Context.ServerKey == server.Key;
             table.AddRow(isSelected ? "[grey]*[/]" : "", server.Key, server.Value.Url);
         }
 

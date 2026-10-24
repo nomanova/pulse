@@ -59,11 +59,12 @@ public sealed class AppListCommand : PagedAppCommand
 
         table.AddColumn("");
         table.AddColumn("Name");
+        table.AddColumn("Key");
 
         foreach (var entity in entities)
         {
-            var isSelected = config.Context.Application?.Name == entity.Name;
-            table.AddRow(isSelected ? "[grey]*[/]" : "", entity.Name);
+            var isSelected = config.Context.Application?.Key == entity.Key;
+            table.AddRow(isSelected ? "[grey]*[/]" : "", entity.Name, entity.Key);
         }
 
         _console.WriteTable(table);

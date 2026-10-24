@@ -13,11 +13,13 @@ namespace Pulse.Domain.Aggregates.Workflows;
 
 public sealed record WorkflowId : EntityId<WorkflowId, Workflow>;
 
-public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INamedObject
+public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INamedObject, IKeyedObject
 {
     public EnvironmentId EnvironmentId { get; private set; } = null!;
 
     public ObjectName Name { get; private set; } = null!;
+    
+    public ObjectKey Key { get; private set; } = null!;
 
     public WorkflowVersionId? PublishedVersionId { get; private set; }
 
@@ -45,39 +47,31 @@ public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INa
     private Workflow(
         WorkflowId id,
         EnvironmentId environmentId,
-        ObjectName name) : base(id)
+        ObjectName name,
+        ObjectKey key) : base(id)
     {
         EnvironmentId = environmentId;
         Name = name;
+        Key = key;
     }
 
-    public static Workflow Create(Environment environment, string? name)
+    public static Workflow Create(Environment environment, string? name, string? key)
     {
         var objectName = ObjectName.Create(name).Assert();
+        var objectKey = ObjectKey.Create(key).Assert();
+        
         var id = IdentityProvider.New<WorkflowId>();
 
         var workflow = new Workflow(
             id,
             environment.Id,
-            objectName);
+            objectName,
+            objectKey);
 
         workflow.CreateDraftVersion();
         workflow.SetCreated();
 
         return workflow;
-    }
-
-    public void Rename(string? name)
-    {
-        var objectName = ObjectName.Create(name).Assert();
-
-        if (Name == objectName)
-        {
-            return;
-        }
-
-        Name = objectName;
-        SetModified();
     }
 
     public WorkflowVersion CreateDraftVersion()
@@ -124,6 +118,6 @@ public sealed class Workflow : DomainEntity<WorkflowId>, IEnvironmentScoped, INa
 
     public override string ToString()
     {
-        return $"[{Id.Value}] {Name}";
+        return $"[{Id.Value}] {Key}";
     }
 }

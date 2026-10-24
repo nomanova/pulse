@@ -21,9 +21,9 @@ public sealed class ServerAddCommand : Command<ServerAddCommand.Settings>
 
     public sealed class Settings : ServerSettings
     {
-        [CommandArgument(0, "<name>")]
-        [Description("Name of the server")]
-        public required string Name { get; init; }
+        [CommandArgument(0, "<key>")]
+        [Description("Key of the server")]
+        public required string Key { get; init; }
 
         [CommandArgument(1, "<url>")]
         [Description("URL of the server")]
@@ -32,7 +32,7 @@ public sealed class ServerAddCommand : Command<ServerAddCommand.Settings>
 
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
-        var name = settings.Name;
+        var key = settings.Key;
         var config = _configService.Load();
 
         if (config.Servers.Count >= Constants.MaxServerCount)
@@ -41,22 +41,22 @@ public sealed class ServerAddCommand : Command<ServerAddCommand.Settings>
             return Exit.Error;
         }
 
-        if (config.Servers.ContainsKey(name))
+        if (config.Servers.ContainsKey(key))
         {
-            _console.WriteError($"Server '{name}' exists");
+            _console.WriteError($"Server '{key}' exists");
             return Exit.Error;
         }
 
-        config.Servers.Add(name, new Models.Server
+        config.Servers.Add(key, new Models.Server
         {
             Url = settings.Url
         });
         
-        config.SetServer(name); // Immediately select the new server
+        config.SetServer(key); // Immediately select the new server
         _configService.Save(config);
 
-        _console.WriteLine($"Server '{name}' added");
-        _console.WriteLine($"Selected server '{name}'");
+        _console.WriteLine($"Server '{key}' added");
+        _console.WriteLine($"Selected server '{key}'");
 
         return Exit.Success;
     }

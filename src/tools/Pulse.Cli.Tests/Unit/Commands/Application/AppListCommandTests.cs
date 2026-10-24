@@ -72,8 +72,8 @@ public sealed class AppListCommandTests : CliTests
         {
             Entities = new List<ApplicationDto>
             {
-                new() { Id = "1", Name = "app1" },
-                new() { Id = "2", Name = "app2" }
+                new() { Id = "1", Name = "App1", Key = "app1" },
+                new() { Id = "2", Name = "App2", Key = "app2" }
             },
             HasNext = false
         };
@@ -104,8 +104,8 @@ public sealed class AppListCommandTests : CliTests
         {
             Entities = new List<ApplicationDto>
             {
-                new() { Id = "1", Name = "app1" },
-                new() { Id = "2", Name = "app2" }
+                new() { Id = "1", Name = "App1", Key = "app1"},
+                new() { Id = "2", Name = "App2", Key = "app2" }
             },
             HasNext = false
         };

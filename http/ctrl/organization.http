@@ -6,7 +6,8 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationName": "{{orgName}}"
+  "organizationName": "{{org.name}}",
+  "organizationKey": "{{org.key}}"
 }
 
 ###
@@ -17,7 +18,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationId": "{{orgId}}"
+  "organizationId": "{{org.id}}"
 }
 
 ###
@@ -28,7 +29,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationId": "{{orgId}}"
+  "organizationId": "{{org.id}}"
 }
 
 ###

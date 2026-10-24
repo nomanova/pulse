@@ -4,6 +4,7 @@ using CommunityToolkit.Mvvm.Input;
 using Pulse.Api.Client.Common;
 using Pulse.Api.Ctrl.Client;
 using Pulse.Api.Ctrl.Contract;
+using Pulse.Web.Core.Common;
 using Pulse.Web.Core.Common.Validation;
 using Pulse.Web.Core.Models;
 using Pulse.Web.Core.Services.Interfaces;
@@ -13,7 +14,17 @@ namespace Pulse.Web.Core.ViewModels;
 
 public sealed record NewOrganizationModel
 {
-    public string? Name { get; set; }
+    public string? Name
+    {
+        get;
+        set
+        {
+            field = value;
+            Key = value.ToKey();
+        }
+    }
+
+    public string? Key { get; set; }
 }
 
 public sealed class NewOrganizationModelValidator : BaseModelValidator<NewOrganizationModel>
@@ -21,31 +32,36 @@ public sealed class NewOrganizationModelValidator : BaseModelValidator<NewOrgani
     public NewOrganizationModelValidator()
     {
         RuleFor(model => model.Name).ValidName();
+        RuleFor(model => model.Key).ValidKey();
     }
 }
 
 public partial class NewOrganizationViewModel : ActionViewModelBase
 {
     private const string ErrAddOrganization = "Could not add organization";
+    private const string ErrKeyInUse = "Organization key is in use";
 
     public readonly NewOrganizationModelValidator ModelValidator = new();
 
     private readonly IContextProvider _contextProvider;
     private readonly IPageNavigator _navigator;
     private readonly ICtrlApiClient _ctrlApiClient;
+    private readonly IDialogManager _dialogManager;
 
     public NewOrganizationViewModel(
         IContextProvider contextProvider,
         IPageNavigator navigator,
-        ICtrlApiClient ctrlApiClient)
+        ICtrlApiClient ctrlApiClient, 
+        IDialogManager dialogManager)
     {
         _contextProvider = contextProvider;
         _navigator = navigator;
         _ctrlApiClient = ctrlApiClient;
+        _dialogManager = dialogManager;
     }
-    
+
     protected override string Subtitle => "New Organization";
-    
+
     [ObservableProperty] public partial NewOrganizationModel Model { get; private set; } = new();
 
     [RelayCommand]
@@ -55,13 +71,16 @@ public partial class NewOrganizationViewModel : ActionViewModelBase
 
         var addResult = await _ctrlApiClient.Organizations.Add(new AddOrganizationRequest
         {
-            OrganizationName = Model.Name
+            OrganizationName = Model.Name,
+            OrganizationKey = Model.Key
         });
 
         if (!addResult.IsSuccessWithData())
         {
             StopLoading();
-            SetFailed(ErrAddOrganization);
+
+            var error = addResult.HasValidationError(Constants.ErrKeyInUse) ? ErrKeyInUse : ErrAddOrganization;
+            SetFailed(error);
             return;
         }
 
@@ -81,14 +100,20 @@ public partial class NewOrganizationViewModel : ActionViewModelBase
         }
 
         var organization = fetchResult.Data!;
-        _contextProvider.Organization = new NamedIdentity(organization.Id, organization.Name);
+        _contextProvider.Organization = new ObjectIdentity(organization.Id, organization.Name, organization.Key);
 
         _navigator.NavigateTo(string.Format(Routes.Applications, organization.Id), replace: true);
     }
-    
+
     [RelayCommand]
     private static void OnFieldChanged()
     {
         // NOP
+    }
+    
+    [RelayCommand]
+    private async Task OnKeyHelp()
+    {
+        await _dialogManager.ShowHelp(Constants.ErrKeyHelp);
     }
 }

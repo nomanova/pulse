@@ -31,9 +31,9 @@ public sealed class EnvRemoveCommand : AsyncCommand<EnvRemoveCommand.Settings>
 
     public sealed class Settings : EnvSettings
     {
-        [CommandArgument(0, "<name>")]
-        [Description("Name of the environment")]
-        public required string Name { get; init; }
+        [CommandArgument(0, "<key>")]
+        [Description("Key of the environment")]
+        public required string Key { get; init; }
     }
 
     protected override async Task<int> ExecuteAsync(
@@ -42,13 +42,13 @@ public sealed class EnvRemoveCommand : AsyncCommand<EnvRemoveCommand.Settings>
         var config = _configService.Load();
         config.AssertApplication();
 
-        var name = settings.Name;
+        var key = settings.Key;
         var applicationId = config.Context.Application!.Id;
 
         // Search
         var searchRequest = new SearchEnvironmentsRequest
         {
-            Query = name,
+            Query = key,
             ApplicationId = applicationId
         };
 
@@ -64,7 +64,7 @@ public sealed class EnvRemoveCommand : AsyncCommand<EnvRemoveCommand.Settings>
 
         if (environment == null)
         {
-            _console.WriteError($"Environment '{name}' not found");
+            _console.WriteError($"Environment '{key}' not found");
             return Exit.Error;
         }
 
@@ -82,14 +82,14 @@ public sealed class EnvRemoveCommand : AsyncCommand<EnvRemoveCommand.Settings>
             return Exit.Error;
         }
 
-        if (config.Context.Environment?.Name == name)
+        if (config.Context.Environment?.Key == key)
         {
             config.ClearEnvironment();
         }
 
         _configService.Save(config);
 
-        _console.WriteLine($"Environment '{name}' removed");
+        _console.WriteLine($"Environment '{key}' removed");
 
         return Exit.Success;
     }

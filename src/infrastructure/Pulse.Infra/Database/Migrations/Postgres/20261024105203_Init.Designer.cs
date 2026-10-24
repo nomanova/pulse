@@ -12,8 +12,8 @@ using Pulse.Infra.Database.Contexts;
 namespace Pulse.Infra.Database.Migrations.Postgres
 {
     [DbContext(typeof(PostgresDatabaseContext))]
-    [Migration("20261021065609_MembershipCascade")]
-    partial class MembershipCascade
+    [Migration("20261024105203_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -685,6 +685,31 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         .IsRequired()
                         .HasConstraintName("fk_applications_organizations_organization_id");
 
+                    b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectKey", "Key", b1 =>
+                        {
+                            b1.Property<string>("ApplicationId")
+                                .HasColumnType("text")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("NormalizedValue")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("normalized_key");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("key");
+
+                            b1.HasKey("ApplicationId");
+
+                            b1.ToTable("applications");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ApplicationId")
+                                .HasConstraintName("fk_applications_applications_id");
+                        });
+
                     b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectName", "Name", b1 =>
                         {
                             b1.Property<string>("ApplicationId")
@@ -710,6 +735,9 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                                 .HasConstraintName("fk_applications_applications_id");
                         });
 
+                    b.Navigation("Key")
+                        .IsRequired();
+
                     b.Navigation("Name")
                         .IsRequired();
                 });
@@ -732,6 +760,31 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
                         .HasConstraintName("fk_environments_applications_application_id");
+
+                    b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectKey", "Key", b1 =>
+                        {
+                            b1.Property<string>("EnvironmentId")
+                                .HasColumnType("text")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("NormalizedValue")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("normalized_key");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("key");
+
+                            b1.HasKey("EnvironmentId");
+
+                            b1.ToTable("environments");
+
+                            b1.WithOwner()
+                                .HasForeignKey("EnvironmentId")
+                                .HasConstraintName("fk_environments_environments_id");
+                        });
 
                     b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectName", "Name", b1 =>
                         {
@@ -786,6 +839,9 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                     b.Navigation("ApiKey")
                         .IsRequired();
 
+                    b.Navigation("Key")
+                        .IsRequired();
+
                     b.Navigation("Name")
                         .IsRequired();
                 });
@@ -827,6 +883,35 @@ namespace Pulse.Infra.Database.Migrations.Postgres
 
             modelBuilder.Entity("Pulse.Domain.Aggregates.Organizations.Organization", b =>
                 {
+                    b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectKey", "Key", b1 =>
+                        {
+                            b1.Property<string>("OrganizationId")
+                                .HasColumnType("text")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("NormalizedValue")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("normalized_key");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("key");
+
+                            b1.HasKey("OrganizationId");
+
+                            b1.HasIndex("Value")
+                                .IsUnique()
+                                .HasDatabaseName("ix_organizations_key");
+
+                            b1.ToTable("organizations");
+
+                            b1.WithOwner()
+                                .HasForeignKey("OrganizationId")
+                                .HasConstraintName("fk_organizations_organizations_id");
+                        });
+
                     b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectName", "Name", b1 =>
                         {
                             b1.Property<string>("OrganizationId")
@@ -845,10 +930,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
 
                             b1.HasKey("OrganizationId");
 
-                            b1.HasIndex("Value")
-                                .IsUnique()
-                                .HasDatabaseName("ix_organizations_name");
-
                             b1.ToTable("organizations");
 
                             b1.WithOwner()
@@ -856,12 +937,44 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                                 .HasConstraintName("fk_organizations_organizations_id");
                         });
 
+                    b.Navigation("Key")
+                        .IsRequired();
+
                     b.Navigation("Name")
                         .IsRequired();
                 });
 
             modelBuilder.Entity("Pulse.Domain.Aggregates.Roles.Role", b =>
                 {
+                    b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectKey", "Key", b1 =>
+                        {
+                            b1.Property<string>("RoleId")
+                                .HasColumnType("text")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("NormalizedValue")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("normalized_key");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("key");
+
+                            b1.HasKey("RoleId");
+
+                            b1.HasIndex("Value")
+                                .IsUnique()
+                                .HasDatabaseName("ix_roles_key");
+
+                            b1.ToTable("roles");
+
+                            b1.WithOwner()
+                                .HasForeignKey("RoleId")
+                                .HasConstraintName("fk_roles_roles_id");
+                        });
+
                     b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectName", "Name", b1 =>
                         {
                             b1.Property<string>("RoleId")
@@ -880,10 +993,6 @@ namespace Pulse.Infra.Database.Migrations.Postgres
 
                             b1.HasKey("RoleId");
 
-                            b1.HasIndex("Value")
-                                .IsUnique()
-                                .HasDatabaseName("ix_roles_name");
-
                             b1.ToTable("roles");
 
                             b1.WithOwner()
@@ -891,13 +1000,16 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                                 .HasConstraintName("fk_roles_roles_id");
                         });
 
+                    b.Navigation("Key")
+                        .IsRequired();
+
                     b.Navigation("Name")
                         .IsRequired();
                 });
 
             modelBuilder.Entity("Pulse.Domain.Aggregates.Users.User", b =>
                 {
-                    b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectName", "Username", b1 =>
+                    b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectKey", "Username", b1 =>
                         {
                             b1.Property<string>("UserId")
                                 .HasColumnType("text")
@@ -1056,6 +1168,31 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         .IsRequired()
                         .HasConstraintName("fk_workflows_environments_environment_id");
 
+                    b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectKey", "Key", b1 =>
+                        {
+                            b1.Property<string>("WorkflowId")
+                                .HasColumnType("text")
+                                .HasColumnName("id");
+
+                            b1.Property<string>("NormalizedValue")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("normalized_key");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text")
+                                .HasColumnName("key");
+
+                            b1.HasKey("WorkflowId");
+
+                            b1.ToTable("workflows");
+
+                            b1.WithOwner()
+                                .HasForeignKey("WorkflowId")
+                                .HasConstraintName("fk_workflows_workflows_id");
+                        });
+
                     b.OwnsOne("Pulse.Domain.Common.Models.ValueObjects.ObjectName", "Name", b1 =>
                         {
                             b1.Property<string>("WorkflowId")
@@ -1080,6 +1217,9 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                                 .HasForeignKey("WorkflowId")
                                 .HasConstraintName("fk_workflows_workflows_id");
                         });
+
+                    b.Navigation("Key")
+                        .IsRequired();
 
                     b.Navigation("Name")
                         .IsRequired();

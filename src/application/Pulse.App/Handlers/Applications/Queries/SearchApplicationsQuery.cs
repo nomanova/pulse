@@ -32,7 +32,7 @@ public sealed class SearchApplicationsQueryAuthorizer : PermissionAuthorizer<Sea
 public sealed class SearchApplicationsQueryHandler :
     IQueryHandler<SearchApplicationsQuery, ErrorOr<PagedSearchResultDto<ApplicationDto>>>
 {
-    private static readonly List<string> OrderByProperties = [nameof(Application.Name)];
+    private static readonly List<string> OrderByProperties = [nameof(Application.Key)];
 
     private readonly IApplicationRepository _applicationRepository;
 
@@ -52,11 +52,11 @@ public sealed class SearchApplicationsQueryHandler :
             return ApplicationErrors.OrderBy;
         }
 
-        var orderBy = query.OrderBy ?? nameof(Application.Name);
+        var orderBy = query.OrderBy ?? nameof(Application.Key);
 
         var orderBySpecification = orderBy switch
         {
-            nameof(Application.Name) => new OrderBySpecification<Application, ApplicationId, string>(orderBy,
+            nameof(Application.Key) => new OrderBySpecification<Application, ApplicationId, string>(orderBy,
                 query.Ascending),
             _ => throw new NotImplementedException()
         };

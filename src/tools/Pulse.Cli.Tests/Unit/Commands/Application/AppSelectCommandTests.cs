@@ -73,7 +73,7 @@ public sealed class AppSelectCommandTests : CliTests
         {
             Entities = new List<ApplicationDto>
             {
-                new() { Id = "1", Name = "app1" }
+                new() { Id = "1", Name = "App 1", Key = "app1" }
             },
             HasNext = false
         };
@@ -90,7 +90,7 @@ public sealed class AppSelectCommandTests : CliTests
         Assert.Contains("Selected application 'app1'", result.Output);
         
         var savedConfig = ConfigService.Load();
-        Assert.Equal("app1", savedConfig.Context.Application?.Name);
+        Assert.Equal("app1", savedConfig.Context.Application?.Key);
     }
 
     [Fact]
@@ -105,8 +105,8 @@ public sealed class AppSelectCommandTests : CliTests
         {
             Entities = new List<ApplicationDto>
             {
-                new() { Id = "1", Name = "app1" },
-                new() { Id = "2", Name = "app2" }
+                new() { Id = "1", Name = "App 1", Key = "app1" },
+                new() { Id = "2", Name = "App 2", Key = "app2" }
             },
             HasNext = false
         };
@@ -126,7 +126,7 @@ public sealed class AppSelectCommandTests : CliTests
         Assert.Contains("Selected application 'app1'", result.Output);
 
         var savedConfig = ConfigService.Load();
-        Assert.Equal("app1", savedConfig.Context.Application?.Name);
+        Assert.Equal("app1", savedConfig.Context.Application?.Key);
     }
 
     private Config ServerConfig()

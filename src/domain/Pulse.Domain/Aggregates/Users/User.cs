@@ -11,7 +11,7 @@ public sealed record UserId : EntityId<UserId, User>;
 
 public class User : DomainEntity<UserId>
 {
-    public ObjectName Username { get; private set; } = null!;
+    public ObjectKey Username { get; private set; } = null!;
 
     public Name? Name { get; private set; }
     
@@ -27,7 +27,7 @@ public class User : DomainEntity<UserId>
 
     private User(
         UserId id,
-        ObjectName username) : base(id)
+        ObjectKey username) : base(id)
     {
         Username = username;
         SecurityStamp = SecurityStamp.Create();
@@ -35,7 +35,7 @@ public class User : DomainEntity<UserId>
 
     public static User Create(string? username)
     {
-        var usernameValue = ObjectName.Create(username).Assert();
+        var usernameValue = ObjectKey.Create(username).Assert();
         var id = IdentityProvider.New<UserId>();
 
         var user = new User(id, usernameValue);

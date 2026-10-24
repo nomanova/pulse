@@ -11,6 +11,7 @@ public static class DtoMapper
         {
             Id = application.Id.Value,
             Name = application.Name.Value,
+            Key = application.Key.Value
         };
     }
 }

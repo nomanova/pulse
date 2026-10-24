@@ -1,5 +1,5 @@
 @page "/new-organization"
-@inherits Pulse.Web.Common.Components.Base.MvvmCmpBase<NewOrganizationViewModel>
+@inherits MvvmCmpBase<NewOrganizationViewModel>
 
 <PageTitle>@ViewModel.Title</PageTitle>
 
@@ -24,21 +24,34 @@
             <MudTextField @bind-Value="@ViewModel.Model.Name"
                           For="@(() => ViewModel.Model.Name)"
                           Class="mt-2"
-                          Immediate="false"
-                          MaxLength="50"
+                          Immediate="true"
+                          MaxLength="@Validators.MaxNameLength"
                           Required="true"
                           Disabled="@ViewModel.IsLoading"
                           HelperText="Name your new organization"
                           Label="Name"
                           data-test-id="inp-name"/>
 
+            <MudTextField @bind-Value="@ViewModel.Model.Key"
+                          For="@(() => ViewModel.Model.Key)"
+                          Immediate="false"
+                          MaxLength="@Validators.MaxKeyLength"
+                          Required="true"
+                          Disabled="@ViewModel.IsLoading"
+                          HelperText="Key of the organization"
+                          Label="Key"
+                          Adornment="Adornment.End"
+                          AdornmentIcon="@Icons.Material.Filled.HelpOutline"
+                          OnAdornmentClick="@(() => ViewModel.KeyHelpCommand.Execute(null))"
+                          data-test-id="inp-key"/>
+
             <CmpButton
-                Text="Create"
+                Text="Add"
                 Class="w-full mt-8"
                 IsLoading="@ViewModel.IsLoading"
                 UseCaps="true"
                 OnClick="@OnSubmit"
-                data-test-id="btn-create"/>
+                data-test-id="btn-add"/>
 
         </MudForm>
 

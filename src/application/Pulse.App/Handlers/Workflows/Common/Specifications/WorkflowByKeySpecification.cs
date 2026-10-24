@@ -6,15 +6,15 @@ using Pulse.Domain.Aggregates.Workflows;
 
 namespace Pulse.App.Handlers.Workflows.Common.Specifications;
 
-public sealed class WorkflowByNameSpecification(
+public sealed class WorkflowByKeySpecification(
     EnvironmentId environmentId,
-    string? workflowName,
+    string? workflowKey,
     bool includeDeleted = false) : Specification<Workflow>
 {
     public override Expression<Func<Workflow, bool>> ToExpression()
     {
         Expression<Func<Workflow, bool>> expression = workflow => workflow.EnvironmentId == environmentId &&
-                                                                  workflow.Name.Value == workflowName;
+                                                                  workflow.Key.Value == workflowKey;
 
         if (!includeDeleted)
         {

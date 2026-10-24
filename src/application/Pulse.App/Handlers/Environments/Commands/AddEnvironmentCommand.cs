@@ -25,6 +25,8 @@ public sealed record AddEnvironmentCommand : ICommand<ErrorOr<IdentityDto>>
     public required ApplicationId ApplicationId { get; init; }
 
     public required string? EnvironmentName { get; init; }
+    
+    public required string? EnvironmentKey { get; init; }
 }
 
 public sealed class AddEnvironmentCommandAuthorizer : PermissionAuthorizer<AddEnvironmentCommand>;
@@ -76,17 +78,17 @@ public sealed class AddEnvironmentCommandHandler : ICommandHandler<AddEnvironmen
             return ApplicationErrors.Environment.MaxCountReached;
         }
 
-        // Duplicate name detection
-        var byNameSpecification = new EnvironmentByNameSpecification(application.Id, command.EnvironmentName);
-        var existingEnvironment = await _environmentRepository.SearchOne(byNameSpecification, cancellationToken);
+        // Duplicate key detection
+        var byKeySpecification = new EnvironmentByKeySpecification(application.Id, command.EnvironmentKey);
+        var existingEnvironment = await _environmentRepository.SearchOne(byKeySpecification, cancellationToken);
 
         if (existingEnvironment != null)
         {
-            return ApplicationErrors.NameInUse;
+            return ApplicationErrors.KeyInUse;
         }
 
         // Create environment
-        var environment = Environment.Create(command.EnvironmentName, application);
+        var environment = Environment.Create(command.EnvironmentName, command.EnvironmentKey, application);
         _environmentRepository.Add(environment);
 
         // Set the creating user as the initial owner of the environment

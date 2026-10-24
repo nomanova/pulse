@@ -6,16 +6,16 @@ using Pulse.Domain.Aggregates.Organizations;
 
 namespace Pulse.App.Handlers.Applications.Common.Specifications;
 
-public sealed class ApplicationByNameSpecification(
+public sealed class ApplicationByKeySpecification(
     OrganizationId organizationId,
-    string? applicationName,
+    string? applicationKey,
     bool includeDeleted = false) : Specification<Application>
 {
     public override Expression<Func<Application, bool>> ToExpression()
     {
         Expression<Func<Application, bool>> expression = application =>
             application.OrganizationId == organizationId &&
-            application.Name.Value == applicationName;
+            application.Key.Value == applicationKey;
 
         if (!includeDeleted)
         {

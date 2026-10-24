@@ -28,8 +28,21 @@ public sealed class OrganizationConfiguration : DomainEntityTypeConfiguration<Or
                 .Property(name => name.NormalizedValue)
                 .IsRequired()
                 .HasColumnName("normalized_name");
+        });
+
+        builder.OwnsOne(organization => organization.Key, organizationBuilder =>
+        {
+            organizationBuilder
+                .Property(key => key.Value)
+                .IsRequired()
+                .HasColumnName("key");
+
+            organizationBuilder
+                .Property(key => key.NormalizedValue)
+                .IsRequired()
+                .HasColumnName("normalized_key");
             
-            organizationBuilder.HasIndex(name => name.Value)
+            organizationBuilder.HasIndex(key => key.Value)
                 .IsUnique();
         });
     }

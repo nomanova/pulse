@@ -45,7 +45,7 @@ public sealed class UserSignInCommand : AsyncCommand<UserSignInCommand.Settings>
             return Exit.Error;
         }
 
-        _console.WriteLine($"Signing in to server '{config.Context.ServerName}'");
+        _console.WriteLine($"Signing in to server '{config.Context.ServerKey}'");
         
         var username = settings.Username;
 

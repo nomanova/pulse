@@ -32,9 +32,9 @@ public sealed class OrgRemoveCommand : AsyncCommand<OrgRemoveCommand.Settings>
 
     public sealed class Settings : OrgSettings
     {
-        [CommandArgument(0, "<name>")]
-        [Description("Name of the organization")]
-        public required string Name { get; init; }
+        [CommandArgument(0, "<key>")]
+        [Description("Key of the organization")]
+        public required string Key { get; init; }
     }
 
     protected override async Task<int> ExecuteAsync(CommandContext context, Settings settings,
@@ -43,12 +43,12 @@ public sealed class OrgRemoveCommand : AsyncCommand<OrgRemoveCommand.Settings>
         var config = _configService.Load();
         config.AssertServer();
 
-        var name = settings.Name;
+        var key = settings.Key;
 
         // Search
         var searchRequest = new NamedPagedSearchRequest
         {
-            Query = name
+            Query = key
         };
         
         var searchResult = await _ctrlApiClient.Organizations.Search(searchRequest, cancellationToken);
@@ -63,7 +63,7 @@ public sealed class OrgRemoveCommand : AsyncCommand<OrgRemoveCommand.Settings>
 
         if (organization == null)
         {
-            _console.WriteError($"Organization '{name}' not found");
+            _console.WriteError($"Organization '{key}' not found");
             return Exit.Error;
         }
         
@@ -81,14 +81,14 @@ public sealed class OrgRemoveCommand : AsyncCommand<OrgRemoveCommand.Settings>
             return Exit.Error;
         }
 
-        if (config.Context.Organization?.Name == name)
+        if (config.Context.Organization?.Key == key)
         {
             config.ClearOrganization();
         }
 
         _configService.Save(config);
 
-        _console.WriteLine($"Organization '{name}' removed");
+        _console.WriteLine($"Organization '{key}' removed");
 
         return Exit.Success;
     }

@@ -2,11 +2,11 @@ namespace Pulse.Cli.Models;
 
 public sealed record Context
 {
-    public string? ServerName { get; init; }
+    public string? ServerKey { get; init; }
 
-    public NamedIdentity? Organization { get; init; }
+    public KeyedIdentity? Organization { get; init; }
 
-    public NamedIdentity? Application { get; init; }
+    public KeyedIdentity? Application { get; init; }
 
-    public NamedIdentity? Environment { get; init; }
+    public KeyedIdentity? Environment { get; init; }
 }

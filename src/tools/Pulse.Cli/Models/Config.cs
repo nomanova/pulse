@@ -12,11 +12,11 @@ public sealed record Config
     [JsonInclude]
     public Context Context { get; private set; } = new();
 
-    public void SetServer(string name)
+    public void SetServer(string key)
     {
         Context = new Context
         {
-            ServerName = name
+            ServerKey = key
         };
     }
 
@@ -27,8 +27,8 @@ public sealed record Config
     
     public bool HasServer()
     {
-        return Context.ServerName is not null &&
-               Servers.ContainsKey(Context.ServerName);
+        return Context.ServerKey is not null &&
+               Servers.ContainsKey(Context.ServerKey);
     }
 
     public bool HasOrganization()
@@ -43,33 +43,33 @@ public sealed record Config
     
     public Server? CurrentServer()
     {
-        return Context.ServerName is null ? null : Servers[Context.ServerName];
+        return Context.ServerKey is null ? null : Servers[Context.ServerKey];
     }
     
-    public void SetOrganization(string id, string name)
+    public void SetOrganization(string id, string key)
     {
         Context = Context with
         {
-            Organization = new NamedIdentity(id, name),
+            Organization = new KeyedIdentity(id, key),
             Application = null,
             Environment = null
         };
     }
 
-    public void SetApplication(string id, string name)
+    public void SetApplication(string id, string key)
     {
         Context = Context with
         {
-            Application = new NamedIdentity(id, name),
+            Application = new KeyedIdentity(id, key),
             Environment = null
         };
     }
 
-    public void SetEnvironment(string id, string name)
+    public void SetEnvironment(string id, string key)
     {
         Context = Context with
         {
-            Environment = new NamedIdentity(id, name)
+            Environment = new KeyedIdentity(id, key)
         };
     }
     
@@ -107,7 +107,7 @@ public sealed record Config
             throw new CliException("No server selected");
         }
 
-        Servers[Context.ServerName!] = Servers[Context.ServerName!] with
+        Servers[Context.ServerKey!] = Servers[Context.ServerKey!] with
         {
             AccessToken = accessToken
         };
@@ -120,7 +120,7 @@ public sealed record Config
             throw new CliException("No server selected");
         }
         
-        Servers[Context.ServerName!] = Servers[Context.ServerName!] with
+        Servers[Context.ServerKey!] = Servers[Context.ServerKey!] with
         {
             AccessToken = null
         };

@@ -35,6 +35,19 @@ public sealed class ApplicationConfiguration : DomainEntityTypeConfiguration<App
                 .IsRequired()
                 .HasColumnName("normalized_name");
         });
+        
+        builder.OwnsOne(application => application.Key, applicationBuilder =>
+        {
+            applicationBuilder
+                .Property(key => key.Value)
+                .IsRequired()
+                .HasColumnName("key");
+
+            applicationBuilder
+                .Property(key => key.NormalizedValue)
+                .IsRequired()
+                .HasColumnName("normalized_key");
+        });
 
         // As long as https://github.com/dotnet/efcore/issues/38276 is not implemented,
         // the code below does not work (nested property in owned entity cannot be accessed).
@@ -42,7 +55,7 @@ public sealed class ApplicationConfiguration : DomainEntityTypeConfiguration<App
         // builder.HasIndex(application => new
         //     {
         //         application.OrganizationId,
-        //         application.Name.Value
+        //         application.Key.Value
         //     })
         //     .IsUnique();
 
@@ -50,14 +63,14 @@ public sealed class ApplicationConfiguration : DomainEntityTypeConfiguration<App
 
         // Up
         // migrationBuilder.CreateIndex(
-        //     name: "ix_applications_organization_id_name",
+        //     name: "ix_applications_organization_id_key",
         //     table: "applications",
-        //     columns: new[] { "organization_id", "name" },
+        //     columns: new[] { "organization_id", "key" },
         //     unique: true);
 
         // Down
         // migrationBuilder.DropIndex(
-        //     name: "ix_applications_organization_id_name",
+        //     name: "ix_applications_organization_id_key",
         //     table: "applications");
     }
 }

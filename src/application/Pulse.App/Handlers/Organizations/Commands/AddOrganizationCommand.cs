@@ -20,6 +20,8 @@ namespace Pulse.App.Handlers.Organizations.Commands;
 public sealed record AddOrganizationCommand : ICommand<ErrorOr<IdentityDto>>
 {
     public required string? OrganizationName { get; init; }
+    
+    public required string? OrganizationKey { get; init; }
 }
 
 public sealed class AddOrganizationCommandAuthorizer : PermissionAuthorizer<AddOrganizationCommand>;
@@ -48,17 +50,17 @@ public class AddOrganizationCommandHandler : ICommandHandler<AddOrganizationComm
     {
         var user = await _userProvider.Get(cancellationToken);
 
-        // Duplicate name detection
-        var specification = new OrganizationByNameSpecification(command.OrganizationName);
+        // Duplicate key detection
+        var specification = new OrganizationByKeySpecification(command.OrganizationKey);
         var existingOrganization = await _organizationRepository.SearchOne(specification, cancellationToken);
 
         if (existingOrganization != null)
         {
-            return ApplicationErrors.NameInUse;
+            return ApplicationErrors.KeyInUse;
         }
 
         // Create organization
-        var organization = Organization.Create(command.OrganizationName);
+        var organization = Organization.Create(command.OrganizationName, command.OrganizationKey);
         _organizationRepository.Add(organization);
 
         // Set the creating user as the initial owner of the organization

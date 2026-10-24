@@ -18,6 +18,6 @@ public sealed class SearchOrganizationsSpecification : Specification<Organizatio
     public override Expression<Func<Organization, bool>> ToExpression()
     {
         Expression<Func<Organization, bool>> expr = organization => !organization.IsDeleted;
-        return expr.WithNameFilter(_query);
+        return expr.WithKeyOrNameFilter(_query);
     }
 }

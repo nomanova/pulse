@@ -10,11 +10,13 @@ namespace Pulse.Domain.Aggregates.Applications;
 public sealed record ApplicationId : EntityId<ApplicationId, Application>;
 
 public sealed class Application : DomainEntity<ApplicationId>,
-    IOrganizationScoped, INamedObject
+    IOrganizationScoped, INamedObject, IKeyedObject
 {
     public OrganizationId OrganizationId { get; } = null!;
 
     public ObjectName Name { get; private set; } = null!;
+
+    public ObjectKey Key { get; private set; } = null!;
 
     private Application()
     {
@@ -23,21 +25,26 @@ public sealed class Application : DomainEntity<ApplicationId>,
     private Application(
         ApplicationId id,
         OrganizationId organizationId,
-        ObjectName name) : base(id)
+        ObjectName name,
+        ObjectKey key) : base(id)
     {
         OrganizationId = organizationId;
         Name = name;
+        Key = key;
     }
 
-    public static Application Create(string? name, Organization organization)
+    public static Application Create(string? name, string? key, Organization organization)
     {
         var objectName = ObjectName.Create(name).Assert();
+        var objectKey = ObjectKey.Create(key).Assert();
+        
         var id = IdentityProvider.New<ApplicationId>();
 
         var application = new Application(
             id,
             organization.Id,
-            objectName);
+            objectName,
+            objectKey);
 
         application.SetCreated();
         application.AddEvent(new ApplicationCreatedEvent(organization.Id, id));
@@ -47,6 +54,6 @@ public sealed class Application : DomainEntity<ApplicationId>,
 
     public override string ToString()
     {
-        return $"[{Id.Value}] {Name.Value}";
+        return $"[{Id.Value}] {Name.Value} ({Key.Value})";
     }
 }

@@ -6,8 +6,9 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "applicationId": "{{appId}}",
-  "environmentName": "{{envName}}"
+  "applicationId": "{{app.id}}",
+  "environmentName": "{{env.name}}",
+  "environmentKey": "{{env.key}}"
 }
 
 ###
@@ -18,7 +19,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "environmentId": "{{envId}}"
+  "environmentId": "{{env.id}}"
 }
 
 ###
@@ -29,7 +30,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "environmentId": "{{envId}}"
+  "environmentId": "{{env.id}}"
 }
 
 ###
@@ -45,5 +46,5 @@ Authorization: Bearer {{auth_token}}
   "pageSize": null,
   "ascending": true,
   "orderBy": null,
-  "applicationId": "{{appId}}"
+  "applicationId": "{{app.id}}"
 }

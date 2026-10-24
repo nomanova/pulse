@@ -33,6 +33,8 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                     id = table.Column<string>(type: "text", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
                     normalized_name = table.Column<string>(type: "text", nullable: false),
+                    key = table.Column<string>(type: "text", nullable: false),
+                    normalized_key = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     modified_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -71,6 +73,8 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                     scope = table.Column<string>(type: "text", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
                     normalized_name = table.Column<string>(type: "text", nullable: false),
+                    key = table.Column<string>(type: "text", nullable: false),
+                    normalized_key = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     modified_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -116,6 +120,8 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                     organization_id = table.Column<string>(type: "text", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
                     normalized_name = table.Column<string>(type: "text", nullable: false),
+                    key = table.Column<string>(type: "text", nullable: false),
+                    normalized_key = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     modified_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -138,10 +144,14 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                 columns: table => new
                 {
                     id = table.Column<string>(type: "text", nullable: false),
-                    organization_id = table.Column<string>(type: "text", nullable: false),
                     application_id = table.Column<string>(type: "text", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
                     normalized_name = table.Column<string>(type: "text", nullable: false),
+                    key = table.Column<string>(type: "text", nullable: false),
+                    normalized_key = table.Column<string>(type: "text", nullable: false),
+                    is_primary = table.Column<bool>(type: "boolean", nullable: false),
+                    pri_api_key = table.Column<string>(type: "text", nullable: false),
+                    sec_api_key = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     modified_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -157,10 +167,30 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         principalTable: "applications",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "connections",
+                columns: table => new
+                {
+                    id = table.Column<string>(type: "text", nullable: false),
+                    environment_id = table.Column<string>(type: "text", nullable: false),
+                    channel = table.Column<string>(type: "text", nullable: false),
+                    plugin_id = table.Column<string>(type: "text", nullable: false),
+                    parameters = table.Column<string>(type: "jsonb", nullable: false),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    modified_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
+                    is_deleted = table.Column<bool>(type: "boolean", nullable: false),
+                    xmin = table.Column<uint>(type: "xid", rowVersion: true, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_connections", x => x.id);
                     table.ForeignKey(
-                        name: "fk_environments_organizations_organization_id",
-                        column: x => x.organization_id,
-                        principalTable: "organizations",
+                        name: "fk_connections_environments_environment_id",
+                        column: x => x.environment_id,
+                        principalTable: "environments",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -189,17 +219,20 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         name: "fk_memberships_applications_application_id",
                         column: x => x.application_id,
                         principalTable: "applications",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_memberships_environments_environment_id",
                         column: x => x.environment_id,
                         principalTable: "environments",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_memberships_organizations_organization_id",
                         column: x => x.organization_id,
                         principalTable: "organizations",
-                        principalColumn: "id");
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "fk_memberships_roles_role_id",
                         column: x => x.role_id,
@@ -219,12 +252,13 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                 columns: table => new
                 {
                     id = table.Column<string>(type: "text", nullable: false),
-                    organization_id = table.Column<string>(type: "text", nullable: false),
-                    application_id = table.Column<string>(type: "text", nullable: false),
                     environment_id = table.Column<string>(type: "text", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
                     normalized_name = table.Column<string>(type: "text", nullable: false),
+                    key = table.Column<string>(type: "text", nullable: false),
+                    normalized_key = table.Column<string>(type: "text", nullable: false),
                     published_version_id = table.Column<string>(type: "text", nullable: true),
+                    draft_version_id = table.Column<string>(type: "text", nullable: true),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     modified_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     deleted_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -235,21 +269,9 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                 {
                     table.PrimaryKey("pk_workflows", x => x.id);
                     table.ForeignKey(
-                        name: "fk_workflows_applications_application_id",
-                        column: x => x.application_id,
-                        principalTable: "applications",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "fk_workflows_environments_environment_id",
                         column: x => x.environment_id,
                         principalTable: "environments",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_workflows_organizations_organization_id",
-                        column: x => x.organization_id,
-                        principalTable: "organizations",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -279,11 +301,9 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                 columns: table => new
                 {
                     id = table.Column<string>(type: "text", nullable: false),
-                    organization_id = table.Column<string>(type: "text", nullable: false),
-                    application_id = table.Column<string>(type: "text", nullable: false),
+                    source = table.Column<string>(type: "text", nullable: false),
                     environment_id = table.Column<string>(type: "text", nullable: false),
-                    workflow_id = table.Column<string>(type: "text", nullable: false),
-                    workflow_version_id = table.Column<string>(type: "text", nullable: false),
+                    workflow_version_id = table.Column<string>(type: "text", nullable: true),
                     status = table.Column<string>(type: "text", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     modified_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -295,35 +315,16 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                 {
                     table.PrimaryKey("pk_workflow_instances", x => x.id);
                     table.ForeignKey(
-                        name: "fk_workflow_instances_applications_application_id",
-                        column: x => x.application_id,
-                        principalTable: "applications",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "fk_workflow_instances_environments_environment_id",
                         column: x => x.environment_id,
                         principalTable: "environments",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "fk_workflow_instances_organizations_organization_id",
-                        column: x => x.organization_id,
-                        principalTable: "organizations",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
                         name: "fk_workflow_instances_workflow_versions_workflow_version_id",
                         column: x => x.workflow_version_id,
                         principalTable: "workflow_versions",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_workflow_instances_workflows_workflow_id",
-                        column: x => x.workflow_id,
-                        principalTable: "workflows",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateTable(
@@ -332,7 +333,8 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                 {
                     id = table.Column<string>(type: "text", nullable: false),
                     workflow_version_id = table.Column<string>(type: "text", nullable: false),
-                    order = table.Column<long>(type: "bigint", nullable: false)
+                    order = table.Column<long>(type: "bigint", nullable: false),
+                    definition = table.Column<string>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -351,8 +353,9 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                 {
                     id = table.Column<string>(type: "text", nullable: false),
                     workflow_instance_id = table.Column<string>(type: "text", nullable: false),
-                    workflow_version_step_id = table.Column<string>(type: "text", nullable: false),
+                    workflow_version_step_id = table.Column<string>(type: "text", nullable: true),
                     order = table.Column<long>(type: "bigint", nullable: false),
+                    definition = table.Column<string>(type: "jsonb", nullable: false),
                     status = table.Column<string>(type: "text", nullable: false),
                     started_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     completed_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
@@ -372,8 +375,7 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                         name: "fk_workflow_instance_steps_workflow_version_steps_workflow_ver",
                         column: x => x.workflow_version_step_id,
                         principalTable: "workflow_version_steps",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "id");
                 });
 
             migrationBuilder.CreateIndex(
@@ -382,14 +384,15 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                 column: "organization_id");
 
             migrationBuilder.CreateIndex(
+                name: "ix_connections_environment_id_plugin_id",
+                table: "connections",
+                columns: new[] { "environment_id", "plugin_id" },
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "ix_environments_application_id",
                 table: "environments",
                 column: "application_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_environments_organization_id",
-                table: "environments",
-                column: "organization_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_inbox_messages_processed_on",
@@ -423,9 +426,9 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_organizations_name",
+                name: "ix_organizations_key",
                 table: "organizations",
-                column: "name",
+                column: "key",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -441,9 +444,9 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                 filter: "processed_on IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "ix_roles_name",
+                name: "ix_roles_key",
                 table: "roles",
-                column: "name",
+                column: "key",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -470,24 +473,9 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                 column: "workflow_version_step_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_workflow_instances_application_id",
-                table: "workflow_instances",
-                column: "application_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_workflow_instances_environment_id",
                 table: "workflow_instances",
                 column: "environment_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_workflow_instances_organization_id",
-                table: "workflow_instances",
-                column: "organization_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_workflow_instances_workflow_id",
-                table: "workflow_instances",
-                column: "workflow_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_workflow_instances_workflow_version_id",
@@ -507,24 +495,17 @@ namespace Pulse.Infra.Database.Migrations.Postgres
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "ix_workflows_application_id",
-                table: "workflows",
-                column: "application_id");
-
-            migrationBuilder.CreateIndex(
                 name: "ix_workflows_environment_id",
                 table: "workflows",
                 column: "environment_id");
-
-            migrationBuilder.CreateIndex(
-                name: "ix_workflows_organization_id",
-                table: "workflows",
-                column: "organization_id");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "connections");
+
             migrationBuilder.DropTable(
                 name: "inbox_messages");
 

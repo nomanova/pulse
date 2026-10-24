@@ -18,7 +18,8 @@ public sealed class CreateOrganizationTests : AppTests
 
         var command = new AddOrganizationCommand
         {
-            OrganizationName = "pulse"
+            OrganizationName = "Pulse",
+            OrganizationKey = "pulse"
         };
 
         // Act
@@ -34,7 +35,7 @@ public sealed class CreateOrganizationTests : AppTests
     }
 
     [Fact]
-    public async Task Create_WithDuplicateName_ShouldReturnNameInUseError()
+    public async Task Create_WithDuplicateKey_ShouldReturnKeyInUseError()
     {
         // Arrange
         var admin = EnsureAdmin();
@@ -42,7 +43,8 @@ public sealed class CreateOrganizationTests : AppTests
 
         var command = new AddOrganizationCommand
         {
-            OrganizationName = organization.Name.Value
+            OrganizationName = organization.Name.Value,
+            OrganizationKey = organization.Key.Value
         };
 
         // Act
@@ -50,6 +52,6 @@ public sealed class CreateOrganizationTests : AppTests
 
         // Assert
         Assert.True(result.IsError);
-        Assert.Contains(ApplicationErrors.NameInUse, result.Errors);
+        Assert.Contains(ApplicationErrors.KeyInUse, result.Errors);
     }
 }

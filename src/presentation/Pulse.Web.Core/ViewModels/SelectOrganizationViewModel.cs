@@ -38,7 +38,7 @@ public partial class SelectOrganizationViewModel : ViewModelBase
     
     [ObservableProperty] public partial bool IsLoading { get; private set; }
 
-    [ObservableProperty] public partial NamedIdentity? CurrentOrganization { get; private set; }
+    [ObservableProperty] public partial ObjectIdentity? CurrentOrganization { get; private set; }
 
     [ObservableProperty] public partial List<OrganizationDto>? Organizations { get; private set; }
 
@@ -78,7 +78,7 @@ public partial class SelectOrganizationViewModel : ViewModelBase
         }
 
         var organization = SelectedOrganization;
-        _contextProvider.Organization = new NamedIdentity(organization.Id, organization.Name);
+        _contextProvider.Organization = new ObjectIdentity(organization.Id, organization.Name, organization.Key);
         
         _navigator.NavigateTo(string.Format(Routes.Applications, organization.Id), replace: true);
     }

@@ -35,6 +35,19 @@ public sealed class EnvironmentConfiguration : DomainEntityTypeConfiguration<Env
                 .IsRequired()
                 .HasColumnName("normalized_name");
         });
+        
+        builder.OwnsOne(environment => environment.Key, environmentBuilder =>
+        {
+            environmentBuilder
+                .Property(key => key.Value)
+                .IsRequired()
+                .HasColumnName("key");
+
+            environmentBuilder
+                .Property(key => key.NormalizedValue)
+                .IsRequired()
+                .HasColumnName("normalized_key");
+        });
 
         builder.OwnsOne(environment => environment.ApiKey, apiKeyBuilder =>
         {
@@ -56,7 +69,7 @@ public sealed class EnvironmentConfiguration : DomainEntityTypeConfiguration<Env
         //     {
         //         environment.OrganizationId,
         //         environment.ApplicationId,
-        //         environment.Name.Value
+        //         environment.Key.Value
         //     })
         //     .IsUnique();
 
@@ -64,14 +77,14 @@ public sealed class EnvironmentConfiguration : DomainEntityTypeConfiguration<Env
 
         // Up
         // migrationBuilder.CreateIndex(
-        //     name: "ix_environments_organization_id_application_id_name",
+        //     name: "ix_environments_organization_id_application_id_key",
         //     table: "environments",
-        //     columns: new[] { "organization_id", "application_id", "name" },
+        //     columns: new[] { "organization_id", "application_id", "key" },
         //     unique: true);
 
         // Down
         // migrationBuilder.DropIndex(
-        //     name: "ix_environments_organization_id_application_id_name",
+        //     name: "ix_environments_organization_id_application_id_key",
         //     table: "environments");
     }
 }

@@ -10,7 +10,8 @@ public static class DtoMapper
         return new OrganizationDto
         {
             Id = organization.Id.Value,
-            Name = organization.Name.Value
+            Name = organization.Name.Value,
+            Key = organization.Key.Value
         };
     }
 }

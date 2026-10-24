@@ -106,17 +106,22 @@
                         RowClass="cursor-pointer">
                         <HeaderContent>
                             <MudTh>Name</MudTh>
+                            <MudTh>Key</MudTh>
                             <MudTh></MudTh>
                         </HeaderContent>
                         <RowTemplate>
                             <MudTd DataLabel="Name">
                                 @context.Name
                             </MudTd>
+                            <MudTd DataLabel="Key">
+                                @context.Key
+                            </MudTd>
                             <MudTd Style="padding: 0 !important; text-align: right">
                                 <MudMenu
                                     AnchorOrigin="Origin.BottomRight"
                                     TransformOrigin="Origin.TopRight"
                                     Class="mr-2"
+                                    Size="Size.Medium"
                                     Icon="@Icons.Material.Filled.MoreVert">
                                     <MudMenuItem
                                         OnClick="@(() => ViewModel.RemoveApplicationCommand.ExecuteAsync(context))"

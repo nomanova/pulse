@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using MudBlazor;
 using Pulse.Web.Common.Components;
+using Pulse.Web.Common.Components.Dialogs;
 using Pulse.Web.Core.Models;
 using Pulse.Web.Core.Services.Interfaces;
 
@@ -51,5 +52,18 @@ public sealed class DialogManager : IDialogManager
         var result = await dialog.Result;
 
         return !result?.Canceled ?? false;
+    }
+
+    public async Task ShowHelp(string message)
+    {
+        var parameters = new DialogParameters
+        {
+            { nameof(CmpHelpDialog.BodyText), message }
+        };
+
+        var dialog = await _dialogService.ShowAsync<CmpHelpDialog>(
+            "Help", parameters, DefaultDialogOptions);
+
+        await dialog.Result;
     }
 }

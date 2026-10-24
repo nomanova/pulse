@@ -1,6 +1,6 @@
 @page "/select-organization"
 @using Pulse.App.Dto.Organizations
-@inherits Pulse.Web.Common.Components.Base.MvvmCmpBase<SelectOrganizationViewModel>
+@inherits MvvmCmpBase<SelectOrganizationViewModel>
 
 <PageTitle>@ViewModel.Title</PageTitle>
 
@@ -75,7 +75,7 @@
 
     private string SelectedRowClass(OrganizationDto organization, int rowNumber)
     {
-        return organization.Id == ViewModel.CurrentOrganization?.Id ? "bg-app-blue-50" : string.Empty;
+        return organization.Id == ViewModel.SelectedOrganization?.Id ? "bg-app-blue-50" : string.Empty;
     }
 
 }

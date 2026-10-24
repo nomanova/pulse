@@ -193,7 +193,8 @@ public sealed class OrgSelectCommandTests : CliTests
                         new OrganizationDto
                         {
                             Id = "org_1",
-                            Name = "default"
+                            Name = "Default",
+                            Key = "default"
                         }
                     ]
                 },
@@ -204,7 +205,7 @@ public sealed class OrgSelectCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Equal("default", ConfigService.SavedConfig.Context.Organization?.Name);
+        Assert.Equal("default", ConfigService.SavedConfig.Context.Organization?.Key);
     }
 
     [Fact]
@@ -225,7 +226,8 @@ public sealed class OrgSelectCommandTests : CliTests
                         new OrganizationDto
                         {
                             Id = "org_1",
-                            Name = "default"
+                            Name = "Default",
+                            Key = "default"
                         }
                     ]
                 },
@@ -257,12 +259,14 @@ public sealed class OrgSelectCommandTests : CliTests
                         new OrganizationDto
                         {
                             Id = "org_1",
-                            Name = "default"
+                            Name = "Default",
+                            Key = "default"
                         },
                         new OrganizationDto
                         {
                             Id = "org_2",
-                            Name = "production"
+                            Name = "Production",
+                            Key = "production"
                         }
                     ]
                 },
@@ -276,7 +280,7 @@ public sealed class OrgSelectCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Equal("default", ConfigService.SavedConfig.Context.Organization?.Name);
+        Assert.Equal("default", ConfigService.SavedConfig.Context.Organization?.Key);
     }
 
     [Fact]
@@ -297,12 +301,14 @@ public sealed class OrgSelectCommandTests : CliTests
                         new OrganizationDto
                         {
                             Id = "org_1",
-                            Name = "default"
+                            Name = "Default",
+                            Key = "default"
                         },
                         new OrganizationDto
                         {
                             Id = "org_2",
-                            Name = "production"
+                            Name = "Production",
+                            Key = "production"
                         }
                     ]
                 },
@@ -338,12 +344,14 @@ public sealed class OrgSelectCommandTests : CliTests
                         new OrganizationDto
                         {
                             Id = "org_1",
-                            Name = "default"
+                            Name = "Default",
+                            Key = "default"
                         },
                         new OrganizationDto
                         {
                             Id = "org_2",
-                            Name = "production"
+                            Name = "Production",
+                            Key = "production"
                         }
                     ]
                 },

@@ -31,9 +31,9 @@ public sealed class AppRemoveCommand : AsyncCommand<AppRemoveCommand.Settings>
 
     public sealed class Settings : AppSettings
     {
-        [CommandArgument(0, "<name>")]
-        [Description("Name of the application")]
-        public required string Name { get; init; }
+        [CommandArgument(0, "<key>")]
+        [Description("Key of the application")]
+        public required string Key { get; init; }
     }
 
     protected override async Task<int> ExecuteAsync(
@@ -42,13 +42,13 @@ public sealed class AppRemoveCommand : AsyncCommand<AppRemoveCommand.Settings>
         var config = _configService.Load();
         config.AssertOrganization();
 
-        var name = settings.Name;
+        var key = settings.Key;
 
         // Search
         var searchRequest = new SearchApplicationsRequest
         {
             OrganizationId = config.Context.Organization!.Id,
-            Query = name
+            Query = key
         };
         
         var searchResult = await _ctrlApiClient.Applications.Search(searchRequest, cancellationToken);
@@ -63,7 +63,7 @@ public sealed class AppRemoveCommand : AsyncCommand<AppRemoveCommand.Settings>
 
         if (application == null)
         {
-            _console.WriteError($"Application '{name}' not found");
+            _console.WriteError($"Application '{key}' not found");
             return Exit.Error;
         }
         
@@ -81,14 +81,14 @@ public sealed class AppRemoveCommand : AsyncCommand<AppRemoveCommand.Settings>
             return Exit.Error;
         }
 
-        if (config.Context.Application?.Name == name)
+        if (config.Context.Application?.Key == key)
         {
             config.ClearApplication();
         }
 
         _configService.Save(config);
 
-        _console.WriteLine($"Application '{name}' removed");
+        _console.WriteLine($"Application '{key}' removed");
 
         return Exit.Success;
     }

@@ -7,9 +7,11 @@ namespace Pulse.Domain.Aggregates.Organizations;
 
 public sealed record OrganizationId : EntityId<OrganizationId, Organization>;
 
-public sealed class Organization : DomainEntity<OrganizationId>, INamedObject
+public sealed class Organization : DomainEntity<OrganizationId>, INamedObject, IKeyedObject
 {
     public ObjectName Name { get; private set; } = null!;
+
+    public ObjectKey Key { get; private set; } = null!;
 
     private Organization()
     {
@@ -17,17 +19,21 @@ public sealed class Organization : DomainEntity<OrganizationId>, INamedObject
 
     private Organization(
         OrganizationId id,
-        ObjectName name) : base(id)
+        ObjectName name,
+        ObjectKey key) : base(id)
     {
         Name = name;
+        Key = key;
     }
 
-    public static Organization Create(string? name)
+    public static Organization Create(string? name, string? key)
     {
         var objectName = ObjectName.Create(name).Assert();
+        var objectKey = ObjectKey.Create(key).Assert();
+        
         var id = IdentityProvider.New<OrganizationId>();
 
-        var organization = new Organization(id, objectName);
+        var organization = new Organization(id, objectName, objectKey);
         organization.SetCreated();
 
         return organization;
@@ -35,6 +41,6 @@ public sealed class Organization : DomainEntity<OrganizationId>, INamedObject
 
     public override string ToString()
     {
-        return $"[{Id.Value}] {Name.Value}";
+        return $"[{Id.Value}] {Name.Value} ({Key.Value})";
     }
 }

@@ -6,8 +6,9 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "organizationId": "{{orgId}}",
-  "applicationName": "{{appName}}"
+  "organizationId": "{{org.id}}",
+  "applicationName": "{{app.name}}",
+  "applicationKey": "{{app.key}}"
 }
 
 ###
@@ -18,7 +19,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "applicationId": "{{appId}}"
+  "applicationId": "{{app.id}}"
 }
 
 ###
@@ -29,7 +30,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "applicationId": "{{appId}}"
+  "applicationId": "{{app.id}}"
 }
 
 ###
@@ -45,5 +46,5 @@ Authorization: Bearer {{auth_token}}
   "pageSize": null,
   "ascending": true,
   "orderBy": null,
-  "organizationId": "{{orgId}}"
+  "organizationId": "{{org.id}}"
 }

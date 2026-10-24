@@ -37,7 +37,7 @@ public sealed class EnvAddCommandTests : CliTests
         ConfigService.UseConfig(config);
 
         // Act
-        var result = App.Run("production");
+        var result = App.Run("Production", "production");
 
         // Assert
         Assert.Equal(Exit.Error, result.ExitCode);
@@ -58,12 +58,12 @@ public sealed class EnvAddCommandTests : CliTests
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "1" }, HttpStatusCode.OK));
 
         // Act
-        var result = App.Run("production");
+        var result = App.Run("Production", "production");
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
         CtrlApiClient.EnvironmentsMock.Verify(x => x.Add(
-            It.Is<AddEnvironmentRequest>(r => r.EnvironmentName == "production" && r.ApplicationId == "app_1"),
+            It.Is<AddEnvironmentRequest>(r => r.EnvironmentKey == "production" && r.ApplicationId == "app_1"),
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -81,11 +81,11 @@ public sealed class EnvAddCommandTests : CliTests
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "1" }, HttpStatusCode.OK));
 
         // Act
-        App.Run("production");
+        App.Run("Production", "production");
 
         // Assert
         var savedConfig = ConfigService.Load();
-        Assert.Equal("production", savedConfig.Context.Environment?.Name);
+        Assert.Equal("production", savedConfig.Context.Environment?.Key);
     }
 
     [Fact]
@@ -102,7 +102,7 @@ public sealed class EnvAddCommandTests : CliTests
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForFailure(HttpStatusCode.BadRequest));
 
         // Act
-        var result = App.Run("production");
+        var result = App.Run("Production", "production");
 
         // Assert
         Assert.Equal(Exit.Error, result.ExitCode);

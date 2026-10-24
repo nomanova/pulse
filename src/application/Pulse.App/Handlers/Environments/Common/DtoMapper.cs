@@ -11,6 +11,7 @@ public static class DtoMapper
         {
             Id = environment.Id.Value,
             Name = environment.Name.Value,
+            Key = environment.Key.Value,
             IsPrimary = environment.IsPrimary
         };
     }

@@ -6,6 +6,8 @@ public sealed record WorkflowDto : IdentityDto
 {
     public required string Name { get; init; }
     
+    public required string Key { get; init; }
+    
     public string? DraftVersionId { get; init; }
     
     public string? PublishedVersionId { get; init; }

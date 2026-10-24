@@ -21,11 +21,23 @@
                               @bind-Value="@ViewModel.Model.Name"
                               For="@(() => ViewModel.Model.Name)"
                               Variant="Variant.Outlined"
-                              Immediate="false"
-                              MaxLength="50"
+                              Immediate="true"
+                              MaxLength="@Validators.MaxNameLength"
                               Required="true"
                               Disabled="@ViewModel.IsSubmitting"
                               Label="Name"/>
+
+                <MudTextField @bind-Value="@ViewModel.Model.Key"
+                              For="@(() => ViewModel.Model.Key)"
+                              Variant="Variant.Outlined"
+                              Immediate="false"
+                              MaxLength="@Validators.MaxKeyLength"
+                              Required="true"
+                              Disabled="@ViewModel.IsSubmitting"
+                              Label="Key"
+                              Adornment="Adornment.End"
+                              AdornmentIcon="@Icons.Material.Filled.HelpOutline"
+                              OnAdornmentClick="@(() => ViewModel.KeyHelpCommand.Execute(null))"/>
             </MudForm>
         }
     </div>
@@ -38,7 +50,7 @@
     private MudTextField<string>? _nameField;
 
     protected override bool IsOpen => ViewModel.IsOpen;
-    
+
     protected override async Task FocusOnOpenAsync()
     {
         if (_nameField is not null)
@@ -46,7 +58,7 @@
             await _nameField.FocusAsync();
         }
     }
-    
+
     private async Task OnSubmit()
     {
         await _form.ValidateAsync();

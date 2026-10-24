@@ -35,7 +35,7 @@ public sealed class AppAddCommandTests : CliTests
         ConfigService.UseConfig(new Config());
 
         // Act
-        var result = App.Run("myapp");
+        var result = App.Run("My App", "myapp");
 
         // Assert
         Assert.Equal(Exit.Error, result.ExitCode);
@@ -55,12 +55,12 @@ public sealed class AppAddCommandTests : CliTests
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "1" }, HttpStatusCode.OK));
 
         // Act
-        var result = App.Run("myapp");
+        var result = App.Run("My App", "myapp");
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
         CtrlApiClient.ApplicationsMock.Verify(x => x.Add(
-            It.Is<AddApplicationRequest>(r => r.ApplicationName == "myapp" && r.OrganizationId == "org_1"),
+            It.Is<AddApplicationRequest>(r => r.ApplicationName == "My App" && r.OrganizationId == "org_1"),
             It.IsAny<CancellationToken>()), Times.Once);
     }
 
@@ -77,11 +77,11 @@ public sealed class AppAddCommandTests : CliTests
             .ReturnsAsync(ApiDataResult<IdentityDto>.ForSuccess(new IdentityDto { Id = "1" }, HttpStatusCode.OK));
 
         // Act
-        App.Run("myapp");
+        App.Run("My App", "myapp");
 
         // Assert
         var savedConfig = ConfigService.Load();
-        Assert.Equal("myapp", savedConfig.Context.Application?.Name);
+        Assert.Equal("myapp", savedConfig.Context.Application?.Key);
     }
 
     [Fact]

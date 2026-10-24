@@ -1,0 +1,26 @@
+<MudDialog Gutters="false">
+
+    <DialogContent>
+        <MudContainer Class="mb-9" Style="min-height: 100px; max-height: 350px; width: 450px; overflow-y: scroll;">
+            <MudText>@_renderedBodyText</MudText>
+        </MudContainer>
+    </DialogContent>
+
+</MudDialog>
+
+@code {
+
+    [CascadingParameter] public IMudDialogInstance MudDialog { get; set; } = null!;
+
+    [Parameter] public string? BodyText { get; set; }
+
+    private MarkupString? _renderedBodyText;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        _renderedBodyText = BodyText == null ? new MarkupString(string.Empty) : new MarkupString(BodyText);
+    }
+
+}

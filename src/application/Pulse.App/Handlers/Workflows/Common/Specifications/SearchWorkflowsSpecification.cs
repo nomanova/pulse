@@ -26,6 +26,6 @@ public sealed class SearchWorkflowsSpecification : Specification<Workflow>
         Expression<Func<Workflow, bool>> expr = workflow => workflow.EnvironmentId == _environmentId &&
                                                             !workflow.IsDeleted;
 
-        return expr.WithNameFilter(_query);
+        return expr.WithKeyOrNameFilter(_query);
     }
 }

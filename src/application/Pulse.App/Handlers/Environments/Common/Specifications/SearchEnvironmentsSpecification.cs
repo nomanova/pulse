@@ -27,6 +27,6 @@ public sealed class SearchEnvironmentsSpecification : Specification<Environment>
         Expression<Func<Environment, bool>> expr = environment => environment.ApplicationId == _applicationId &&
                                                                   !environment.IsDeleted;
 
-        return expr.WithNameFilter(_query);
+        return expr.WithKeyOrNameFilter(_query);
     }
 }

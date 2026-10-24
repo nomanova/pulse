@@ -33,6 +33,10 @@ public sealed class EnvAddCommand : AsyncCommand<EnvAddCommand.Settings>
         [CommandArgument(0, "<name>")]
         [Description("Name of the environment")]
         public required string Name { get; init; }
+        
+        [CommandArgument(1, "<key>")]
+        [Description("Key of the environment")]
+        public required string Key { get; init; }
     }
 
     protected override async Task<int> ExecuteAsync(
@@ -42,11 +46,13 @@ public sealed class EnvAddCommand : AsyncCommand<EnvAddCommand.Settings>
         config.AssertApplication();
 
         var name = settings.Name;
+        var key = settings.Key;
 
         var request = new AddEnvironmentRequest
         {
             ApplicationId = config.Context.Application!.Id,
-            EnvironmentName = name
+            EnvironmentName = name,
+            EnvironmentKey = key
         };
 
         var result = await _ctrlApiClient.Environments.Add(request, cancellationToken);
@@ -59,11 +65,11 @@ public sealed class EnvAddCommand : AsyncCommand<EnvAddCommand.Settings>
 
         var id = result.Data.Id;
 
-        config.SetEnvironment(id, name); // Immediately select the new environment
+        config.SetEnvironment(id, key); // Immediately select the new environment
         _configService.Save(config);
 
-        _console.WriteLine($"Environment '{name}' added");
-        _console.WriteLine($"Selected environment '{name}'");
+        _console.WriteLine($"Environment '{name}' ('{key}') added");
+        _console.WriteLine($"Selected environment '{key}'");
 
         return Exit.Success;
     }

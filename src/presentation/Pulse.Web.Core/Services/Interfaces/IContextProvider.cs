@@ -7,15 +7,15 @@ namespace Pulse.Web.Core.Services.Interfaces;
 
 public interface IContextProvider
 {
-    NamedIdentity? Organization { get; set; }
+    ObjectIdentity? Organization { get; set; }
 
     Task<ErrorOr<Success>> EnsureOrganization(string organizationId);
     
-    NamedIdentity? Application { get; }
+    ObjectIdentity? Application { get; }
 
     Task<ErrorOr<Success>> EnsureApplication(string applicationId, string? environmentId = null);
     
-    IReadOnlyList<NamedIdentity>? Environments { get; }
+    IReadOnlyList<ObjectIdentity>? Environments { get; }
     
-    NamedIdentity? CurrentEnvironment { get; set; }
+    ObjectIdentity? CurrentEnvironment { get; set; }
 }

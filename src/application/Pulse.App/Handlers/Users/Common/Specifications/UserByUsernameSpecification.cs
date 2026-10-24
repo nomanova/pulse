@@ -17,7 +17,7 @@ public sealed class UserByUsernameSpecification : Specification<User>
 
     private UserByUsernameSpecification(string? username)
     {
-        var usernameResult = ObjectName.Create(username);
+        var usernameResult = ObjectKey.Create(username);
         _username = usernameResult.IsError ? null : usernameResult.Value.Value;
     }
     

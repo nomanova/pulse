@@ -24,16 +24,32 @@ public partial class Role
             IdentityProvider.New(new Guid("00000000-0000-0000-0004-000000000001")));
 
         public static readonly Role SrvOwner = new(
-            SrvOwnerRoleId, true, Scope.Server, ObjectName.Create("srv-owner").Assert());
+            SrvOwnerRoleId, 
+            true, 
+            Scope.Server, 
+            ObjectName.Create("Server Owner").Assert(), 
+            ObjectKey.Create("srv-owner").Assert());
         
         public static readonly Role OrgOwner = new(
-            OrgOwnerRoleId, true, Scope.Organization, ObjectName.Create("org-owner").Assert());
+            OrgOwnerRoleId, 
+            true, 
+            Scope.Organization,
+            ObjectName.Create("Organization Owner").Assert(),
+            ObjectKey.Create("org-owner").Assert());
 
         public static readonly Role AppOwner = new(
-            AppOwnerRoleId, true, Scope.Application, ObjectName.Create("app-owner").Assert());
+            AppOwnerRoleId, 
+            true, 
+            Scope.Application, 
+            ObjectName.Create("Application Owner").Assert(), 
+            ObjectKey.Create("app-owner").Assert());
 
         public static readonly Role EnvOwner = new(
-            EnvOwnerRoleId, true, Scope.Environment, ObjectName.Create("env-owner").Assert());
+            EnvOwnerRoleId, 
+            true, 
+            Scope.Environment, 
+            ObjectName.Create("Environment Owner").Assert(), 
+            ObjectKey.Create("env-owner").Assert());
 
         public static readonly IReadOnlyCollection<Role> All =
         [

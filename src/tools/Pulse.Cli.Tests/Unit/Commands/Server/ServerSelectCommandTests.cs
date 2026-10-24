@@ -120,7 +120,7 @@ public sealed class ServerSelectCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Equal("default", ConfigService.SavedConfig.Context.ServerName);
+        Assert.Equal("default", ConfigService.SavedConfig.Context.ServerKey);
     }
 
     [Fact]
@@ -188,7 +188,7 @@ public sealed class ServerSelectCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Equal("default", ConfigService.SavedConfig.Context.ServerName);
+        Assert.Equal("default", ConfigService.SavedConfig.Context.ServerKey);
     }
 
     [Fact]

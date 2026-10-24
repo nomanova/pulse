@@ -8,6 +8,7 @@ public sealed class ApplicationBuilder : IBuilder<Application>
 {
     private Organization? _organization;
     private string? _name;
+    private string? _key;
 
     private ApplicationBuilder()
     {
@@ -18,7 +19,8 @@ public sealed class ApplicationBuilder : IBuilder<Application>
         return new ApplicationBuilder
         {
             _organization = organization,
-            _name = "app"
+            _name = "App",
+            _key = "app",
         };
     }
 
@@ -28,11 +30,17 @@ public sealed class ApplicationBuilder : IBuilder<Application>
         return this;
     }
 
+    public ApplicationBuilder WithKey(string key)
+    {
+        _key = key;
+        return this;
+    }
+    
     public Application Build()
     {
         _organization.ThrowIfNull();
         _name.ThrowIfNull();
 
-        return Application.Create(_name, _organization);
+        return Application.Create(_name, _key, _organization);
     }
 }

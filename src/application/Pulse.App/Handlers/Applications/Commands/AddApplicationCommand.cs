@@ -27,6 +27,8 @@ public sealed record AddApplicationCommand : ICommand<ErrorOr<IdentityDto>>
     public required OrganizationId OrganizationId { get; init; }
 
     public required string? ApplicationName { get; init; }
+    
+    public required string? ApplicationKey { get; init; }
 }
 
 public sealed class AddApplicationCommandAuthorizer : PermissionAuthorizer<AddApplicationCommand>;
@@ -70,17 +72,17 @@ public class AddApplicationCommandHandler : ICommandHandler<AddApplicationComman
             return Error.NotFound();
         }
 
-        // Duplicate name detection
-        var applicationSpecification = new ApplicationByNameSpecification(organization.Id, command.ApplicationName);
+        // Duplicate key detection
+        var applicationSpecification = new ApplicationByKeySpecification(organization.Id, command.ApplicationKey);
         var existingApplication = await _applicationRepository.SearchOne(applicationSpecification, cancellationToken);
 
         if (existingApplication != null)
         {
-            return ApplicationErrors.NameInUse;
+            return ApplicationErrors.KeyInUse;
         }
 
         // Create application
-        var application = Application.Create(command.ApplicationName, organization);
+        var application = Application.Create(command.ApplicationName, command.ApplicationKey, organization);
         _applicationRepository.Add(application);
 
         // Set the creating user as the initial owner of the application
@@ -88,7 +90,7 @@ public class AddApplicationCommandHandler : ICommandHandler<AddApplicationComman
         _membershipRepository.Add(applicationMembership);
 
         // Create (primary) environment
-        var environment = Environment.Create(Environment.DefaultName, application, true);
+        var environment = Environment.Create(Environment.DefaultName, Environment.DefaultKey, application, true);
         _environmentRepository.Add(environment);
 
         // Set the creating user as the initial owner of the environment

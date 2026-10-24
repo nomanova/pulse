@@ -26,6 +26,6 @@ public sealed class SearchApplicationsSpecification : Specification<Application>
         Expression<Func<Application, bool>> expr = application => application.OrganizationId == _organizationId &&
                                                             !application.IsDeleted;
         
-        return expr.WithNameFilter(_query);
+        return expr.WithKeyOrNameFilter(_query);
     }
 }

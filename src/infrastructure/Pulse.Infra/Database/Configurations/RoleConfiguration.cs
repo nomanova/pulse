@@ -32,8 +32,21 @@ public sealed class RoleConfiguration : DomainEntityTypeConfiguration<Role>
                 .Property(name => name.NormalizedValue)
                 .IsRequired()
                 .HasColumnName("normalized_name");
+        });
+        
+        builder.OwnsOne(role => role.Key, roleBuilder =>
+        {
+            roleBuilder
+                .Property(key => key.Value)
+                .IsRequired()
+                .HasColumnName("key");
+
+            roleBuilder
+                .Property(key => key.NormalizedValue)
+                .IsRequired()
+                .HasColumnName("normalized_key");
             
-            roleBuilder.HasIndex(name => name.Value)
+            roleBuilder.HasIndex(key => key.Value)
                 .IsUnique();
         });
     }

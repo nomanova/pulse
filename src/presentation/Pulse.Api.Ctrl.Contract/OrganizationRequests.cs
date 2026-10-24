@@ -8,6 +8,8 @@ public abstract record OrganizationRequest
 public sealed record AddOrganizationRequest
 {
     public string? OrganizationName { get; init; }
+    
+    public string? OrganizationKey { get; init; }
 }
 
 public sealed record RemoveOrganizationRequest : OrganizationRequest;

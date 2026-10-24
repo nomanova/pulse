@@ -27,7 +27,7 @@ public sealed class SearchOrganizationsQueryAuthorizer : PermissionAuthorizer<Se
 public class SearchOrganizationsQueryHandler :
     IQueryHandler<SearchOrganizationsQuery, ErrorOr<PagedSearchResultDto<OrganizationDto>>>
 {
-    private static readonly List<string> OrderByProperties = [nameof(Organization.Name)];
+    private static readonly List<string> OrderByProperties = [nameof(Organization.Key)];
 
     private readonly IOrganizationRepository _organizationRepository;
 
@@ -46,11 +46,11 @@ public class SearchOrganizationsQueryHandler :
             return ApplicationErrors.OrderBy;
         }
 
-        var orderBy = query.OrderBy ?? nameof(Organization.Name);
+        var orderBy = query.OrderBy ?? nameof(Organization.Key);
 
         var orderBySpecification = orderBy switch
         {
-            nameof(Organization.Name) => new OrderBySpecification<Organization, OrganizationId, string>(orderBy,
+            nameof(Organization.Key) => new OrderBySpecification<Organization, OrganizationId, string>(orderBy,
                 query.Ascending),
             _ => throw new NotImplementedException()
         };

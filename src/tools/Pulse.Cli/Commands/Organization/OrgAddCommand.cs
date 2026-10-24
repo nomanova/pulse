@@ -33,6 +33,10 @@ public sealed class OrgAddCommand : AsyncCommand<OrgAddCommand.Settings>
         [CommandArgument(0, "<name>")]
         [Description("Name of the organization")]
         public required string Name { get; init; }
+        
+        [CommandArgument(1, "<key>")]
+        [Description("Key of the organization")]
+        public required string Key { get; init; }
     }
 
     protected override async Task<int> ExecuteAsync(CommandContext context, Settings settings,
@@ -42,10 +46,12 @@ public sealed class OrgAddCommand : AsyncCommand<OrgAddCommand.Settings>
         config.AssertServer();
 
         var name = settings.Name;
+        var key = settings.Key;
 
         var request = new AddOrganizationRequest
         {
-            OrganizationName = name
+            OrganizationName = name,
+            OrganizationKey = key
         };
 
         var result = await _ctrlApiClient.Organizations.Add(request, cancellationToken);
@@ -58,11 +64,11 @@ public sealed class OrgAddCommand : AsyncCommand<OrgAddCommand.Settings>
 
         var id = result.Data.Id;
         
-        config.SetOrganization(id, name); // Immediately select the new organization
+        config.SetOrganization(id, key); // Immediately select the new organization
         _configService.Save(config);
 
-        _console.WriteLine($"Organization '{name}' added");
-        _console.WriteLine($"Selected organization '{name}'");
+        _console.WriteLine($"Organization '{name}' ('{key}') added");
+        _console.WriteLine($"Selected organization '{key}'");
 
         return Exit.Success;
     }

@@ -32,7 +32,7 @@ public sealed class SearchEnvironmentsQueryAuthorizer : PermissionAuthorizer<Sea
 public class SearchEnvironmentsQueryHandler :
     IQueryHandler<SearchEnvironmentsQuery, ErrorOr<PagedSearchResultDto<EnvironmentDto>>>
 {
-    private static readonly List<string> OrderByProperties = [nameof(Environment.Name)];
+    private static readonly List<string> OrderByProperties = [nameof(Environment.Key)];
 
     private readonly IEnvironmentRepository _environmentRepository;
 
@@ -52,11 +52,11 @@ public class SearchEnvironmentsQueryHandler :
             return ApplicationErrors.OrderBy;
         }
 
-        var orderBy = query.OrderBy ?? nameof(Environment.Name);
+        var orderBy = query.OrderBy ?? nameof(Environment.Key);
 
         var orderBySpecification = orderBy switch
         {
-            nameof(Environment.Name) => new OrderBySpecification<Environment, EnvironmentId, string>(orderBy,
+            nameof(Environment.Key) => new OrderBySpecification<Environment, EnvironmentId, string>(orderBy,
                 query.Ascending),
             _ => throw new NotImplementedException()
         };

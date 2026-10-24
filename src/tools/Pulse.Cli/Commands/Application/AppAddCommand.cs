@@ -33,6 +33,10 @@ public sealed class AppAddCommand : AsyncCommand<AppAddCommand.Settings>
         [CommandArgument(0, "<name>")]
         [Description("Name of the application")]
         public required string Name { get; init; }
+        
+        [CommandArgument(1, "<key>")]
+        [Description("Key of the application")]
+        public required string Key { get; init; }
     }
 
     protected override async Task<int> ExecuteAsync(
@@ -42,11 +46,13 @@ public sealed class AppAddCommand : AsyncCommand<AppAddCommand.Settings>
         config.AssertOrganization();
 
         var name = settings.Name;
+        var key = settings.Key;
 
         var request = new AddApplicationRequest
         {
             OrganizationId = config.Context.Organization!.Id,
-            ApplicationName = name
+            ApplicationName = name,
+            ApplicationKey = key
         };
 
         var result = await _ctrlApiClient.Applications.Add(request, cancellationToken);
@@ -59,11 +65,11 @@ public sealed class AppAddCommand : AsyncCommand<AppAddCommand.Settings>
 
         var id = result.Data.Id;
         
-        config.SetApplication(id, name); // Immediately select the new application
+        config.SetApplication(id, key); // Immediately select the new application
         _configService.Save(config);
 
-        _console.WriteLine($"Application '{name}' added");
-        _console.WriteLine($"Selected application '{name}'");
+        _console.WriteLine($"Application '{name}' ('{key}') added");
+        _console.WriteLine($"Selected application '{key}'");
 
         return Exit.Success;
     }

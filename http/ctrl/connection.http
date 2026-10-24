@@ -6,7 +6,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "environmentId": "{{envId}}",
+  "environmentId": "{{env.id}}",
   "pluginId": "com.nomanova.pulse.plugin.provider.email.console",
   "parameters": {}
 }
@@ -19,7 +19,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "environmentId": "{{envId}}",
+  "environmentId": "{{env.id}}",
   "pluginId": "com.nomanova.pulse.plugin.provider.email.sendgrid",
   "parameters": {
     "apiKey": "{{sendGridApiKey}}"
@@ -34,7 +34,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "environmentId": "{{envId}}",
+  "environmentId": "{{env.id}}",
   "pluginId": "com.nomanova.pulse.plugin.provider.sms.console",
   "parameters": {}
 }
@@ -47,7 +47,7 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "connectionId": "3gqjyyhe7chfklwvvmabi21sk"
+  "connectionId": "{{con.id}}"
 }
 
 ###
@@ -61,7 +61,7 @@ Authorization: Bearer {{auth_token}}
   "lastId": null,
   "pageSize": null,
   "ascending": true,
-  "environmentId": "{{envId}}",
+  "environmentId": "{{env.id}}",
   "status": null
 }
 
@@ -73,5 +73,5 @@ Content-Type: application/json
 Authorization: Bearer {{auth_token}}
 
 {
-  "connectionId": "{{conId}}"
+  "connectionId": "{{con.id}}"
 }

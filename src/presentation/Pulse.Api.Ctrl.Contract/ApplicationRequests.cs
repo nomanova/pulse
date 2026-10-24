@@ -7,6 +7,8 @@ public sealed record AddApplicationRequest
     public string? OrganizationId { get; init; }
 
     public string? ApplicationName { get; init; }
+    
+    public string? ApplicationKey { get; init; }
 }
 
 public sealed record RemoveApplicationRequest

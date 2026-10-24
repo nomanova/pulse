@@ -163,7 +163,7 @@ public sealed class OrgRemoveCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
-        Assert.Equal("production", ConfigService.SavedConfig.Context.Organization?.Name);
+        Assert.Equal("production", ConfigService.SavedConfig.Context.Organization?.Key);
     }
 
     [Fact]
@@ -226,7 +226,7 @@ public sealed class OrgRemoveCommandTests : CliTests
 
         // Assert
         Assert.Equal(Exit.Error, result.ExitCode);
-        Assert.Equal("default", ConfigService.Config.Context.Organization?.Name);
+        Assert.Equal("default", ConfigService.Config.Context.Organization?.Key);
     }
 
     private static Config ServerConfig()
@@ -249,7 +249,8 @@ public sealed class OrgRemoveCommandTests : CliTests
     
     private static PagedSearchResultDto<OrganizationDto> OrganizationSearchResult(
         string id = "org_1",
-        string name = "default")
+        string name = "Default",
+        string key = "default")
     {
         return new PagedSearchResultDto<OrganizationDto>
         {
@@ -258,7 +259,8 @@ public sealed class OrgRemoveCommandTests : CliTests
                 new OrganizationDto
                 {
                     Id = id,
-                    Name = name
+                    Name = name,
+                    Key = key
                 }
             ],
             HasNext = false

@@ -23,26 +23,26 @@ public sealed class ServerSelectCommand : Command<ServerSelectCommand.Settings>
 
     public sealed class Settings : ServerSettings
     {
-        [CommandArgument(0, "[name]")]
-        [Description("Name of the server")]
-        public required string? Name { get; init; }
+        [CommandArgument(0, "[key]")]
+        [Description("Key of the server")]
+        public required string? Key { get; init; }
     }
 
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
-        var name = settings.Name;
+        var key = settings.Key;
         var config = _configService.Load();
 
-        // Server name explicitly provided
-        if (name is not null && config.Servers.ContainsKey(name))
+        // Server key explicitly provided
+        if (key is not null && config.Servers.ContainsKey(key))
         {
-            SelectServer(config, name);
+            SelectServer(config, key);
             return Exit.Success;
         }
 
-        if (name is not null && !config.Servers.ContainsKey(name))
+        if (key is not null && !config.Servers.ContainsKey(key))
         {
-            _console.WriteError($"No server '{name}' found");
+            _console.WriteError($"No server '{key}' found");
             return Exit.Error;
         }
 
@@ -54,17 +54,17 @@ public sealed class ServerSelectCommand : Command<ServerSelectCommand.Settings>
                 return Exit.Error;
             // Single server available
             case 1:
-                name = config.Servers.Keys.First();
-                SelectServer(config, name);
+                key = config.Servers.Keys.First();
+                SelectServer(config, key);
                 return Exit.Success;
         }
 
         // Selection menu
-        var serverNames = config.Servers.Keys.ToArray();
+        var serverKeys = config.Servers.Keys.ToArray();
 
         var selectedServer = _console.Prompt(new SelectionPrompt<string>()
             .Title("Select server")
-            .AddChoices(serverNames)
+            .AddChoices(serverKeys)
         );
 
         SelectServer(config, selectedServer);
@@ -72,11 +72,11 @@ public sealed class ServerSelectCommand : Command<ServerSelectCommand.Settings>
         return Exit.Success;
     }
 
-    private void SelectServer(Config config, string name)
+    private void SelectServer(Config config, string key)
     {
-        config.SetServer(name);
+        config.SetServer(key);
         _configService.Save(config);
 
-        _console.WriteLine($"Selected server '{name}'");
+        _console.WriteLine($"Selected server '{key}'");
     }
 }

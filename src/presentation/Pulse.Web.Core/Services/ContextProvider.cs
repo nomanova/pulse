@@ -32,7 +32,7 @@ public sealed class ContextProvider : IContextProvider
         _apiClient = apiClient;
     }
 
-    public NamedIdentity? Organization
+    public ObjectIdentity? Organization
     {
         get;
         set
@@ -64,12 +64,12 @@ public sealed class ContextProvider : IContextProvider
         }
 
         var organization = result.Data!;
-        Organization = new NamedIdentity(organization.Id, organization.Name);
+        Organization = new ObjectIdentity(organization.Id, organization.Name, organization.Key);
 
         return Result.Success;
     }
 
-    public NamedIdentity? Application { get; private set; }
+    public ObjectIdentity? Application { get; private set; }
 
     public async Task<ErrorOr<Success>> EnsureApplication(string applicationId, string? environmentId = null)
     {
@@ -115,16 +115,16 @@ public sealed class ContextProvider : IContextProvider
             return Error.NotFound(description: ErrEnvironmentNotFound);
         }
 
-        Application = new NamedIdentity(application.Id, application.Name);
-        Environments = environments.Select(env => new NamedIdentity(env.Id, env.Name)).ToList().AsReadOnly();
-        CurrentEnvironment = new NamedIdentity(currentEnvironment.Id, currentEnvironment.Name);
+        Application = new ObjectIdentity(application.Id, application.Name, application.Key);
+        Environments = environments.Select(env => new ObjectIdentity(env.Id, env.Name, env.Key)).ToList().AsReadOnly();
+        CurrentEnvironment = new ObjectIdentity(currentEnvironment.Id, currentEnvironment.Name, currentEnvironment.Key);
 
         return Result.Success;
     }
 
-    public IReadOnlyList<NamedIdentity>? Environments { get; private set; }
+    public IReadOnlyList<ObjectIdentity>? Environments { get; private set; }
 
-    public NamedIdentity? CurrentEnvironment
+    public ObjectIdentity? CurrentEnvironment
     {
         get;
         set

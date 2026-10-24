@@ -54,7 +54,7 @@ public sealed class AppRemoveCommandTests : CliTests
 
         var searchResult = new PagedSearchResultDto<ApplicationDto>
         {
-            Entities = new List<ApplicationDto> { new() { Id = "app_1", Name = "myapp" } },
+            Entities = new List<ApplicationDto> { new() { Id = "app_1", Name = "My App", Key = "myapp" } },
             HasNext = false
         };
 
@@ -87,7 +87,7 @@ public sealed class AppRemoveCommandTests : CliTests
 
         var searchResult = new PagedSearchResultDto<ApplicationDto>
         {
-            Entities = new List<ApplicationDto> { new() { Id = "app_1", Name = "myapp" } },
+            Entities = new List<ApplicationDto> { new() { Id = "app_1", Name = "My App", Key = "myapp" } },
             HasNext = false
         };
 
@@ -104,7 +104,7 @@ public sealed class AppRemoveCommandTests : CliTests
 
         // Assert
         var savedConfig = ConfigService.Load();
-        Assert.Null(savedConfig.Context.Application?.Name);
+        Assert.Null(savedConfig.Context.Application?.Key);
     }
 
     [Fact]

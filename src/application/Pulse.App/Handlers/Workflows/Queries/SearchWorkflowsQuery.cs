@@ -31,7 +31,7 @@ public sealed class SearchWorkflowsQueryAuthorizer : ApiKeyPermissionAuthorizer<
 public class SearchWorkflowsQueryHandler :
     IQueryHandler<SearchWorkflowsQuery, ErrorOr<PagedSearchResultDto<WorkflowDto>>>
 {
-    private static readonly List<string> OrderByProperties = [nameof(Workflow.Name)];
+    private static readonly List<string> OrderByProperties = [nameof(Workflow.Key)];
 
     private readonly IWorkflowRepository _workflowRepository;
 
@@ -50,11 +50,11 @@ public class SearchWorkflowsQueryHandler :
             return ApplicationErrors.OrderBy;
         }
 
-        var orderBy = query.OrderBy ?? nameof(Workflow.Name);
+        var orderBy = query.OrderBy ?? nameof(Workflow.Key);
 
         var orderBySpecification = orderBy switch
         {
-            nameof(Workflow.Name) => new OrderBySpecification<Workflow, WorkflowId, string>(orderBy,
+            nameof(Workflow.Key) => new OrderBySpecification<Workflow, WorkflowId, string>(orderBy,
                 query.Ascending),
             _ => throw new NotImplementedException()
         };

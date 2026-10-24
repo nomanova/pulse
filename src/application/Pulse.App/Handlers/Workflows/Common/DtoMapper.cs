@@ -13,6 +13,7 @@ public static class DtoMapper
         {
             Id = workflow.Id.Value,
             Name = workflow.Name.Value,
+            Key = workflow.Key.Value,
             DraftVersionId = workflow.DraftVersion?.Id.Value,
             PublishedVersionId = workflow.PublishedVersion?.Id.Value
         };

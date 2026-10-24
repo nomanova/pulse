@@ -59,11 +59,12 @@ public sealed class OrgListCommand : PagedOrgCommand
 
         table.AddColumn("");
         table.AddColumn("Name");
+        table.AddColumn("Key");
 
         foreach (var organization in organizations)
         {
-            var isSelected = config.Context.Organization?.Name == organization.Name;
-            table.AddRow(isSelected ? "[grey]*[/]" : "", organization.Name);
+            var isSelected = config.Context.Organization?.Key == organization.Key;
+            table.AddRow(isSelected ? "[grey]*[/]" : "", organization.Name, organization.Key);
         }
 
         _console.WriteTable(table);

@@ -22,30 +22,30 @@ public sealed class ServerRemoveCommand : Command<ServerRemoveCommand.Settings>
 
     public sealed class Settings : ServerSettings
     {
-        [CommandArgument(0, "<name>")]
-        [Description("Name of the server")]
-        public required string Name { get; init; }
+        [CommandArgument(0, "<key>")]
+        [Description("Key of the server")]
+        public required string Key { get; init; }
     }
 
     protected override int Execute(CommandContext context, Settings settings, CancellationToken cancellationToken)
     {
-        var name = settings.Name;
+        var key = settings.Key;
         var config = _configService.Load();
 
-        if (!config.Servers.Remove(name))
+        if (!config.Servers.Remove(key))
         {
-            _console.WriteError($"No server '{name}' found");
+            _console.WriteError($"No server '{key}' found");
             return Exit.Error;
         }
 
-        if (config.Context.ServerName == name)
+        if (config.Context.ServerKey == key)
         {
             config.ClearServer();
         }
 
         _configService.Save(config);
 
-        _console.WriteLine($"Server '{name}' removed");
+        _console.WriteLine($"Server '{key}' removed");
 
         return Exit.Success;
     }

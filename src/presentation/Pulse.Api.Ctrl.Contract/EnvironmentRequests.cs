@@ -7,6 +7,8 @@ public sealed record AddEnvironmentRequest
     public string? ApplicationId { get; init; }
     
     public string? EnvironmentName { get; init; }
+    
+    public string? EnvironmentKey { get; init; }
 }
 
 public sealed record RemoveEnvironmentRequest

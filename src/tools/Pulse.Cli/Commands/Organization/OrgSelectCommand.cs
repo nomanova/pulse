@@ -44,32 +44,32 @@ public sealed class OrgSelectCommand : PagedOrgCommand
                 _console.WriteLine("No organizations found");
                 return Exit.Success;
             case 1:
-                SelectEntity(config, entities[0].Id, entities[0].Name);
+                SelectEntity(config, entities[0].Id, entities[0].Key);
                 return Exit.Success;
         }
 
         // Selection menu
-        var names = entities.Select(o => o.Name).ToArray();
+        var keys = entities.Select(o => o.Key).ToArray();
 
         _console.WriteContinuation(lastId);
         
-        var selectedEntityName = await _console.PromptAsync(new SelectionPrompt<string>()
+        var selectedEntityKey = await _console.PromptAsync(new SelectionPrompt<string>()
                 .Title("Select organization")
-                .AddChoices(names),
+                .AddChoices(keys),
             cancellationToken: cancellationToken);
 
-        var entity = entities.Single(o => o.Name == selectedEntityName);
+        var entity = entities.Single(o => o.Key == selectedEntityKey);
         
-        SelectEntity(config, entity.Id, entity.Name);
+        SelectEntity(config, entity.Id, entity.Key);
 
         return Exit.Success;
     }
 
-    private void SelectEntity(Config config, string id, string name)
+    private void SelectEntity(Config config, string id, string key)
     {
-        config.SetOrganization(id, name);
+        config.SetOrganization(id, key);
         _configService.Save(config);
 
-        _console.WriteLine($"Selected organization '{name}'");
+        _console.WriteLine($"Selected organization '{key}'");
     }
 }

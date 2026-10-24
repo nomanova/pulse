@@ -5,6 +5,7 @@ namespace Pulse.Tests.Shared.Builders;
 public sealed class OrganizationBuilder : IBuilder<Organization>
 {
     private string? _name;
+    private string? _key;
 
     private OrganizationBuilder()
     {
@@ -13,7 +14,8 @@ public sealed class OrganizationBuilder : IBuilder<Organization>
     public static OrganizationBuilder New()
     {
         return new OrganizationBuilder()
-            .WithName("princeton-plainsboro");
+            .WithName("Princeton Plainsboro")
+            .WithKey("princeton-plainsboro");
     }
 
     public OrganizationBuilder WithName(string name)
@@ -22,8 +24,14 @@ public sealed class OrganizationBuilder : IBuilder<Organization>
         return this;
     }
 
+    public OrganizationBuilder WithKey(string key)
+    {
+        _key = key;
+        return this;
+    }
+
     public Organization Build()
     {
-        return Organization.Create(_name);
+        return Organization.Create(_name, _key);
     }
 }

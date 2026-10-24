@@ -37,6 +37,19 @@ public sealed class WorkflowConfiguration : DomainEntityTypeConfiguration<Workfl
                 .IsRequired()
                 .HasColumnName("normalized_name");
         });
+        
+        builder.OwnsOne(workflow => workflow.Key, workflowBuilder =>
+        {
+            workflowBuilder
+                .Property(key => key.Value)
+                .IsRequired()
+                .HasColumnName("key");
+
+            workflowBuilder
+                .Property(key => key.NormalizedValue)
+                .IsRequired()
+                .HasColumnName("normalized_key");
+        });
 
         builder.HasMany(workflow => workflow.Versions)
             .WithOne()
@@ -55,7 +68,7 @@ public sealed class WorkflowConfiguration : DomainEntityTypeConfiguration<Workfl
         //         workflow.OrganizationId,
         //         workflow.ApplicationId,
         //         workflow.EnvironmentId,
-        //         workflow.Name.Value
+        //         workflow.Key.Value
         //     })
         //     .IsUnique();
 
@@ -63,14 +76,14 @@ public sealed class WorkflowConfiguration : DomainEntityTypeConfiguration<Workfl
 
         // Up
         // migrationBuilder.CreateIndex(
-        //     name: "ix_workflows_organization_id_application_id_environment_id_name",
+        //     name: "ix_workflows_organization_id_application_id_environment_id_key",
         //     table: "workflows",
-        //     columns: new[] { "organization_id", "application_id", "environment_id", "name" },
+        //     columns: new[] { "organization_id", "application_id", "environment_id", "key" },
         //     unique: true);
 
         // Down
         // migrationBuilder.DropIndex(
-        //     name: "ix_workflows_organization_id_application_id_environment_id_name",
+        //     name: "ix_workflows_organization_id_application_id_environment_id_key",
         //     table: "applications");
     }
 }

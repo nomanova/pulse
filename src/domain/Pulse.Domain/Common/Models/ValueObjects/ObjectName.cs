@@ -1,35 +1,16 @@
 using ErrorOr;
-using System.Linq;
 using FluentValidation;
 using Pulse.Domain.Common.Errors;
+using Pulse.Domain.Common.Extensions;
 
 namespace Pulse.Domain.Common.Models.ValueObjects;
 
-/**
- * Each object name in the system adheres to the RFC 1123 label name rules:
- * - A label may start with a letter or digit
- * - Must still end with a letter or digit
- * - Interior characters: letters, digits, or hyphens
- * - Max length: 63 characters
- * With the more restrictive addition that all letters must be lowercase.
- */
-public record ObjectName
+public sealed record ObjectName
 {
-    public const int MaxLength = 61;
-    private const string AllowedCharacters = "abcdefghijklmnopqrstuvwxyz0123456789-";
+    public const int MaxLength = 100;
 
-    /**
-     * Original value as provided by the user.
-     * Used to determine if the name is unique (unambiguous lookup).
-     * E.g., acme-hq
-     */
     public string Value { get; } = null!;
 
-    /*
-     * The normalized value is the name with only alphanumeric characters.
-     * Used when searching by name.
-     * E.g., acmehq
-     */
     public string NormalizedValue { get; } = null!;
 
     private ObjectName()
@@ -49,7 +30,7 @@ public record ObjectName
             return DomainErrors.ObjectName.Required;
         }
 
-        var normalizedValue = value.AsNormalizedObjectName();
+        var normalizedValue = value.AsNormalizedQueryable();
         var name = new ObjectName(value, normalizedValue);
 
         var validator = new NameValidator();
@@ -69,10 +50,6 @@ public record ObjectName
         {
             RuleFor(model => model.Value).NotEmpty()
                 .WithError(DomainErrors.ObjectName.Required);
-            RuleFor(model => model.Value).Must(value => value.All(c => AllowedCharacters.Contains(c)))
-                .WithError(DomainErrors.ObjectName.ForbiddenCharacter);
-            RuleFor(model => model.Value).Matches("^[a-z0-9]([-a-z0-9]*[a-z0-9])?$")
-                .WithError(DomainErrors.ObjectName.InvalidFormat);
             RuleFor(model => model.Value).MaximumLength(MaxLength)
                 .WithError(DomainErrors.ObjectName.TooLong);
         }

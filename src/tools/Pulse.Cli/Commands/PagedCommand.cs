@@ -53,7 +53,7 @@ public abstract class PagedCommand<T, Ts> : AsyncCommand<PagedCommandSettings> w
             if (result != null)
             {
                 lastId = result.HasNext ? result.Entities[^1].Id : null;
-                entities = result.Entities.ToList();
+                entities = [.. result.Entities];
             }
         }
 

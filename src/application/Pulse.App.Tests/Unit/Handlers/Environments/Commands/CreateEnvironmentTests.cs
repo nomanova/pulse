@@ -24,7 +24,8 @@ public sealed class CreateEnvironmentTests : AppTests
         var command = new AddEnvironmentCommand
         {
             ApplicationId = application.Id,
-            EnvironmentName = "test-env"
+            EnvironmentName = "Test Environment",
+            EnvironmentKey = "test-env"
         };
 
         // Act
@@ -45,13 +46,14 @@ public sealed class CreateEnvironmentTests : AppTests
         var application = ApplicationBuilder.New(organization).Build();
         DatabaseContext.AddApplications(application);
 
-        var environment = Environment.Create("test-env", application);
+        var environment = Environment.Create("Test Environment","test-env", application);
         DatabaseContext.WithEnvironments(environment);
 
         var command = new AddEnvironmentCommand
         {
             ApplicationId = application.Id,
-            EnvironmentName = environment.Name.Value
+            EnvironmentName = environment.Name.Value,
+            EnvironmentKey = environment.Key.Value
         };
 
         // Act
@@ -59,6 +61,6 @@ public sealed class CreateEnvironmentTests : AppTests
 
         // Assert
         Assert.True(result.IsError);
-        Assert.Contains(ApplicationErrors.NameInUse, result.Errors);
+        Assert.Contains(ApplicationErrors.KeyInUse, result.Errors);
     }
 }

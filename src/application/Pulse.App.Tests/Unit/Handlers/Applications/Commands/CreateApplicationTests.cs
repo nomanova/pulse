@@ -20,7 +20,8 @@ public sealed class CreateApplicationTests : AppTests
         var command = new AddApplicationCommand
         {
             OrganizationId = organization.Id,
-            ApplicationName = "test-app"
+            ApplicationName = "Test App",
+            ApplicationKey = "test-app",
         };
         
         // Act
@@ -32,7 +33,7 @@ public sealed class CreateApplicationTests : AppTests
     }
     
     [Fact]
-    public async Task Create_WithDuplicateName_ShouldReturnNameInUseError()
+    public async Task Create_WithDuplicateKey_ShouldReturnKeyInUseError()
     {
         // Arrange
         var admin = EnsureAdmin();
@@ -47,7 +48,8 @@ public sealed class CreateApplicationTests : AppTests
         var command = new AddApplicationCommand
         {
             OrganizationId = organization.Id,
-            ApplicationName = application.Name.Value
+            ApplicationName = application.Name.Value,
+            ApplicationKey = application.Key.Value
         };
 
         // Act
@@ -55,6 +57,6 @@ public sealed class CreateApplicationTests : AppTests
 
         // Assert
         Assert.True(result.IsError);
-        Assert.Contains(ApplicationErrors.NameInUse, result.Errors);
+        Assert.Contains(ApplicationErrors.KeyInUse, result.Errors);
     }
 }

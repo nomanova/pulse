@@ -57,7 +57,7 @@ public sealed class EnvRemoveCommandTests : CliTests
 
         var searchResult = new PagedSearchResultDto<EnvironmentDto>
         {
-            Entities = new List<EnvironmentDto> { new() { Id = "env_1", Name = "prod" } },
+            Entities = new List<EnvironmentDto> { new() { Id = "env_1", Name = "Production", Key = "prod" } },
             HasNext = false
         };
 
@@ -91,7 +91,7 @@ public sealed class EnvRemoveCommandTests : CliTests
 
         var searchResult = new PagedSearchResultDto<EnvironmentDto>
         {
-            Entities = new List<EnvironmentDto> { new() { Id = "env_1", Name = "prod" } },
+            Entities = new List<EnvironmentDto> { new() { Id = "env_1", Name = "Production", Key = "prod" } },
             HasNext = false
         };
 
@@ -108,7 +108,7 @@ public sealed class EnvRemoveCommandTests : CliTests
 
         // Assert
         var savedConfig = ConfigService.Load();
-        Assert.Null(savedConfig.Context.Environment?.Name);
+        Assert.Null(savedConfig.Context.Environment?.Key);
     }
 
     [Fact]

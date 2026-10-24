@@ -181,6 +181,6 @@ public sealed class ServerRemoveCommandTests : CliTests
         // Assert
         Assert.Equal(Exit.Success, result.ExitCode);
         Assert.True(ConfigService.SavedConfig.HasServer());
-        Assert.Equal("production", ConfigService.SavedConfig.Context.ServerName);
+        Assert.Equal("production", ConfigService.SavedConfig.Context.ServerKey);
     }
 }
