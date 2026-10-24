@@ -1,4 +1,4 @@
-@inherits MvvmCmpBase<AddApplicationViewModel>
+@inherits CmpFocusOnOpen<AddApplicationViewModel>
 
 <CmpDrawer
     Title="Add application"
@@ -17,7 +17,8 @@
                      ValidationDelay="0"
                      FieldChanged="@(() => ViewModel.FieldChangedCommand.Execute(null))">
 
-                <MudTextField @bind-Value="@ViewModel.Model.Name"
+                <MudTextField @ref="@_nameField"
+                              @bind-Value="@ViewModel.Model.Name"
                               For="@(() => ViewModel.Model.Name)"
                               Variant="Variant.Outlined"
                               Immediate="false"
@@ -34,7 +35,18 @@
 @code {
 
     private MudForm _form = null!;
+    private MudTextField<string>? _nameField;
 
+    protected override bool IsOpen => ViewModel.IsOpen;
+    
+    protected override async Task FocusOnOpenAsync()
+    {
+        if (_nameField is not null)
+        {
+            await _nameField.FocusAsync();
+        }
+    }
+    
     private async Task OnSubmit()
     {
         await _form.ValidateAsync();
