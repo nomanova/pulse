@@ -6,8 +6,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Files", "_Files", "{4F0C2C
 		LICENSE = LICENSE
 		global.json = global.json
 		Directory.Build.props = Directory.Build.props
-		TODO.md = TODO.md
-		AGENTS.md = AGENTS.md
+		CLAUDE.md = CLAUDE.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{F1A107C0-C18F-454C-82C5-1B0FD8512123}"
