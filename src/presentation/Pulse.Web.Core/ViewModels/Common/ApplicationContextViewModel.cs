@@ -1,25 +1,23 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Pulse.Web.Core.Services;
 using Pulse.Web.Core.Services.Interfaces;
 
 namespace Pulse.Web.Core.ViewModels.Common;
 
-public abstract partial class ApplicationContextViewModel : OrganizationContextViewModel
+public abstract partial class ApplicationContextViewModel :
+    OrganizationContextViewModel, IRecipient<ApplicationChangedMessage>, IRecipient<EnvironmentChangedMessage>
 {
-    private readonly IContextProvider _contextProvider;
-
-    protected ApplicationContextViewModel(IContextProvider contextProvider)
-        : base(contextProvider)
+    protected ApplicationContextViewModel(IContextProvider contextProvider, IMessenger messenger)
+        : base(contextProvider, messenger)
     {
-        _contextProvider = contextProvider;
     }
-    
-    [ObservableProperty]
-    public partial string? ApplicationId { get; protected set; }
-    
-    [ObservableProperty]
-    public partial string? EnvironmentId { get; protected set; }
-    
+
+    [ObservableProperty] public partial string? ApplicationId { get; protected set; }
+
+    [ObservableProperty] public partial string? EnvironmentId { get; protected set; }
+
     public async Task InitializeApplicationContext(
         string organizationId,
         string applicationId,
@@ -30,7 +28,17 @@ public abstract partial class ApplicationContextViewModel : OrganizationContextV
 
         await InitializeOrganizationContext(organizationId);
     }
-    
+
+    public void Receive(ApplicationChangedMessage message)
+    {
+        OnApplicationChanged();
+    }
+
+    public void Receive(EnvironmentChangedMessage message)
+    {
+        OnEnvironmentChanged();
+    }
+
     protected override async Task OnOrganizationLoaded()
     {
         if (ApplicationId is null)
@@ -38,7 +46,7 @@ public abstract partial class ApplicationContextViewModel : OrganizationContextV
             return;
         }
 
-        var result = await _contextProvider.EnsureApplication(ApplicationId, EnvironmentId);
+        var result = await ContextProvider.EnsureApplication(ApplicationId, EnvironmentId);
 
         if (result.IsError)
         {
@@ -48,13 +56,23 @@ public abstract partial class ApplicationContextViewModel : OrganizationContextV
 
         await OnApplicationLoaded();
     }
-    
+
     protected virtual Task OnApplicationLoaded()
     {
         return Task.CompletedTask;
     }
 
     protected virtual Task OnApplicationLoadFailed()
+    {
+        return Task.CompletedTask;
+    }
+
+    protected virtual Task OnApplicationChanged()
+    {
+        return Task.CompletedTask;
+    }
+
+    protected virtual Task OnEnvironmentChanged()
     {
         return Task.CompletedTask;
     }

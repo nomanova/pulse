@@ -1,23 +1,32 @@
 @inherits MvvmCmpBase<EnvironmentContainerViewModel>
 
-<CmpSideBarPage>
-    <SideBar>
-        <CmpEnvironmentMenu
-            OrganizationId="@OrganizationId"
-            ApplicationId="@ApplicationId"
-            EnvironmentId="@EnvironmentId"/>
-    </SideBar>
-    <Content>
-        @if (ViewModel.IsLoading)
-        {
-            <CmpLoader/>
-        }
-        else
-        {
-            @ChildContent
-        }
-    </Content>
-</CmpSideBarPage>
+<AddEnvironmentDrawer/>
+
+<div class="env-wrapper">
+    <div class="env-topbar">
+        <CmpEnvironmentTopBar ApplicationName="@ViewModel.ApplicationName" 
+                              EnvironmentName="@ViewModel.EnvironmentName"
+                              ApplicationId="@ViewModel.ApplicationId"/>
+    </div>
+    <div class="env-body">
+        <div class="env-sidebar">
+            <CmpEnvironmentMenu
+                OrganizationId="@OrganizationId"
+                ApplicationId="@ApplicationId"
+                EnvironmentId="@EnvironmentId"/>
+        </div>
+        <div class="env-content">
+            @if (ViewModel.IsLoading)
+            {
+                <CmpLoader/>
+            }
+            else
+            {
+                @ChildContent
+            }
+        </div>
+    </div>
+</div>
 
 @code {
     [Parameter] public required string OrganizationId { get; set; }

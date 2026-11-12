@@ -8,7 +8,7 @@ using Pulse.Web.Core.ViewModels.Common;
 
 namespace Pulse.Web.Core.ViewModels;
 
-public partial class UserViewModel : ViewModelBase, IRecipient<ContextChangedMessage>
+public partial class UserViewModel : ViewModelBase, IRecipient<OrganizationChangedMessage>
 {
     private readonly IMessenger _messenger;
     private readonly IContextProvider _contextProvider;
@@ -49,7 +49,7 @@ public partial class UserViewModel : ViewModelBase, IRecipient<ContextChangedMes
         SetOrganizationName();
     }
 
-    public void Receive(ContextChangedMessage message)
+    public void Receive(OrganizationChangedMessage message)
     {
         SetOrganizationName();
     }

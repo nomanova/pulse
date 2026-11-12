@@ -1,0 +1,16 @@
+.env-wrapper {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    overflow: hidden;
+}
+
+.env-body {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    overflow: hidden;
+}
+
+.env-sidebar {
+    box-shadow: 0 0 3px rgba(0,0,0,0.5);
+    clip-path: inset(0px -3px 0px 0px);
+}

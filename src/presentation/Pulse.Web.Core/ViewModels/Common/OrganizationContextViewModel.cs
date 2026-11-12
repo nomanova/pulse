@@ -1,16 +1,29 @@
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Messaging;
+using Pulse.Web.Core.Services;
 using Pulse.Web.Core.Services.Interfaces;
 
 namespace Pulse.Web.Core.ViewModels.Common;
 
-public abstract partial class OrganizationContextViewModel : ViewModelBase
+public abstract partial class OrganizationContextViewModel : ViewModelBase, IRecipient<OrganizationChangedMessage>
 {
-    private readonly IContextProvider _contextProvider;
+    protected readonly IContextProvider ContextProvider;
+    protected readonly IMessenger Messenger;
 
-    protected OrganizationContextViewModel(IContextProvider contextProvider)
+    protected OrganizationContextViewModel(
+        IContextProvider contextProvider,
+        IMessenger messenger)
     {
-        _contextProvider = contextProvider;
+        ContextProvider = contextProvider;
+        Messenger = messenger;
+
+        Messenger.RegisterAll(this);
+    }
+
+    public override void Dispose()
+    {
+        Messenger.UnregisterAll(this);
     }
 
     [ObservableProperty] public partial bool IsLoading { get; protected set; }
@@ -25,7 +38,7 @@ public abstract partial class OrganizationContextViewModel : ViewModelBase
 
         try
         {
-            var result = await _contextProvider.EnsureOrganization(organizationId);
+            var result = await ContextProvider.EnsureOrganization(organizationId);
 
             if (result.IsError)
             {
@@ -41,12 +54,22 @@ public abstract partial class OrganizationContextViewModel : ViewModelBase
         }
     }
 
+    public void Receive(OrganizationChangedMessage message)
+    {
+        OnOrganizationChanged();
+    }
+
     protected virtual Task OnOrganizationLoaded()
     {
         return Task.CompletedTask;
     }
 
     protected virtual Task OnOrganizationLoadFailed()
+    {
+        return Task.CompletedTask;
+    }
+
+    protected virtual Task OnOrganizationChanged()
     {
         return Task.CompletedTask;
     }

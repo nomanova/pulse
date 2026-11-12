@@ -34,7 +34,7 @@ public partial class ApplicationListViewModel : OrganizationContextViewModel
         ILocalStorage localStorage,
         IFlagManager flagManager, 
         IPageNavigator navigator, 
-        IDialogManager dialogManager) : base(contextProvider)
+        IDialogManager dialogManager) : base(contextProvider, messenger)
     {
         _messenger = messenger;
         _ctrlApiClient = ctrlApiClient;

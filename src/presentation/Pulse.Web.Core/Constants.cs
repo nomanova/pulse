@@ -3,11 +3,12 @@ namespace Pulse.Web.Core;
 public static class Constants
 {
     public const string AppName = "Pulse";
-    
-    public const string ErrNameInUse = "General.NameInUse";
+
     public const string ErrKeyInUse = "General.KeyInUse";
-    
+
     public const uint MaxEnvironmentCount = 10;
+
+    public const string ErrGeneral = "Something went wrong, please try again later";
 
     public const string ErrKeyHelp = """
                                      The <b>key</b> of an object is used for <b>programmatic access</b> 

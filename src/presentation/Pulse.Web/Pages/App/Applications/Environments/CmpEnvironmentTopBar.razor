@@ -1,0 +1,36 @@
+@inherits MvvmCmpBase<EnvironmentActionsViewModel>
+
+<div class="px-6 py-1 flex bg-app-green-400 text-app-white">
+    
+    <div class="flex align-center space-x-2 text-lg font-semibold">
+        <span>@ApplicationName</span>
+        <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight" />
+        <span>@EnvironmentName</span>
+    </div>
+    
+    <div class="grow"></div>
+    
+    <div class="flex align-center space-x-2">
+        <MudIconButton
+            Icon="@Icons.Material.Filled.AddCircleOutline"
+            Color="Color.Inherit"
+            Size="Size.Small"
+            OnClick="@(() => ViewModel.AddCommand.Execute(null))"/>
+    </div>
+    
+</div>
+
+@code {
+    
+    [Parameter] public string? ApplicationName { get; set; }
+
+    [Parameter] public string? EnvironmentName { get; set; }
+    
+    [Parameter] public string? ApplicationId { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        ViewModel.ApplicationId = ApplicationId;
+    }
+
+}

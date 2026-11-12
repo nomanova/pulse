@@ -4,8 +4,6 @@ namespace Pulse.Web.Core.ViewModels.Common;
 
 public partial class ActionViewModelBase : ViewModelBase
 {
-    protected const string ErrGeneral = "Something went wrong, please try again later";
-    
     [ObservableProperty] public partial bool IsLoading { get; private set; }
 
     [ObservableProperty] public partial bool IsFailed { get; private set; }

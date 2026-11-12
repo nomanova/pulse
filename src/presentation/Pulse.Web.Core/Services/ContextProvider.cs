@@ -12,7 +12,11 @@ using Pulse.Web.Core.Services.Interfaces;
 
 namespace Pulse.Web.Core.Services;
 
-public sealed record ContextChangedMessage;
+public sealed record OrganizationChangedMessage;
+
+public sealed record ApplicationChangedMessage;
+
+public sealed record EnvironmentChangedMessage;
 
 public sealed class ContextProvider : IContextProvider
 {
@@ -42,7 +46,7 @@ public sealed class ContextProvider : IContextProvider
             CurrentEnvironment = null;
             field = value;
 
-            _messenger.Send(new ContextChangedMessage());
+            _messenger.Send(new OrganizationChangedMessage());
         }
     }
 
@@ -120,6 +124,26 @@ public sealed class ContextProvider : IContextProvider
         CurrentEnvironment = new ObjectIdentity(currentEnvironment.Id, currentEnvironment.Name, currentEnvironment.Key);
 
         return Result.Success;
+    }
+
+    public void AddAndSwitchToEnvironment(string applicationId, ObjectIdentity environment)
+    {
+        if (Application == null || Application.Id != applicationId)
+        {
+            throw new InvalidOperationException("Faulty application");
+        }
+        
+        if (Environments == null)
+        {
+            Environments = [environment];
+        }
+        else
+        {
+            Environments = [..Environments, environment];
+        }
+
+        CurrentEnvironment = environment;
+        _messenger.Send(new EnvironmentChangedMessage());
     }
 
     public IReadOnlyList<ObjectIdentity>? Environments { get; private set; }

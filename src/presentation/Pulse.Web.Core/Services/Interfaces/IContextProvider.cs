@@ -14,6 +14,8 @@ public interface IContextProvider
     ObjectIdentity? Application { get; }
 
     Task<ErrorOr<Success>> EnsureApplication(string applicationId, string? environmentId = null);
+
+    void AddAndSwitchToEnvironment(string applicationId, ObjectIdentity environment);
     
     IReadOnlyList<ObjectIdentity>? Environments { get; }
     

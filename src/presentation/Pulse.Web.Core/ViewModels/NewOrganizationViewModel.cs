@@ -95,7 +95,7 @@ public partial class NewOrganizationViewModel : ActionViewModelBase
 
         if (!fetchResult.IsSuccessWithData())
         {
-            SetFailed(ErrGeneral);
+            SetFailed(Constants.ErrGeneral);
             return;
         }
 

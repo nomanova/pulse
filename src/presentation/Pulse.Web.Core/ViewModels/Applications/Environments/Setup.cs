@@ -7,11 +7,14 @@ public static class Setup
     public static IServiceCollection AddEnvironmentViewModels(this IServiceCollection services)
     {
         services.AddTransient<EnvironmentViewModel>();
+        services.AddTransient<EnvironmentActionsViewModel>();
         
         services.AddTransient<EnvironmentContainerViewModel>();
         
         services.AddTransient<EnvironmentApiKeysViewModel>();
         services.AddTransient<EnvironmentConnectionsViewModel>();
+        
+        services.AddTransient<AddEnvironmentViewModel>();
         
         return services;
     }

@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using CommunityToolkit.Mvvm.Messaging;
 using Pulse.Web.Core.Services.Interfaces;
 using Pulse.Web.Core.ViewModels.Common;
 
@@ -12,8 +13,9 @@ public partial class EnvironmentViewModel : ApplicationContextViewModel
 
     public EnvironmentViewModel(
         IContextProvider contextProvider,
+        IMessenger messenger,
         IFlagManager flagManager,
-        IPageNavigator navigator) : base(contextProvider)
+        IPageNavigator navigator) : base(contextProvider, messenger)
     {
         _contextProvider = contextProvider;
         _flagManager = flagManager;
