@@ -79,7 +79,22 @@ public sealed class ContextProvider : IContextProvider
     {
         if (Application != null && Application.Id == applicationId)
         {
-            return Result.Success;
+            if (environmentId == null)
+            {
+                return Result.Success;
+            }
+
+            // The application is already loaded, but the requested environment can differ from the current one
+            // (e.g. browser back navigation after adding an environment), so sync it from the cached list.
+            var cachedEnvironment = Environments?.FirstOrDefault(env => env.Id == environmentId);
+
+            if (cachedEnvironment != null)
+            {
+                CurrentEnvironment = cachedEnvironment;
+                return Result.Success;
+            }
+
+            // Unknown environment: fall through and reload from the API.
         }
 
         // Load application
