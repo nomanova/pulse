@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project
 
-Pulse is a self-hosted, open-core (AGPLv3) notification server for .NET: workflow engine, multichannel delivery (email, SMS, ...), and a provider plugin system. Early development. .NET 10 / C# 14 (SDK pinned in `global.json`), EF Core with PostgreSQL or SQLite. Solution: `Pulse.sln`. The backlog is managed in Jira; `PLS-<n>` refers to the Jira ticket number.
+Pulse is a self-hosted, open-core (AGPLv3) notification server for .NET: workflow engine, multichannel delivery (email, SMS, ...), and a provider plugin system. Early development. .NET 10 / C# 14 (SDK pinned in `global.json`), EF Core with PostgreSQL or SQLite. Solution: `Pulse.sln`. The backlog is managed in Jira at `nomanova.atlassian.net` (project key `PLS`); `PLS-<n>` refers to the Jira ticket number, e.g. `https://nomanova.atlassian.net/browse/PLS-11`. Use the Atlassian MCP server to read and update tickets.
 
 ## Commands
 
