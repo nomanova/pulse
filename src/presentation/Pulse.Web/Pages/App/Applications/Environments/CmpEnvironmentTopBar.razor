@@ -2,28 +2,40 @@
 @inherits MvvmCmpBase<EnvironmentActionsViewModel>
 
 <div class="px-6 py-1 flex bg-app-green-400 text-app-white">
-    
-    <div class="flex align-center space-x-2 text-lg">
-        <span>@ApplicationName</span>
-        <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight" />
+
+    <div class="flex items-center space-x-2 text-lg">
+        <span class="opacity-75">@ApplicationName</span>
+        <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight" Class="opacity-75"/>
         <MudMenu Dense="true"
                  Disabled="@ViewModel.IsRemoving"
                  AnchorOrigin="Origin.BottomLeft"
-                 TransformOrigin="Origin.TopLeft">
+                 TransformOrigin="Origin.TopLeft"
+                 ListClass="min-w-56">
             <ActivatorContent>
-                <div class="flex align-center cursor-pointer" @onclick="@context.ToggleAsync">
+                <MudButton OnClick="@context.ToggleAsync"
+                           Variant="Variant.Text"
+                           Color="Color.Inherit"
+                           Disabled="@ViewModel.IsRemoving"
+                           Class="normal-case text-lg"
+                           EndIcon="@Icons.Material.Filled.ArrowDropDown"
+                           aria-haspopup="true">
                     <span>@EnvironmentName</span>
-                    <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown"/>
-                </div>
+                </MudButton>
             </ActivatorContent>
             <ChildContent>
-                @foreach (var env in Environments)
+                @foreach (var env in SortedEnvironments)
                 {
                     var id = env.Id;
-                    <MudMenuItem OnClick="@(() => ViewModel.SwitchCommand.Execute(id))"
-                                 Disabled="@(id == EnvironmentId)">
-                        <div class="flex align-center space-x-2">
-                            <span>@env.Name</span>
+                    var isCurrent = id == EnvironmentId;
+                    <MudMenuItem OnClick="@(() => ViewModel.SwitchCommand.Execute(id))">
+                        <div class="flex items-center space-x-2">
+                            <span class="w-5 flex items-center">
+                                @if (isCurrent)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.Check" Size="Size.Small" Color="Color.Primary"/>
+                                }
+                            </span>
+                            <span class="@(isCurrent ? "font-semibold" : null)">@env.Name</span>
                             @if (env.IsPrimary)
                             {
                                 <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Text">Primary</MudChip>
@@ -31,33 +43,50 @@
                         </div>
                     </MudMenuItem>
                 }
+                <MudDivider/>
+                <MudMenuItem Disabled="@(!ViewModel.CanAdd)"
+                             OnClick="@(() => ViewModel.AddCommand.Execute(null))">
+                    <div class="flex items-center space-x-2">
+                        <span class="w-5 flex items-center">
+                            <MudIcon Icon="@Icons.Material.Filled.Add" Size="Size.Small"/>
+                        </span>
+                        <span>Add environment</span>
+                    </div>
+                </MudMenuItem>
             </ChildContent>
         </MudMenu>
     </div>
-    
+
     <div class="grow"></div>
-    
-    <div class="flex align-center mr-1 space-x-3">
-        <MudIconButton
-            Icon="@Icons.Material.Filled.AddCircleOutline"
-            Color="Color.Inherit"
-            Size="Size.Small"
-            Disabled="@(ViewModel.IsRemoving || !ViewModel.CanAdd)"
-            OnClick="@(() => ViewModel.AddCommand.Execute(null))"/>
+
+    <div class="flex items-center mr-2 space-x-4">
+        <MudTooltip Text="@AddTooltip">
+            <MudIconButton
+                Icon="@Icons.Material.Filled.AddCircleOutline"
+                Color="Color.Inherit"
+                Size="Size.Small"
+                Class="[&_.mud-icon-root]:text-[1.45rem]"
+                Disabled="@(ViewModel.IsRemoving || !ViewModel.CanAdd)"
+                OnClick="@(() => ViewModel.AddCommand.Execute(null))"/>
+        </MudTooltip>
+        <span class="h-5 w-px bg-app-white opacity-50"></span>
         @if (ViewModel.IsRemoving)
         {
             <MudProgressCircular Color="Color.Inherit" Size="Size.Small" Indeterminate="true"/>
         }
         else
         {
-            <MudIconButton
-                Icon="@Icons.Material.Filled.DeleteOutline"
-                Color="Color.Inherit"
-                Size="Size.Small"
-                OnClick="@(() => ViewModel.RemoveCommand.Execute(null))"/>
+            <MudTooltip Text="Remove">
+                <MudIconButton
+                    Icon="@Icons.Material.Filled.DeleteOutline"
+                    Color="Color.Inherit"
+                    Size="Size.Small"
+                    Class="[&_.mud-icon-root]:text-[1.45rem]"
+                    OnClick="@(() => ViewModel.RemoveCommand.Execute(null))"/>
+            </MudTooltip>
         }
     </div>
-    
+
 </div>
 
 @code {
@@ -71,6 +100,13 @@
     [Parameter] public string? EnvironmentId { get; set; }
 
     [Parameter] public IReadOnlyList<ObjectIdentity> Environments { get; set; } = [];
+
+    private IEnumerable<ObjectIdentity> SortedEnvironments =>
+        Environments.OrderByDescending(env => env.IsPrimary).ThenBy(env => env.Name, StringComparer.OrdinalIgnoreCase);
+
+    private string AddTooltip => ViewModel.CanAdd
+        ? "Add"
+        : $"Maximum of {Core.Constants.MaxEnvironmentCount} reached";
 
     protected override void OnParametersSet()
     {
