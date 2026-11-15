@@ -19,7 +19,7 @@ dotnet test path/to/Project.Tests.csproj --filter "FullyQualifiedName~SomeTest" 
 cd src/Pulse.AppHost && ./run.sh
 ```
 
-AppHost is configured through parameters in `src/Pulse.AppHost/appsettings*.json`: `DatabaseProvider` (`Sqlite`|`Postgres`), `DatabaseOnly` (start only the DB), `WithWeb` (also start Blazor `Pulse.Web`), plus DB path/credentials. It sets `PULSE_ADMIN_PASSWORD` for the API. Postgres runs as a persistent container.
+AppHost is configured through parameters in `src/Pulse.AppHost/appsettings*.json`: `DatabaseProvider` (`Sqlite`|`Postgres`), `DatabaseOnly` (start only the DB), `WithWeb` (also start Blazor `Pulse.Web`), plus DB path/credentials. It sets `PULSE_ADMIN_PASSWORD` for the API. Postgres runs as a persistent container. Put personal/local overrides in `src/Pulse.AppHost/appsettings.Local.json` (globally git-ignored); do not use .NET user secrets.
 
 Docs site (`docs/`, VitePress): `npm run dev` / `npm run build` there. `http/` contains HTTP-client request files and env files for manual API calls.
 
