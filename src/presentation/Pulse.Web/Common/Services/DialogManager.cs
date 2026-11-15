@@ -54,6 +54,19 @@ public sealed class DialogManager : IDialogManager
         return !result?.Canceled ?? false;
     }
 
+    public async Task ShowInfo(string title, string message)
+    {
+        var parameters = new DialogParameters
+        {
+            { nameof(CmpHelpDialog.BodyText), message }
+        };
+
+        var dialog = await _dialogService.ShowAsync<CmpHelpDialog>(
+            title, parameters, DefaultDialogOptions);
+
+        await dialog.Result;
+    }
+
     public async Task ShowHelp(string message)
     {
         var parameters = new DialogParameters

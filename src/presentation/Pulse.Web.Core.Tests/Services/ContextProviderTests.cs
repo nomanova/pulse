@@ -76,7 +76,7 @@ public class ContextProviderTests
     {
         // Arrange (regression: browser back after adding an environment kept showing the newest environment)
         await _sut.EnsureApplication(ApplicationId, Production.Id);
-        _sut.AddAndSwitchToEnvironment(ApplicationId, new ObjectIdentity(Staging.Id, Staging.Name, Staging.Key));
+        _sut.AddAndSwitchToEnvironment(ApplicationId, Staging.ToIdentity());
         Assert.Equal(Staging.Id, _sut.CurrentEnvironment?.Id);
 
         // Act
@@ -93,7 +93,7 @@ public class ContextProviderTests
     {
         // Arrange
         await _sut.EnsureApplication(ApplicationId, Production.Id);
-        _sut.AddAndSwitchToEnvironment(ApplicationId, new ObjectIdentity(Staging.Id, Staging.Name, Staging.Key));
+        _sut.AddAndSwitchToEnvironment(ApplicationId, Staging.ToIdentity());
 
         // Act
         await _sut.EnsureApplication(ApplicationId, Production.Id);
@@ -112,7 +112,7 @@ public class ContextProviderTests
     {
         // Arrange
         await _sut.EnsureApplication(ApplicationId, Production.Id);
-        _sut.AddAndSwitchToEnvironment(ApplicationId, new ObjectIdentity(Staging.Id, Staging.Name, Staging.Key));
+        _sut.AddAndSwitchToEnvironment(ApplicationId, Staging.ToIdentity());
 
         // Act
         var result = await _sut.EnsureApplication(ApplicationId);
@@ -138,5 +138,53 @@ public class ContextProviderTests
         _environments.Verify(
             service => service.Search(It.IsAny<SearchEnvironmentsRequest>(), It.IsAny<CancellationToken>()),
             Times.Exactly(2));
+    }
+
+    [Fact]
+    public async Task RemoveEnvironment_WithCurrentEnvironment_ShouldSwitchToPrimaryEnvironment()
+    {
+        // Arrange
+        SetupEnvironments(Production, Staging);
+        await _sut.EnsureApplication(ApplicationId, Staging.Id);
+
+        // Act
+        _sut.RemoveEnvironment(ApplicationId, Staging.Id);
+
+        // Assert
+        Assert.Equal(Production.Id, _sut.CurrentEnvironment?.Id);
+        Assert.DoesNotContain(_sut.Environments!, env => env.Id == Staging.Id);
+    }
+
+    [Fact]
+    public async Task RemoveEnvironment_WithCurrentEnvironment_ShouldSendEnvironmentChangedMessage()
+    {
+        // Arrange
+        var messenger = new WeakReferenceMessenger();
+        var received = false;
+        messenger.Register<EnvironmentChangedMessage>(this, (_, _) => received = true);
+
+        var apiClient = new Mock<ICtrlApiClient>();
+        apiClient.SetupGet(client => client.Applications).Returns(_applications.Object);
+        apiClient.SetupGet(client => client.Environments).Returns(_environments.Object);
+        var sut = new ContextProvider(messenger, apiClient.Object);
+
+        SetupEnvironments(Production, Staging);
+        await sut.EnsureApplication(ApplicationId, Staging.Id);
+
+        // Act
+        sut.RemoveEnvironment(ApplicationId, Staging.Id);
+
+        // Assert
+        Assert.True(received);
+    }
+
+    [Fact]
+    public async Task RemoveEnvironment_WithUnknownApplication_ShouldThrow()
+    {
+        // Arrange
+        await _sut.EnsureApplication(ApplicationId);
+
+        // Act & Assert
+        Assert.Throws<System.InvalidOperationException>(() => _sut.RemoveEnvironment("other-app", Production.Id));
     }
 }

@@ -135,8 +135,8 @@ public sealed class ContextProvider : IContextProvider
         }
 
         Application = new ObjectIdentity(application.Id, application.Name, application.Key);
-        Environments = environments.Select(env => new ObjectIdentity(env.Id, env.Name, env.Key)).ToList().AsReadOnly();
-        CurrentEnvironment = new ObjectIdentity(currentEnvironment.Id, currentEnvironment.Name, currentEnvironment.Key);
+        Environments = environments.Select(env => env.ToIdentity()).ToList().AsReadOnly();
+        CurrentEnvironment = currentEnvironment.ToIdentity();
 
         return Result.Success;
     }
@@ -158,6 +158,21 @@ public sealed class ContextProvider : IContextProvider
         }
 
         CurrentEnvironment = environment;
+        _messenger.Send(new EnvironmentChangedMessage());
+    }
+
+    public void RemoveEnvironment(string applicationId, string environmentId)
+    {
+        if (Application == null || Application.Id != applicationId)
+        {
+            throw new InvalidOperationException("Faulty application");
+        }
+
+        var remaining = (Environments ?? []).Where(env => env.Id != environmentId).ToList();
+        var next = remaining.FirstOrDefault(env => env.IsPrimary) ?? remaining.FirstOrDefault();
+
+        Environments = remaining.AsReadOnly();
+        CurrentEnvironment = next;
         _messenger.Send(new EnvironmentChangedMessage());
     }
 

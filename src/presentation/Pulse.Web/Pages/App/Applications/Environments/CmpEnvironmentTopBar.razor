@@ -10,12 +10,25 @@
     
     <div class="grow"></div>
     
-    <div class="flex align-center space-x-2">
+    <div class="flex align-center mr-1 space-x-3">
         <MudIconButton
             Icon="@Icons.Material.Filled.AddCircleOutline"
             Color="Color.Inherit"
             Size="Size.Small"
+            Disabled="@ViewModel.IsRemoving"
             OnClick="@(() => ViewModel.AddCommand.Execute(null))"/>
+        @if (ViewModel.IsRemoving)
+        {
+            <MudProgressCircular Color="Color.Inherit" Size="Size.Small" Indeterminate="true"/>
+        }
+        else
+        {
+            <MudIconButton
+                Icon="@Icons.Material.Filled.DeleteOutline"
+                Color="Color.Inherit"
+                Size="Size.Small"
+                OnClick="@(() => ViewModel.RemoveCommand.Execute(null))"/>
+        }
     </div>
     
 </div>

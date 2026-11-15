@@ -10,5 +10,7 @@ public interface IDialogManager
     Task<bool> GetConfirmation(string title, string message, string action,
         DialogStyle style = DialogStyle.Info);
 
+    Task ShowInfo(string title, string message);
+
     Task ShowHelp(string message);
 }

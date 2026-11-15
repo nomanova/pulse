@@ -17,6 +17,8 @@ public interface IContextProvider
 
     void AddAndSwitchToEnvironment(string applicationId, ObjectIdentity environment);
     
+    void RemoveEnvironment(string applicationId, string environmentId);
+
     IReadOnlyList<ObjectIdentity>? Environments { get; }
     
     ObjectIdentity? CurrentEnvironment { get; set; }
