@@ -1,11 +1,38 @@
+@using Pulse.Web.Core.Models
 @inherits MvvmCmpBase<EnvironmentActionsViewModel>
 
 <div class="px-6 py-1 flex bg-app-green-400 text-app-white">
     
-    <div class="flex align-center space-x-2 text-lg font-semibold">
+    <div class="flex align-center space-x-2 text-lg">
         <span>@ApplicationName</span>
         <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowRight" />
-        <span>@EnvironmentName</span>
+        <MudMenu Dense="true"
+                 Disabled="@ViewModel.IsRemoving"
+                 AnchorOrigin="Origin.BottomLeft"
+                 TransformOrigin="Origin.TopLeft">
+            <ActivatorContent>
+                <div class="flex align-center cursor-pointer" @onclick="@context.ToggleAsync">
+                    <span>@EnvironmentName</span>
+                    <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown"/>
+                </div>
+            </ActivatorContent>
+            <ChildContent>
+                @foreach (var env in Environments)
+                {
+                    var id = env.Id;
+                    <MudMenuItem OnClick="@(() => ViewModel.SwitchCommand.Execute(id))"
+                                 Disabled="@(id == EnvironmentId)">
+                        <div class="flex align-center space-x-2">
+                            <span>@env.Name</span>
+                            @if (env.IsPrimary)
+                            {
+                                <MudChip T="string" Size="Size.Small" Color="Color.Primary" Variant="Variant.Text">Primary</MudChip>
+                            }
+                        </div>
+                    </MudMenuItem>
+                }
+            </ChildContent>
+        </MudMenu>
     </div>
     
     <div class="grow"></div>
@@ -15,7 +42,7 @@
             Icon="@Icons.Material.Filled.AddCircleOutline"
             Color="Color.Inherit"
             Size="Size.Small"
-            Disabled="@ViewModel.IsRemoving"
+            Disabled="@(ViewModel.IsRemoving || !ViewModel.CanAdd)"
             OnClick="@(() => ViewModel.AddCommand.Execute(null))"/>
         @if (ViewModel.IsRemoving)
         {
@@ -40,6 +67,10 @@
     [Parameter] public string? EnvironmentName { get; set; }
     
     [Parameter] public string? ApplicationId { get; set; }
+
+    [Parameter] public string? EnvironmentId { get; set; }
+
+    [Parameter] public IReadOnlyList<ObjectIdentity> Environments { get; set; } = [];
 
     protected override void OnParametersSet()
     {

@@ -46,10 +46,28 @@ public partial class EnvironmentActionsViewModel : ViewModelBase
 
     [ObservableProperty] public partial bool IsRemoving { get; private set; }
 
+    public bool CanAdd => (_contextProvider.Environments?.Count ?? 0) < Constants.MaxEnvironmentCount;
+
+    [RelayCommand]
+    private void OnSwitch(string? environmentId)
+    {
+        if (ApplicationId == null || environmentId == null || IsRemoving)
+        {
+            return;
+        }
+
+        if (_contextProvider.CurrentEnvironment?.Id == environmentId)
+        {
+            return;
+        }
+
+        _contextProvider.SwitchEnvironment(ApplicationId, environmentId);
+    }
+
     [RelayCommand]
     private void OnAdd()
     {
-        if (ApplicationId == null)
+        if (ApplicationId == null || !CanAdd)
         {
             return;
         }

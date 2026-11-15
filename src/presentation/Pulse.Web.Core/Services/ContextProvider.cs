@@ -161,6 +161,20 @@ public sealed class ContextProvider : IContextProvider
         _messenger.Send(new EnvironmentChangedMessage());
     }
 
+    public void SwitchEnvironment(string applicationId, string environmentId)
+    {
+        if (Application == null || Application.Id != applicationId)
+        {
+            throw new InvalidOperationException("Faulty application");
+        }
+
+        var environment = Environments?.FirstOrDefault(env => env.Id == environmentId)
+                          ?? throw new InvalidOperationException("Unknown environment");
+
+        CurrentEnvironment = environment;
+        _messenger.Send(new EnvironmentChangedMessage());
+    }
+
     public void RemoveEnvironment(string applicationId, string environmentId)
     {
         if (Application == null || Application.Id != applicationId)

@@ -1,6 +1,8 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Messaging;
+using Pulse.Web.Core.Models;
 using Pulse.Web.Core.Services.Interfaces;
 using Pulse.Web.Core.ViewModels.Common;
 
@@ -25,10 +27,13 @@ public partial class EnvironmentContainerViewModel : ApplicationContextViewModel
 
     [ObservableProperty] public partial string? EnvironmentName { get; private set; }
 
+    [ObservableProperty] public partial IReadOnlyList<ObjectIdentity> Environments { get; private set; } = [];
+
     protected override Task OnApplicationLoaded()
     {
         ApplicationName = ContextProvider.Application?.Name;
         EnvironmentName = ContextProvider.CurrentEnvironment?.Name;
+        Environments = ContextProvider.Environments ?? [];
 
         return base.OnApplicationLoaded();
     }

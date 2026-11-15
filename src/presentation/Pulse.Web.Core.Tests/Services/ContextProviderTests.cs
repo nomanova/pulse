@@ -187,4 +187,64 @@ public class ContextProviderTests
         // Act & Assert
         Assert.Throws<System.InvalidOperationException>(() => _sut.RemoveEnvironment("other-app", Production.Id));
     }
+
+    [Fact]
+    public async Task SwitchEnvironment_WithKnownEnvironment_ShouldUpdateCurrentEnvironment()
+    {
+        // Arrange
+        SetupEnvironments(Production, Staging);
+        await _sut.EnsureApplication(ApplicationId, Production.Id);
+
+        // Act
+        _sut.SwitchEnvironment(ApplicationId, Staging.Id);
+
+        // Assert
+        Assert.Equal(Staging.Id, _sut.CurrentEnvironment?.Id);
+    }
+
+    [Fact]
+    public async Task SwitchEnvironment_WithKnownEnvironment_ShouldSendEnvironmentChangedMessage()
+    {
+        // Arrange
+        var messenger = new WeakReferenceMessenger();
+        var received = false;
+        messenger.Register<EnvironmentChangedMessage>(this, (_, _) => received = true);
+
+        var apiClient = new Mock<ICtrlApiClient>();
+        apiClient.SetupGet(client => client.Applications).Returns(_applications.Object);
+        apiClient.SetupGet(client => client.Environments).Returns(_environments.Object);
+        var sut = new ContextProvider(messenger, apiClient.Object);
+
+        SetupEnvironments(Production, Staging);
+        await sut.EnsureApplication(ApplicationId, Production.Id);
+
+        // Act
+        sut.SwitchEnvironment(ApplicationId, Staging.Id);
+
+        // Assert
+        Assert.True(received);
+    }
+
+    [Fact]
+    public async Task SwitchEnvironment_WithUnknownEnvironment_ShouldThrowAndKeepCurrentEnvironment()
+    {
+        // Arrange
+        SetupEnvironments(Production, Staging);
+        await _sut.EnsureApplication(ApplicationId, Production.Id);
+
+        // Act & Assert
+        Assert.Throws<System.InvalidOperationException>(() => _sut.SwitchEnvironment(ApplicationId, "unknown"));
+        Assert.Equal(Production.Id, _sut.CurrentEnvironment?.Id);
+    }
+
+    [Fact]
+    public async Task SwitchEnvironment_WithUnknownApplication_ShouldThrow()
+    {
+        // Arrange
+        SetupEnvironments(Production, Staging);
+        await _sut.EnsureApplication(ApplicationId, Production.Id);
+
+        // Act & Assert
+        Assert.Throws<System.InvalidOperationException>(() => _sut.SwitchEnvironment("other-app", Staging.Id));
+    }
 }

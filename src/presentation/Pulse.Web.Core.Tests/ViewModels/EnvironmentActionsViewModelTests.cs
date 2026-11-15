@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -168,4 +170,83 @@ public class EnvironmentActionsViewModelTests
             service => service.Remove(It.IsAny<RemoveEnvironmentRequest>(), It.IsAny<CancellationToken>()),
             Times.Once);
     }
+
+    [Fact]
+    public void Switch_WithOtherEnvironment_ShouldSwitchEnvironment()
+    {
+        // Arrange
+        _contextProvider.SetupGet(provider => provider.CurrentEnvironment).Returns(Production);
+
+        // Act
+        _sut.SwitchCommand.Execute(Staging.Id);
+
+        // Assert
+        _contextProvider.Verify(provider => provider.SwitchEnvironment(ApplicationId, Staging.Id), Times.Once);
+    }
+
+    [Fact]
+    public void Switch_WithCurrentEnvironment_ShouldDoNothing()
+    {
+        // Arrange
+        _contextProvider.SetupGet(provider => provider.CurrentEnvironment).Returns(Production);
+
+        // Act
+        _sut.SwitchCommand.Execute(Production.Id);
+
+        // Assert
+        _contextProvider.Verify(provider => provider.SwitchEnvironment(It.IsAny<string>(), It.IsAny<string>()),
+            Times.Never);
+    }
+
+    [Fact]
+    public void Switch_WithoutApplicationId_ShouldDoNothing()
+    {
+        // Arrange
+        _sut.ApplicationId = null;
+
+        // Act
+        _sut.SwitchCommand.Execute(Staging.Id);
+
+        // Assert
+        _contextProvider.Verify(provider => provider.SwitchEnvironment(It.IsAny<string>(), It.IsAny<string>()),
+            Times.Never);
+    }
+
+    [Theory]
+    [InlineData(1, true)]
+    [InlineData(9, true)]
+    [InlineData(10, false)]
+    public void CanAdd_WithEnvironmentCount_ShouldRespectMaximum(int count, bool expected)
+    {
+        // Arrange
+        _contextProvider.SetupGet(provider => provider.Environments).Returns(CreateEnvironments(count));
+
+        // Act
+        var canAdd = _sut.CanAdd;
+
+        // Assert
+        Assert.Equal(expected, canAdd);
+    }
+
+    [Fact]
+    public void Add_WhenMaximumReached_ShouldNotSendMessage()
+    {
+        // Arrange
+        _contextProvider.SetupGet(provider => provider.Environments).Returns(CreateEnvironments(10));
+        var messenger = new WeakReferenceMessenger();
+        var received = false;
+        messenger.Register<AddEnvironmentMessage>(this, (_, _) => received = true);
+        var sut = new EnvironmentActionsViewModel(
+            messenger, _contextProvider.Object, Mock.Of<ICtrlApiClient>(), _dialogManager.Object,
+            _flagManager.Object) { ApplicationId = ApplicationId };
+
+        // Act
+        sut.AddCommand.Execute(null);
+
+        // Assert
+        Assert.False(received);
+    }
+
+    private static IReadOnlyList<ObjectIdentity> CreateEnvironments(int count) =>
+        Enumerable.Range(0, count).Select(i => new ObjectIdentity($"env-{i}", $"Env {i}", $"env-{i}")).ToList();
 }
